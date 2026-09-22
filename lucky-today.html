@@ -648,7 +648,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.getElementById('themeTitle')?.textContent||document.querySelector('.theme-title')?.textContent||'Lucky Today')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||document.getElementById('bestMoveText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'lucky',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={best_move:document.getElementById('bestMoveText')?.textContent||'',surprise:document.getElementById('surpriseText')?.textContent||'',watch_for:document.getElementById('watchText')?.textContent||'',lucky_number:document.getElementById('luckyNumber')?.textContent||document.getElementById('numberText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'lucky',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
