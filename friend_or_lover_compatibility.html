@@ -622,6 +622,7 @@ async function buildCompatibilityReading(){
   if(!window.AskGenieAI || typeof window.AskGenieAI.compatibility!=='function'){
     renderLocalResult();
     document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+    saveToMyGenie();
     return false;
   }
   try{
@@ -631,6 +632,7 @@ async function buildCompatibilityReading(){
     );
     currentCompatibilityAI=ai;
     renderAICompatibility(ai);
+    saveToMyGenie();
     return true;
   }catch(err){
     console.warn('AskGenie compatibility AI failed:',err);
@@ -704,6 +706,22 @@ document.getElementById('shareBtn').onclick=async()=>{
   if(navigator.share){try{await navigator.share({title:'AskGenie247',text,url:location.href})}catch(e){}}
   else{try{await navigator.clipboard.writeText(text+' '+location.href);alert(currentLang==='vi'?'Đã sao chép kết quả!':'Result copied!')}catch(e){}}
 };
+
+// My Genie V1: save completed reading summaries locally (never saves uploaded images).
+function saveToMyGenie(){
+  try{
+    const key='askgenieReadingHistory';
+    const list=JSON.parse(localStorage.getItem(key)||'[]');
+    const title=(()=>document.getElementById('matchTitle')?.textContent||'Friend or Lover?')();
+    const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'friend',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const fingerprint=item.type+'|'+item.title+'|'+item.summary;
+    const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
+    filtered.unshift(item);
+    localStorage.setItem(key,JSON.stringify(filtered.slice(0,50)));
+  }catch(e){console.warn('My Genie history save failed:',e)}
+}
+
 </script>
 </body>
 </html>
