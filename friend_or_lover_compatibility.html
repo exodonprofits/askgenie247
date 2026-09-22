@@ -714,7 +714,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.getElementById('matchTitle')?.textContent||'Friend or Lover?')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'friend',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={romantic_signal:document.getElementById('scoreText')?.textContent||'',chemistry:document.getElementById('chemistryText')?.textContent||'',friendship:document.getElementById('friendshipText')?.textContent||'',romance:document.getElementById('romanceText')?.textContent||'',watch_for:document.getElementById('watchText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'friend',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
