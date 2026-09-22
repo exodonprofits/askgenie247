@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080513" />
+<title>AskGenie247 — Tarot</title>
+<style>
+:root{
+  --bg:#080513;--gold:#ffd66b;--violet:#a974ff;--pink:#ff7ac8;--text:#fff8ff;
+  --muted:#c9bfd2;--line:rgba(255,255,255,.10);--shadow:0 18px 50px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{overflow-x:hidden}
+.app{
+  min-height:100dvh;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),
+    radial-gradient(circle at 14% 36%,rgba(255,122,200,.08),transparent 24%),
+    linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);
+  padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom));
+}
+.stars,.stars:before,.stars:after{
+  position:fixed;inset:0;content:"";pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.2px),
+    radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);
+  background-size:42px 42px,70px 70px;background-position:0 0,17px 22px;
+  opacity:.14;animation:drift 22s linear infinite;
+}
+.stars:before{opacity:.08;animation-duration:32s}.stars:after{opacity:.05;animation-duration:40s}
+@keyframes drift{to{transform:translateY(40px)}}
+header{
+  position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 8px;
+}
+.back,.lang-toggle{
+  min-width:42px;height:42px;border-radius:14px;border:1px solid var(--line);
+  background:#ffffff0b;color:white;display:grid;place-items:center;backdrop-filter:blur(12px)
+}
+.back{font-size:22px;text-decoration:none;width:42px}
+.lang-toggle{padding:0 11px;font-weight:850;font-size:11px;letter-spacing:.4px}
+.brand{font-weight:850;font-size:16px}
+main{position:relative;z-index:2;padding:0 14px 24px}
+.hero{text-align:center;padding:10px 12px 14px}
+.hero-logo{
+  width:104px;height:104px;object-fit:contain;display:block;margin:0 auto 9px;
+  filter:drop-shadow(0 0 18px rgba(255,214,107,.22)) drop-shadow(0 0 28px rgba(169,116,255,.18));
+  animation:float 3.6s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-5px)}}
+h1{font-size:29px;line-height:1.08;margin:0 0 7px;font-weight:900}
+.gradient{
+  background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.panel{
+  background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));
+  border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);
+  margin-top:12px;backdrop-filter:blur(16px)
+}
+.step-title{font-size:18px;font-weight:850;margin:0 0 4px}
+.step-sub{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.45}
+.spread-grid,.focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{
+  min-height:76px;border-radius:18px;border:1px solid var(--line);background:#ffffff08;color:white;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:800;font-size:12px;padding:8px;
+}
+.choice .emoji{font-size:25px}
+.choice.active{
+  border-color:rgba(255,214,107,.55);
+  background:linear-gradient(180deg,rgba(255,214,107,.14),rgba(255,255,255,.04));
+  box-shadow:0 0 22px rgba(255,214,107,.10)
+}
+.focus{
+  min-height:58px;border-radius:16px;border:1px solid var(--line);background:#ffffff08;color:white;
+  font-weight:800;font-size:12px
+}
+.focus.active{border-color:rgba(169,116,255,.55);background:rgba(169,116,255,.12);box-shadow:0 0 18px rgba(169,116,255,.10)}
+.field{margin-top:12px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+.field textarea{
+  width:100%;min-height:86px;border-radius:16px;border:1px solid var(--line);background:#ffffff08;color:white;
+  padding:12px;font-size:13px;outline:none;resize:none
+}
+.field textarea::placeholder{color:#8f8497}
+.btn{border:0;border-radius:16px;min-height:50px;padding:12px 14px;font-weight:850;font-size:14px}
+.btn.primary{
+  width:100%;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;
+  box-shadow:0 10px 26px rgba(255,214,107,.14)
+}
+.btn.secondary{background:#ffffff0b;color:white;border:1px solid var(--line)}
+.shuffle-view{display:none}.shuffle-view.show{display:block}
+.deck-stage{display:grid;place-items:center;padding:8px 0 4px}
+.deck{
+  position:relative;width:170px;height:225px
+}
+.card-back{
+  position:absolute;inset:0;border-radius:20px;border:1px solid rgba(255,214,107,.28);
+  background:
+    radial-gradient(circle at center,rgba(255,214,107,.18),transparent 28%),
+    linear-gradient(145deg,#3a1755,#1a0d29 65%,#0c0712);
+  box-shadow:0 18px 40px rgba(0,0,0,.38),0 0 30px rgba(169,116,255,.18);
+}
+.card-back:before{
+  content:"✦";position:absolute;inset:15px;border:1px solid rgba(255,214,107,.28);border-radius:14px;
+  display:grid;place-items:center;font-size:58px;color:var(--gold)
+}
+.card-back:nth-child(1){transform:rotate(-8deg) translate(-18px,4px)}
+.card-back:nth-child(2){transform:rotate(7deg) translate(17px,5px)}
+.card-back:nth-child(3){transform:rotate(-2deg)}
+.deck.shuffling .card-back:nth-child(1){animation:leftShuffle .8s ease-in-out infinite alternate}
+.deck.shuffling .card-back:nth-child(2){animation:rightShuffle .8s ease-in-out infinite alternate}
+@keyframes leftShuffle{to{transform:rotate(-16deg) translate(-34px,-3px)}}
+@keyframes rightShuffle{to{transform:rotate(15deg) translate(34px,6px)}}
+.scan-copy{text-align:center}.scan-copy h3{margin:0 0 6px;font-size:19px}.scan-copy p{margin:0;color:var(--muted);font-size:12px}
+.results{display:none}.results.show{display:block}
+.reveal{
+  text-align:center;background:
+    radial-gradient(circle at 50% 0%,rgba(255,214,107,.14),transparent 28%),
+    linear-gradient(180deg,rgba(38,20,55,.94),rgba(18,10,27,.96));
+  border:1px solid rgba(255,214,107,.18);border-radius:28px;padding:22px 16px;box-shadow:var(--shadow)
+}
+.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:850}
+.reading-title{font-size:28px;font-weight:950;margin:10px 0 4px}
+.reading-sub{font-size:13px;color:var(--muted)}
+.cards-wrap{display:grid;gap:12px;margin-top:14px}
+.tarot-card{
+  border-radius:22px;padding:14px;background:#ffffff08;border:1px solid var(--line);
+  display:grid;grid-template-columns:92px 1fr;gap:13px;align-items:center
+}
+.tarot-art{
+  aspect-ratio:2/3;border-radius:15px;border:1px solid rgba(255,214,107,.22);
+  background:
+    radial-gradient(circle at 50% 35%,rgba(255,214,107,.18),transparent 28%),
+    linear-gradient(180deg,#35174e,#120a1c);
+  display:grid;place-items:center;text-align:center;padding:8px;
+  box-shadow:0 10px 24px rgba(0,0,0,.28)
+}
+.tarot-art .icon{font-size:34px}
+.tarot-art small{display:block;color:#f7dd8f;font-size:8px;font-weight:800;margin-top:5px}
+.tarot-copy h3{margin:0 0 4px;font-size:15px}
+.tarot-copy .position{font-size:10px;color:var(--gold);font-weight:800;margin-bottom:6px}
+.tarot-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.48}
+.summary-card{margin-top:12px;border-radius:20px;padding:15px;background:linear-gradient(180deg,rgba(169,116,255,.11),rgba(255,255,255,.04));border:1px solid rgba(169,116,255,.22)}
+.summary-card h3{margin:0 0 6px;font-size:16px}.summary-card p{margin:0;color:#eee5f5;font-size:13px;line-height:1.5}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{border-radius:999px;padding:7px 9px;font-size:11px;background:#ffffff0a;border:1px solid var(--line);color:#eee3f7}
+.ask-box{
+  margin-top:12px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(169,116,255,.13),rgba(255,255,255,.04));
+  border:1px solid rgba(169,116,255,.22)
+}
+.ask-box h3{margin:0 0 7px;font-size:17px}.ask-box p{margin:0 0 12px;color:var(--muted);font-size:12px}
+.quick-qs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick{border:1px solid var(--line);background:#ffffff09;color:white;padding:10px;border-radius:999px;font-size:11px}
+.answer-box{display:none;margin-top:10px;border-radius:18px;padding:13px;background:#ffffff08;border:1px solid var(--line)}
+.answer-box.show{display:block}
+.answer-box strong{font-size:13px}.answer-box p{font-size:12px;color:var(--muted);line-height:1.48;margin:6px 0 0}
+.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}
+.bottom-nav{
+  position:fixed;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));height:62px;border-radius:21px;
+  background:rgba(14,9,22,.88);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);
+  z-index:80;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 18px 50px rgba(0,0,0,.48)
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#bfb4c8;text-decoration:none;font-size:10px;font-weight:700}
+.nav-item .ni{font-size:19px}.nav-item.active{color:var(--gold)}
+.hidden{display:none!important}
+@media (min-width:700px){
+  .app:after{content:"AskGenie247 Tarot is designed for mobile";position:fixed;inset:0;z-index:9999;background:#080513;color:white;display:grid;place-items:center;font-size:18px;font-weight:800}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+/* AskGenie AI wait animation — tarot.html */
+.ai-magic-wait{
+  --ai-c1:#ffd66b;--ai-c2:#ff7ac8;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:34px;max-width:100%;vertical-align:middle
+}
+.ai-magic-wheel{
+  width:34px;height:34px;flex:0 0 34px;position:relative;display:grid;place-items:center
+}
+.ai-magic-wheel:before{
+  content:"";position:absolute;inset:1px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--ai-c1);border-right-color:var(--ai-c2);
+  box-shadow:0 0 9px rgba(255,214,107,.24);
+  animation:aiMagicSpin 1.1s linear infinite
+}
+.ai-magic-wheel:after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.19);
+  animation:aiMagicSpinReverse 2.45s linear infinite
+}
+.ai-magic-core{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  font-size:12px;line-height:1;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.65),transparent 18%),
+             radial-gradient(circle,var(--ai-c1),rgba(31,14,46,.96) 72%);
+  box-shadow:0 0 12px rgba(169,116,255,.38);
+  animation:aiMagicPulse 1.15s ease-in-out infinite
+}
+.ai-magic-orbit{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ai-c2);
+  top:-1px;left:14px;box-shadow:0 0 8px var(--ai-c2);z-index:3;
+  transform-origin:3px 18px;animation:aiMagicOrbit 2.45s linear infinite
+}
+.ai-wait-copy{
+  color:#efe5f7;font-size:10px;font-weight:800;line-height:1.35;
+  animation:aiMagicGlow 1s ease-in-out infinite alternate;text-align:left
+}
+@keyframes aiMagicSpin{to{transform:rotate(360deg)}}
+@keyframes aiMagicSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes aiMagicOrbit{to{transform:rotate(360deg)}}
+@keyframes aiMagicPulse{50%{transform:scale(1.12);filter:brightness(1.18)}}
+@keyframes aiMagicGlow{from{opacity:.62}to{opacity:1}}
+.ai-answer-reveal{animation:aiAnswerReveal .48s cubic-bezier(.16,1,.3,1)}
+@keyframes aiAnswerReveal{
+  from{opacity:.2;transform:translateY(5px);filter:blur(3px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<div class="stars"></div>
+
+<header>
+  <a class="back" href="index.html" aria-label="Back">‹</a>
+  <div class="brand" data-i18n="pageTitle">🃏 Tarot</div>
+  <button class="lang-toggle" id="langToggle" aria-label="Change language">VI</button>
+</header>
+
+<main>
+  <section class="hero">
+    <img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie">
+    <h1><span class="gradient" data-i18n="heroTitle">Pick a card. See what speaks to you.</span></h1>
+    <p data-i18n="heroSub">Choose a spread, focus your question, and let Genie create a reflective tarot reading.</p>
+  </section>
+
+  <section class="panel" id="setupPanel">
+    <h2 class="step-title" data-i18n="spreadTitle">Choose a tarot spread</h2>
+    <p class="step-sub" data-i18n="spreadSub">One card for a quick message, three cards for a deeper look.</p>
+
+    <div class="spread-grid">
+      <button class="choice" data-spread="one"><span class="emoji">🃏</span><span data-i18n="oneCard">1 Card</span></button>
+      <button class="choice" data-spread="three"><span class="emoji">🔮</span><span data-i18n="threeCard">3 Cards</span></button>
+    </div>
+
+    <div style="margin-top:16px">
+      <h3 class="step-title" style="font-size:16px" data-i18n="focusTitle">What are you asking about?</h3>
+      <p class="step-sub" data-i18n="focusSub">Pick a theme or choose General.</p>
+      <div class="focus-grid">
+        <button class="focus" data-focus="Love">❤️ <span data-i18n="love">Love</span></button>
+        <button class="focus" data-focus="Money">💰 <span data-i18n="money">Money</span></button>
+        <button class="focus" data-focus="Career">💼 <span data-i18n="career">Career</span></button>
+        <button class="focus" data-focus="General">✨ <span data-i18n="general">General</span></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="question" data-i18n="questionLabel">Optional question</label>
+      <textarea id="question" data-i18n-placeholder="questionPlaceholder" placeholder="What should I understand right now?"></textarea>
+    </div>
+
+    <button class="btn primary" id="drawBtn" style="margin-top:16px" data-i18n="draw">Shuffle & Draw ✨</button>
+  </section>
+
+  <section class="panel shuffle-view" id="shuffleView">
+    <div class="deck-stage">
+      <div class="deck shuffling" id="deck">
+        <div class="card-back"></div><div class="card-back"></div><div class="card-back"></div>
+      </div>
+    </div>
+    <div class="scan-copy">
+      <h3 data-i18n="shuffleTitle">Genie is shuffling the cards…</h3>
+      <p id="shuffleText" data-i18n="shuffleStart">Focus on your question.</p>
+    </div>
+  </section>
+
+  <section class="results" id="results">
+    <div class="reveal">
+      <div class="eyebrow" data-i18n="resultLabel">YOUR TAROT READING</div>
+      <h2 class="reading-title" id="readingTitle">A Message for You</h2>
+      <div class="reading-sub" id="readingSub"></div>
+      <div id="aiStatus" style="margin-top:8px;font-size:10px;color:var(--gold);font-weight:800"></div>
+      <div class="cards-wrap" id="cardsWrap"></div>
+      <div class="summary-card">
+        <h3 data-i18n="summaryTitle">🧞 Genie’s Reflection</h3>
+        <p id="summaryText"></p>
+        <div class="chips" id="summaryChips"></div>
+      </div>
+    </div>
+
+    <div class="ask-box">
+      <h3 data-i18n="askTitle">🧞 Ask Genie About This Reading</h3>
+      <p data-i18n="askSub">Choose a follow-up question.</p>
+      <div class="quick-qs">
+        <button class="quick" id="qMeaning" data-i18n="qMeaning">✨ What matters most?</button>
+        <button class="quick" id="qAction" data-i18n="qAction">🧭 What should I focus on?</button>
+      </div>
+      <div class="answer-box" id="answerBox">
+        <strong data-i18n="genieSays">Genie says</strong>
+        <p id="answerText"></p>
+      </div>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="btn secondary" id="retryBtn" data-i18n="retry">🔄 Draw Again</button>
+      <button class="btn primary" id="shareBtn" data-i18n="share">📤 Share Result</button>
+    </div>
+
+    <p class="fineprint" data-i18n="fineprint">For fun, entertainment and self-reflection only. Tarot does not scientifically predict future events.</p>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html"><span class="ni">🏠</span><span data-i18n="home">Home</span></a>
+  <a class="nav-item active" href="index.html#explore"><span class="ni">✨</span><span data-i18n="explore">Explore</span></a>
+  <a class="nav-item" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><span data-i18n="genie">Genie</span></a>
+  <a class="nav-item" href="my-genie.html"><span class="ni">❤️</span><span data-i18n="me">Me</span></a>
+</nav>
+</div>
+
+<script src="js/askgenie-ai.js"></script>
+<script>
+
+function aiWaitMarkup(){
+  const vi=document.documentElement.lang==='vi';
+  return `<span class="ai-magic-wait"><span class="ai-magic-wheel"><span class="ai-magic-orbit"></span><span class="ai-magic-core">✦</span></span><span class="ai-wait-copy">${vi?"Đang kết nối các lá bài thành thông điệp…":"Turning the cards into a message…"}</span></span>`;
+}
+function showAIWait(el){
+  if(!el)return;
+  el.classList.remove('ai-answer-reveal');
+  el.innerHTML=aiWaitMarkup();
+}
+function revealAIText(el,text){
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.remove('ai-answer-reveal');
+  void el.offsetWidth;
+  el.classList.add('ai-answer-reveal');
+}
+
+
+const translations={
+  en:{
+    pageTitle:"🃏 Tarot",heroTitle:"Pick a card. See what speaks to you.",heroSub:"Choose a spread, focus your question, and let Genie create a reflective tarot reading.",
+    spreadTitle:"Choose a tarot spread",spreadSub:"One card for a quick message, three cards for a deeper look.",oneCard:"1 Card",threeCard:"3 Cards",
+    focusTitle:"What are you asking about?",focusSub:"Pick a theme or choose General.",love:"Love",money:"Money",career:"Career",general:"General",
+    questionLabel:"Optional question",questionPlaceholder:"What should I understand right now?",draw:"Shuffle & Draw ✨",
+    shuffleTitle:"Genie is shuffling the cards…",shuffleStart:"Focus on your question.",resultLabel:"YOUR TAROT READING",
+    summaryTitle:"🧞 Genie’s Reflection",askTitle:"🧞 Ask Genie About This Reading",askSub:"Choose a follow-up question.",
+    qMeaning:"✨ What matters most?",qAction:"🧭 What should I focus on?",genieSays:"Genie says",retry:"🔄 Draw Again",share:"📤 Share Result",
+    aiReading:"✨ AI interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",aiThinking:"🧞 ChatGPT is interpreting your cards…",fineprint:"For fun, entertainment and self-reflection only. Tarot does not scientifically predict future events.",
+    home:"Home",explore:"Explore",genie:"Genie",me:"Me"
+  },
+  vi:{
+    pageTitle:"🃏 Bài Tarot",heroTitle:"Chọn một lá bài. Xem điều gì chạm đến bạn.",heroSub:"Chọn kiểu trải bài, tập trung vào câu hỏi và để Genie tạo một bài đọc tarot để bạn suy ngẫm.",
+    spreadTitle:"Chọn kiểu trải bài",spreadSub:"Một lá cho thông điệp nhanh, ba lá để nhìn sâu hơn.",oneCard:"1 Lá",threeCard:"3 Lá",
+    focusTitle:"Bạn muốn hỏi về điều gì?",focusSub:"Chọn một chủ đề hoặc Tổng Quát.",love:"Tình Yêu",money:"Tiền Bạc",career:"Sự Nghiệp",general:"Tổng Quát",
+    questionLabel:"Câu hỏi tùy chọn",questionPlaceholder:"Tôi nên hiểu điều gì ngay lúc này?",draw:"Xáo Bài & Rút Bài ✨",
+    shuffleTitle:"Genie đang xáo bài…",shuffleStart:"Hãy tập trung vào câu hỏi của bạn.",resultLabel:"BÀI TAROT CỦA BẠN",
+    summaryTitle:"🧞 Góc Nhìn Của Genie",askTitle:"🧞 Hỏi Genie Về Bài Tarot Này",askSub:"Chọn một câu hỏi tiếp theo.",
+    qMeaning:"✨ Điều gì quan trọng nhất?",qAction:"🧭 Tôi nên tập trung vào điều gì?",genieSays:"Genie nói",retry:"🔄 Rút Lại",share:"📤 Chia Sẻ Kết Quả",
+    aiReading:"✨ Diễn giải AI bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",aiThinking:"🧞 ChatGPT đang diễn giải các lá bài…",fineprint:"Chỉ dành cho giải trí và tự suy ngẫm. Tarot không thể dự đoán tương lai một cách khoa học.",
+    home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi"
+  }
+};
+
+let currentLang=localStorage.getItem('askgenieLang');
+if(!currentLang) currentLang=navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en';
+
+function applyLanguage(lang){
+  document.documentElement.lang=lang==='vi'?'vi':'en';
+  localStorage.setItem('askgenieLang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;if(translations[lang][k]) el.textContent=translations[lang][k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const k=el.dataset.i18nPlaceholder;if(translations[lang][k]) el.placeholder=translations[lang][k];
+  });
+  document.getElementById('langToggle').textContent=lang==='vi'?'EN':'VI';
+  if(document.getElementById('results').classList.contains('show')) renderLocalReading();
+}
+applyLanguage(currentLang);
+document.getElementById('langToggle').onclick=()=>{currentLang=currentLang==='en'?'vi':'en';applyLanguage(currentLang)};
+
+let spread='',focus='';
+document.querySelectorAll('[data-spread]').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('[data-spread]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');spread=btn.dataset.spread;
+  };
+});
+document.querySelectorAll('[data-focus]').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('[data-focus]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');focus=btn.dataset.focus;
+  };
+});
+
+const cards=[
+  {
+    id:'sun',icon:'☀️',en:'The Sun',vi:'Mặt Trời',
+    keywords:{en:['clarity','confidence','joy'],vi:['rõ ràng','tự tin','niềm vui']},
+    meanings:{
+      General:{en:'A clearer, lighter phase may be emerging. Notice where things feel simpler, more honest or easier to understand.',vi:'Một giai đoạn rõ ràng và nhẹ nhàng hơn có thể đang mở ra. Hãy chú ý nơi mọi việc trở nên đơn giản, chân thật hoặc dễ hiểu hơn.'},
+      Love:{en:'Warmth, openness and honest affection are emphasized. The healthiest signal is feeling seen without needing to perform.',vi:'Sự ấm áp, cởi mở và tình cảm chân thành được nhấn mạnh. Tín hiệu tốt nhất là cảm giác được nhìn thấy mà không cần phải cố thể hiện.'},
+      Money:{en:'Clarity helps money decisions. Favor what you fully understand over something exciting but vague.',vi:'Sự rõ ràng giúp ích cho quyết định tiền bạc. Ưu tiên điều bạn thật sự hiểu hơn là điều hấp dẫn nhưng mơ hồ.'},
+      Career:{en:'Visibility is a theme. Good work may be easier for others to notice, especially when you communicate your value clearly.',vi:'Khả năng được nhìn thấy là chủ đề chính. Công việc tốt của bạn dễ được chú ý hơn khi bạn truyền đạt rõ giá trị của mình.'}
+    }
+  },
+  {
+    id:'moon',icon:'🌙',en:'The Moon',vi:'Mặt Trăng',
+    keywords:{en:['intuition','uncertainty','hidden feelings'],vi:['trực giác','mơ hồ','cảm xúc ẩn']},
+    meanings:{
+      General:{en:'Not everything is fully visible yet. Give yourself permission to wait for more information before forcing certainty.',vi:'Chưa phải mọi thứ đều rõ ràng. Hãy cho bản thân thời gian để có thêm thông tin trước khi cố ép một kết luận.'},
+      Love:{en:'Feelings may be real but mixed. Pay attention to consistency, not only chemistry or imagination.',vi:'Cảm xúc có thể thật nhưng còn lẫn lộn. Hãy chú ý sự nhất quán chứ không chỉ sức hút hoặc tưởng tượng.'},
+      Money:{en:'Avoid making money decisions from incomplete information. Verify details before committing.',vi:'Tránh đưa ra quyết định tiền bạc khi thông tin còn thiếu. Hãy kiểm tra kỹ trước khi cam kết.'},
+      Career:{en:'There may be uncertainty around direction or expectations. Ask clearer questions before assuming what others want.',vi:'Có thể tồn tại sự mơ hồ về hướng đi hoặc kỳ vọng. Hãy hỏi rõ hơn trước khi đoán người khác muốn gì.'}
+    }
+  },
+  {
+    id:'star',icon:'⭐',en:'The Star',vi:'Ngôi Sao',
+    keywords:{en:['hope','renewal','direction'],vi:['hy vọng','hồi phục','định hướng']},
+    meanings:{
+      General:{en:'A calmer sense of direction can return after confusion or fatigue. Small signs of progress matter.',vi:'Cảm giác định hướng bình tĩnh hơn có thể quay lại sau giai đoạn mơ hồ hoặc mệt mỏi. Những dấu hiệu tiến bộ nhỏ cũng đáng chú ý.'},
+      Love:{en:'Hope is present, but it works best with honesty and patience rather than idealizing someone.',vi:'Hy vọng đang hiện diện, nhưng tốt nhất khi đi cùng sự chân thành và kiên nhẫn thay vì lý tưởng hóa một người.'},
+      Money:{en:'Improvement may come through steady recovery and better habits rather than one dramatic win.',vi:'Sự cải thiện có thể đến qua việc phục hồi đều đặn và thói quen tốt hơn thay vì một chiến thắng lớn duy nhất.'},
+      Career:{en:'A longer-term goal may feel worth returning to. Reconnect with the part of the work that actually inspires you.',vi:'Một mục tiêu dài hạn có thể đáng để quay lại. Hãy kết nối lại với phần công việc thật sự truyền cảm hứng cho bạn.'}
+    }
+  },
+  {
+    id:'magician',icon:'🪄',en:'The Magician',vi:'Nhà Ảo Thuật',
+    keywords:{en:['initiative','skill','resourcefulness'],vi:['chủ động','kỹ năng','biết tận dụng nguồn lực']},
+    meanings:{
+      General:{en:'You may already have more tools than you realize. The message is to use what is available before waiting for perfect conditions.',vi:'Bạn có thể đã có nhiều công cụ hơn mình nghĩ. Thông điệp là hãy tận dụng điều đang có trước khi chờ điều kiện hoàn hảo.'},
+      Love:{en:'Direct communication matters. If you want the connection to move, clarity beats hinting.',vi:'Giao tiếp trực tiếp rất quan trọng. Nếu muốn mối quan hệ tiến triển, sự rõ ràng hiệu quả hơn những tín hiệu mơ hồ.'},
+      Money:{en:'Skills and resourcefulness are your strongest assets. Look for ways to turn what you know into practical value.',vi:'Kỹ năng và khả năng tận dụng nguồn lực là tài sản mạnh nhất. Hãy tìm cách biến điều bạn biết thành giá trị thực tế.'},
+      Career:{en:'This favors action, initiative and building something from your existing strengths.',vi:'Lá bài này thiên về hành động, chủ động và xây dựng điều gì đó từ thế mạnh bạn đã có.'}
+    }
+  },
+  {
+    id:'lovers',icon:'❤️',en:'The Lovers',vi:'Những Người Yêu Nhau',
+    keywords:{en:['choice','alignment','connection'],vi:['lựa chọn','đồng điệu','kết nối']},
+    meanings:{
+      General:{en:'A meaningful choice may require you to decide what truly aligns with your values.',vi:'Một lựa chọn có ý nghĩa có thể buộc bạn phải quyết định điều gì thật sự phù hợp với giá trị của mình.'},
+      Love:{en:'Connection is strong, but this card is also about choice. Mutuality and shared values matter more than intensity alone.',vi:'Kết nối có thể mạnh, nhưng lá bài này cũng nói về lựa chọn. Sự tương hỗ và giá trị chung quan trọng hơn cường độ cảm xúc đơn thuần.'},
+      Money:{en:'A financial choice may involve tradeoffs. Pick the option that best matches your real priorities.',vi:'Một quyết định tài chính có thể đi kèm đánh đổi. Hãy chọn phương án phù hợp nhất với ưu tiên thực sự của bạn.'},
+      Career:{en:'A career decision may ask whether the opportunity fits who you want to become, not only what it pays.',vi:'Một quyết định nghề nghiệp có thể buộc bạn cân nhắc liệu cơ hội đó có phù hợp với người bạn muốn trở thành, chứ không chỉ mức thu nhập.'}
+    }
+  },
+  {
+    id:'wheel',icon:'🎡',en:'Wheel of Fortune',vi:'Bánh Xe Số Phận',
+    keywords:{en:['change','timing','cycles'],vi:['thay đổi','thời điểm','chu kỳ']},
+    meanings:{
+      General:{en:'Circumstances may be shifting. Stay adaptable and notice which changes are outside your control versus where you still have choices.',vi:'Hoàn cảnh có thể đang thay đổi. Hãy linh hoạt và phân biệt điều gì nằm ngoài tầm kiểm soát với nơi bạn vẫn còn lựa chọn.'},
+      Love:{en:'The dynamic may be changing. Do not assume the relationship must stay in the same pattern forever.',vi:'Động lực của mối quan hệ có thể đang thay đổi. Đừng cho rằng mọi thứ phải mãi theo một khuôn cũ.'},
+      Money:{en:'Timing may matter, but avoid relying on luck alone. Prepare so you can use opportunities when they appear.',vi:'Thời điểm có thể quan trọng, nhưng đừng chỉ dựa vào may mắn. Hãy chuẩn bị để tận dụng cơ hội khi nó xuất hiện.'},
+      Career:{en:'A change in circumstances could open or close a path. Flexibility may matter more than sticking to the original plan.',vi:'Một thay đổi hoàn cảnh có thể mở hoặc đóng một hướng đi. Sự linh hoạt có thể quan trọng hơn việc bám chặt kế hoạch ban đầu.'}
+    }
+  },
+  {
+    id:'hermit',icon:'🏮',en:'The Hermit',vi:'Ẩn Sĩ',
+    keywords:{en:['reflection','solitude','inner guidance'],vi:['suy ngẫm','khoảng lặng','định hướng bên trong']},
+    meanings:{
+      General:{en:'You may benefit from stepping away from noise long enough to hear your own judgment.',vi:'Bạn có thể cần tạm rời xa tiếng ồn để nghe rõ phán đoán của chính mình.'},
+      Love:{en:'Space can be useful if it helps you understand what you actually want instead of reacting emotionally.',vi:'Khoảng cách có thể hữu ích nếu nó giúp bạn hiểu điều mình thật sự muốn thay vì phản ứng theo cảm xúc.'},
+      Money:{en:'Slow down and review. Quiet analysis may reveal something that rushed decisions miss.',vi:'Hãy chậm lại và xem xét. Phân tích kỹ có thể giúp bạn thấy điều mà quyết định vội vàng bỏ sót.'},
+      Career:{en:'A period of focused learning or independent work may be more useful than chasing visibility.',vi:'Một giai đoạn học tập tập trung hoặc làm việc độc lập có thể hữu ích hơn việc cố tìm sự chú ý.'}
+    }
+  },
+  {
+    id:'strength',icon:'🦁',en:'Strength',vi:'Sức Mạnh',
+    keywords:{en:['courage','patience','self-control'],vi:['can đảm','kiên nhẫn','tự chủ']},
+    meanings:{
+      General:{en:'Calm persistence may be more powerful than force. You do not need to push every situation aggressively.',vi:'Sự kiên trì bình tĩnh có thể mạnh hơn ép buộc. Bạn không cần phải thúc đẩy mọi tình huống quá mạnh.'},
+      Love:{en:'Patience and emotional maturity matter. Soft strength may create more trust than pressure.',vi:'Kiên nhẫn và trưởng thành cảm xúc rất quan trọng. Sự vững vàng nhẹ nhàng có thể tạo niềm tin hơn áp lực.'},
+      Money:{en:'Discipline is the advantage. Consistency may matter more than trying to make one big move.',vi:'Kỷ luật là lợi thế. Sự đều đặn có thể quan trọng hơn việc cố tạo một bước đi thật lớn.'},
+      Career:{en:'Confidence with restraint is highlighted. Lead without needing to dominate.',vi:'Sự tự tin đi cùng tiết chế được nhấn mạnh. Hãy dẫn dắt mà không cần áp đảo.'}
+    }
+  }
+];
+
+let drawn=[];
+
+function seededRandom(seed){
+  let x=Math.sin(seed)*10000;
+  return x-Math.floor(x);
+}
+function makeSeed(){
+  const q=document.getElementById('question').value.trim();
+  const raw=(q+'|'+spread+'|'+focus+'|'+new Date().toISOString().slice(0,10));
+  let h=0;for(let i=0;i<raw.length;i++)h=(h*31+raw.charCodeAt(i))>>>0;
+  return h||12345;
+}
+function drawCards(){
+  const count=spread==='three'?3:1;
+  const seed=makeSeed();
+  const pool=[...cards];
+  drawn=[];
+  for(let i=0;i<count;i++){
+    const idx=Math.floor(seededRandom(seed+i*97)*pool.length);
+    drawn.push(pool.splice(idx,1)[0]);
+  }
+}
+
+function positionLabel(i){
+  if(spread==='one') return currentLang==='vi'?'Thông Điệp Chính':'Main Message';
+  const en=['Past / What shaped this','Present / What matters now','Next Step / What to carry forward'];
+  const vi=['Quá Khứ / Điều đã định hình','Hiện Tại / Điều quan trọng lúc này','Bước Tiếp / Điều nên mang theo'];
+  return (currentLang==='vi'?vi:en)[i];
+}
+
+function renderLocalReading(){
+  const vi=currentLang==='vi',fc=focus||'General';
+  document.getElementById('readingTitle').textContent=vi
+    ? (spread==='three'?'BA LÁ BÀI CỦA BẠN':'THÔNG ĐIỆP DÀNH CHO BẠN')
+    : (spread==='three'?'YOUR THREE-CARD READING':'A MESSAGE FOR YOU');
+  const focusLabels=vi?{Love:'Tình Yêu',Money:'Tiền Bạc',Career:'Sự Nghiệp',General:'Tổng Quát'}:{Love:'Love',Money:'Money',Career:'Career',General:'General'};
+  document.getElementById('readingSub').textContent=focusLabels[fc];
+
+  const wrap=document.getElementById('cardsWrap');
+  wrap.innerHTML='';
+  drawn.forEach((c,i)=>{
+    const name=vi?c.vi:c.en;
+    const meaning=c.meanings[fc][vi?'vi':'en'];
+    const kw=c.keywords[vi?'vi':'en'].join(' • ');
+    const el=document.createElement('div');
+    el.className='tarot-card';
+    el.innerHTML=`
+      <div class="tarot-art"><div><div class="icon">${c.icon}</div><small>${name}</small></div></div>
+      <div class="tarot-copy">
+        <div class="position">${positionLabel(i)}</div>
+        <h3>${name}</h3>
+        <p>${meaning}</p>
+        <div class="chips">${c.keywords[vi?'vi':'en'].map(k=>`<span class="chip">${k}</span>`).join('')}</div>
+      </div>`;
+    wrap.appendChild(el);
+  });
+
+  const names=drawn.map(c=>vi?c.vi:c.en).join(', ');
+  const summary=vi
+    ? (spread==='one'
+      ? `Lá ${names} nhấn mạnh một chủ đề đơn giản: đừng cố ép câu trả lời nhanh hơn mức bạn thật sự hiểu. Hãy dùng lá bài như một góc nhìn để xem điều gì trong tình huống hiện tại cần sự chú ý của bạn.`
+      : `Ba lá ${names} tạo thành một câu chuyện từ điều đã ảnh hưởng đến bạn, điều đang quan trọng lúc này, và bước tiếp theo đáng cân nhắc. Hãy tìm điểm lặp lại giữa các lá thay vì xem mỗi lá như một dự đoán riêng biệt.`)
+    : (spread==='one'
+      ? `${names} highlights one simple theme: do not force an answer faster than you can genuinely understand it. Use the card as a lens for what deserves your attention now.`
+      : `The three cards — ${names} — form a story about what shaped the situation, what matters now, and what may be useful to carry forward. Look for the repeating theme rather than treating each card as a separate prediction.`);
+  document.getElementById('summaryText').textContent=summary;
+
+  const allKw=[...new Set(drawn.flatMap(c=>c.keywords[vi?'vi':'en']))].slice(0,4);
+  document.getElementById('summaryChips').innerHTML=allKw.map(k=>`<span class="chip">✨ ${k}</span>`).join('');
+}
+
+
+function aiPositionLabel(i){
+  if(spread==='one') return currentLang==='vi'?'Thông Điệp Chính':'Main Message';
+  const en=['Past / What shaped this','Present / What matters now','Next Step / What to carry forward'];
+  const vi=['Quá Khứ / Điều đã định hình','Hiện Tại / Điều quan trọng lúc này','Bước Tiếp / Điều nên mang theo'];
+  return (currentLang==='vi'?vi:en)[i];
+}
+
+function renderAIReading(ai){
+  const vi=currentLang==='vi',fc=focus||'General';
+  document.getElementById('readingTitle').textContent=ai.title || (vi?'BÀI TAROT CỦA BẠN':'YOUR TAROT READING');
+  document.getElementById('readingSub').textContent=ai.subtitle || fc;
+  document.getElementById('aiStatus').textContent=translations[currentLang].aiReading;
+
+  const wrap=document.getElementById('cardsWrap');
+  wrap.innerHTML='';
+
+  drawn.forEach((c,i)=>{
+    const name=vi?c.vi:c.en;
+    const aiCard=(ai.card_readings||[])[i] || {};
+    const el=document.createElement('div');
+    el.className='tarot-card';
+    el.innerHTML=`
+      <div class="tarot-art"><div><div class="icon">${c.icon}</div><small>${name}</small></div></div>
+      <div class="tarot-copy">
+        <div class="position">${aiCard.position || aiPositionLabel(i)}</div>
+        <h3>${name}</h3>
+        <p>${aiCard.interpretation || ''}</p>
+      </div>`;
+    wrap.appendChild(el);
+  });
+
+  document.getElementById('summaryText').textContent=ai.reflection || '';
+  document.getElementById('summaryChips').innerHTML=(ai.keywords||[])
+    .slice(0,5).map(k=>`<span class="chip">✨ ${k}</span>`).join('');
+
+  const followups=(ai.followups||[]).slice(0,2);
+  if(followups[0]) document.getElementById('qMeaning').textContent=followups[0];
+  if(followups[1]) document.getElementById('qAction').textContent=followups[1];
+}
+
+async function getAIReading(extraQuestion=''){
+  if(!window.AskGenieAI || typeof window.AskGenieAI.tarot!=='function'){
+    throw new Error('AskGenieAI client not loaded');
+  }
+
+  const baseQuestion=document.getElementById('question').value.trim();
+  const payload={
+    spread,
+    focus,
+    question: baseQuestion,
+    cards: drawn.map((c,i)=>({
+      card:c.en,
+      display_name: currentLang==='vi'?c.vi:c.en,
+      position:aiPositionLabel(i)
+    }))
+  };
+
+  if(extraQuestion) payload.followup_question=extraQuestion;
+
+  return await window.AskGenieAI.tarot(payload,{language:currentLang});
+}
+
+async function buildReading(){
+  showAIWait(document.getElementById('aiStatus'));
+  try{
+    const ai=await getAIReading();
+    renderAIReading(ai);
+    return true;
+  }catch(err){
+    console.warn('AskGenie AI failed, using local fallback:',err);
+    renderLocalReading();
+    document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+    return false;
+  }
+}
+
+document.getElementById('drawBtn').onclick=()=>{
+  if(!spread){alert(currentLang==='vi'?'Hãy chọn kiểu trải bài.':'Choose a tarot spread first.');return}
+  if(!focus){alert(currentLang==='vi'?'Hãy chọn chủ đề bạn muốn hỏi.':'Choose a focus first.');return}
+  document.getElementById('setupPanel').classList.add('hidden');
+  document.getElementById('shuffleView').classList.add('show');
+  document.getElementById('shuffleView').scrollIntoView({behavior:'smooth',block:'center'});
+
+  const msgs=currentLang==='vi'
+    ? ['Hãy tập trung vào câu hỏi của bạn…','Đang xáo bài…','Đang chọn lá phù hợp…','ChatGPT đang diễn giải bài…']
+    : ['Focus on your question…','Shuffling the deck…','Choosing the cards…','ChatGPT is interpreting your reading…'];
+  msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('shuffleText').textContent=m,500+i*500));
+
+  setTimeout(async()=>{
+    drawCards();
+    document.getElementById('shuffleView').classList.remove('show');
+    document.getElementById('results').classList.add('show');
+    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+    await buildReading();
+  },2600);
+};
+
+document.getElementById('retryBtn').onclick=()=>{
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('setupPanel').classList.remove('hidden');
+  document.getElementById('answerBox').classList.remove('show');
+  document.getElementById('aiStatus').textContent='';
+  document.getElementById('qMeaning').textContent=translations[currentLang].qMeaning;
+  document.getElementById('qAction').textContent=translations[currentLang].qAction;
+  drawn=[];
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+document.getElementById('qMeaning').onclick=async()=>{
+  const btn=document.getElementById('qMeaning');
+  const q=btn.textContent.trim();
+  showAIWait(document.getElementById('answerText'));
+  document.getElementById('answerBox').classList.add('show');
+  try{
+    const ai=await getAIReading(q);
+    revealAIText(document.getElementById('answerText'),ai.answer || ai.reflection || (ai.card_readings||[]).map(x=>x.interpretation).join(' '));
+  }catch(err){
+    document.getElementById('answerText').textContent=currentLang==='vi'
+      ? 'Điều quan trọng nhất là chủ đề lặp lại giữa các lá. Hãy chú ý phần nào trong bài đọc khiến bạn phản ứng mạnh nhất.'
+      : 'What matters most is the theme that repeats across the cards. Notice which part of the reading creates the strongest reaction.';
+  }
+};
+document.getElementById('qAction').onclick=async()=>{
+  const btn=document.getElementById('qAction');
+  const q=btn.textContent.trim();
+  showAIWait(document.getElementById('answerText'));
+  document.getElementById('answerBox').classList.add('show');
+  try{
+    const ai=await getAIReading(q);
+    revealAIText(document.getElementById('answerText'),ai.answer || ai.reflection || (ai.card_readings||[]).map(x=>x.interpretation).join(' '));
+  }catch(err){
+    document.getElementById('answerText').textContent=currentLang==='vi'
+      ? 'Hãy chọn một việc cụ thể bạn có thể làm rõ, kiểm tra hoặc trao đổi thay vì cố dự đoán toàn bộ tương lai.'
+      : 'Choose one concrete thing you can clarify, verify or discuss instead of trying to predict the entire future.';
+  }
+};
+
+document.getElementById('shareBtn').onclick=async()=>{
+  const vi=currentLang==='vi';
+  const names=drawn.map(c=>vi?c.vi:c.en).join(', ');
+  const text=vi?`🃏 Bài Tarot AskGenie247 của tôi: ${names}`:`🃏 My AskGenie247 Tarot reading: ${names}`;
+  if(navigator.share){try{await navigator.share({title:'AskGenie247 Tarot',text,url:location.href})}catch(e){}}
+  else{try{await navigator.clipboard.writeText(text+' '+location.href);alert(vi?'Đã sao chép kết quả!':'Result copied!')}catch(e){}}
+};
+</script>
+</body>
+</html>

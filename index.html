@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080513" />
+  <title>AskGenie247 — Pick Your Mystery</title>
+  <style>
+    :root{
+      --bg:#080513;
+      --bg2:#12071d;
+      --gold:#ffd66b;
+      --violet:#a974ff;
+      --pink:#ff7ac8;
+      --text:#fff7ff;
+      --muted:#cbbfd6;
+      --line:#ffffff1f;
+      --shadow:0 14px 34px rgba(0,0,0,.34);
+    }
+
+
+    .brand-logo{
+      display:block;
+      width:34px;
+      height:34px;
+      object-fit:contain;
+      filter:drop-shadow(0 0 10px rgba(255,214,107,.24));
+    }
+    .hero-logo{
+      display:block;
+      width:112px;
+      height:112px;
+      object-fit:contain;
+      margin:0 auto 12px;
+      filter:
+        drop-shadow(0 0 18px rgba(255,214,107,.24))
+        drop-shadow(0 0 28px rgba(169,116,255,.20));
+      animation:logoFloat 3.8s ease-in-out infinite;
+    }
+    @keyframes logoFloat{
+      50%{transform:translateY(-5px) scale(1.018)}
+    }
+
+
+    .lang-toggle{
+      min-width:44px;height:40px;padding:0 10px;border-radius:14px;
+      border:1px solid var(--line);background:#ffffff0b;color:white;
+      font-size:11px;font-weight:850;letter-spacing:.4px;
+      display:grid;place-items:center;backdrop-filter:blur(12px);
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;min-height:100%;
+      background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif
+    }
+    body{overflow-x:hidden}
+
+    .app{
+      min-height:100dvh;
+      position:relative;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(132,73,255,.28), transparent 28%),
+        radial-gradient(circle at 15% 34%, rgba(255,122,200,.09), transparent 25%),
+        linear-gradient(180deg,#090512 0%,#11071c 48%,#080513 100%);
+      padding:env(safe-area-inset-top) 0 calc(84px + env(safe-area-inset-bottom));
+      overflow:hidden;
+    }
+
+    .stars,.stars:before,.stars:after{
+      position:fixed;inset:0;pointer-events:none;content:"";
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.85) 1px,transparent 1.2px),
+        radial-gradient(circle,rgba(255,214,107,.65) 1px,transparent 1.2px);
+      background-size:40px 40px,66px 66px;
+      background-position:0 0,15px 21px;
+      opacity:.18;
+      animation:drift 20s linear infinite;
+    }
+    .stars:before{opacity:.10;animation-duration:30s}
+    .stars:after{opacity:.07;animation-duration:38s}
+    @keyframes drift{to{transform:translateY(42px)}}
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 18px 4px;position:relative;z-index:3;
+    }
+    .brand{
+      display:flex;align-items:center;gap:9px;font-weight:850;
+      font-size:18px;letter-spacing:.2px;
+    }
+    .lamp{
+      font-size:27px;
+      filter:drop-shadow(0 0 10px rgba(255,214,107,.5));
+      animation:lampFloat 3.5s ease-in-out infinite;
+    }
+    @keyframes lampFloat{50%{transform:translateY(-3px) rotate(-3deg)}}
+    .mini-btn{
+      width:40px;height:40px;border:1px solid var(--line);border-radius:14px;
+      display:grid;place-items:center;background:#ffffff0d;color:white;
+      backdrop-filter:blur(14px);font-size:18px;
+    }
+
+    .hero{
+      position:relative;z-index:2;text-align:center;padding:18px 18px 8px;
+    }
+    .hero-orb{
+      width:78px;height:78px;border-radius:50%;margin:0 auto 12px;
+      display:grid;place-items:center;font-size:38px;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.72), transparent 12%),
+        radial-gradient(circle, rgba(170,119,255,.85) 0%, rgba(80,34,128,.72) 48%, rgba(16,7,30,.95) 74%);
+      box-shadow:
+        0 0 24px rgba(169,116,255,.38),
+        0 0 52px rgba(169,116,255,.14),
+        inset 0 0 18px rgba(255,255,255,.10);
+      animation:float 3.8s ease-in-out infinite;
+    }
+    @keyframes float{50%{transform:translateY(-5px) scale(1.02)}}
+    h1{
+      font-size:28px;line-height:1.08;margin:0 0 7px;font-weight:900;
+    }
+    .gradient-text{
+      background:linear-gradient(90deg,var(--gold),#ffe9aa 42%,#ffb6de 72%,#b88cff);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero p{
+      margin:0 auto;color:var(--muted);
+      font-size:14px;line-height:1.45;max-width:330px;
+    }
+
+    .section-title{
+      padding:18px 18px 11px;position:relative;z-index:2;
+    }
+    .section-title h2{font-size:20px;margin:0 0 3px}
+    .section-title p{margin:0;font-size:12px;color:var(--muted)}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      padding:0 14px;
+      position:relative;z-index:2;
+    }
+
+    .mystery-card{
+      min-height:168px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg,rgba(35,20,52,.90),rgba(18,11,29,.95));
+      box-shadow:var(--shadow);
+      padding:15px 12px 14px;
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .mystery-card:active{
+      transform:scale(.97);
+      border-color:rgba(255,214,107,.35);
+      box-shadow:0 8px 22px rgba(0,0,0,.3),0 0 24px rgba(169,116,255,.12);
+    }
+    .mystery-card:before{
+      content:"";position:absolute;inset:-35%;z-index:-2;
+      background:radial-gradient(circle at 50% 30%, rgba(169,116,255,.24), transparent 28%);
+    }
+    .mystery-card:after{
+      content:"";position:absolute;inset:0;z-index:-1;
+      background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 35%,rgba(255,214,107,.035));
+    }
+
+    .badge{
+      position:absolute;top:9px;right:9px;
+      font-size:9px;font-weight:800;letter-spacing:.4px;
+      padding:5px 7px;border-radius:999px;
+      background:#ffffff0d;border:1px solid var(--line);color:#f8ebff;
+    }
+
+    .card-emoji{
+      font-size:50px;line-height:1;margin:5px 0 10px;
+      filter:drop-shadow(0 0 14px rgba(255,255,255,.15));
+      animation:emojiFloat 3.1s ease-in-out infinite;
+    }
+    .mystery-card:nth-child(2) .card-emoji{animation-delay:.25s}
+    .mystery-card:nth-child(3) .card-emoji{animation-delay:.5s}
+    .mystery-card:nth-child(4) .card-emoji{animation-delay:.75s}
+    .mystery-card:nth-child(5) .card-emoji{animation-delay:1s}
+    .mystery-card:nth-child(6) .card-emoji{animation-delay:1.25s}
+    .mystery-card:nth-child(7) .card-emoji{animation-delay:1.5s}
+    .mystery-card:nth-child(8) .card-emoji{animation-delay:1.75s}
+    @keyframes emojiFloat{50%{transform:translateY(-5px) rotate(2deg)}}
+
+    .mystery-card h3{
+      margin:0;
+      font-size:16px;
+      line-height:1.12;
+      font-weight:850;
+    }
+    .mystery-card .micro{
+      margin-top:5px;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+
+    .daily{
+      margin:16px 14px 0;
+      padding:16px;
+      border-radius:22px;
+      position:relative;z-index:2;
+      background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+    }
+    .daily-top{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .daily h3{margin:0;font-size:17px}
+    .fortune{
+      font-size:14px;line-height:1.4;color:#f8efff;margin:11px 0 12px;
+    }
+    .chips{
+      display:flex;gap:7px;overflow:auto;scrollbar-width:none;
+    }
+    .chips::-webkit-scrollbar{display:none}
+    .chip{
+      flex:0 0 auto;
+      font-size:11px;
+      padding:7px 9px;
+      border-radius:999px;
+      background:#ffffff0d;
+      border:1px solid var(--line);
+      color:var(--muted);
+    }
+    .chip b{color:white}
+
+    .surprise{
+      margin:12px 14px 0;
+      width:calc(100% - 28px);
+      height:56px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      color:white;
+      font-weight:850;
+      font-size:16px;
+      background:linear-gradient(90deg,rgba(169,116,255,.28),rgba(255,122,200,.20));
+      position:relative;z-index:2;
+      box-shadow:0 12px 24px rgba(0,0,0,.22);
+    }
+
+    .bottom-nav{
+      position:fixed;
+      left:10px;right:10px;
+      bottom:calc(8px + env(safe-area-inset-bottom));
+      height:62px;
+      border-radius:21px;
+      background:rgba(14,9,22,.84);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(20px);
+      z-index:20;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
+    }
+    .nav-item{
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:3px;
+      font-size:10px;color:#bfb4c8;
+    }
+    .nav-item .ni{font-size:19px}
+    .nav-item.active{color:var(--gold)}
+
+    /* Curtain transition */
+    .curtain-layer{
+      position:fixed;inset:0;z-index:100;
+      pointer-events:none;visibility:hidden;
+    }
+    .curtain-layer.active{visibility:visible}
+    .curtain{
+      position:absolute;top:0;width:51%;height:100%;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.24),transparent 10%,rgba(255,255,255,.05) 18%,transparent 31%,rgba(0,0,0,.24) 45%,rgba(255,255,255,.05) 58%,transparent 72%,rgba(0,0,0,.28)),
+        linear-gradient(180deg,#5b0c25,#8f173b 50%,#4b071c);
+      box-shadow:inset 0 0 30px rgba(0,0,0,.35);
+      transition:transform .72s cubic-bezier(.77,0,.18,1);
+    }
+    .curtain.left{left:0;transform:translateX(-101%)}
+    .curtain.right{right:0;transform:translateX(101%)}
+    .curtain-layer.closing .left,
+    .curtain-layer.closing .right{transform:translateX(0)}
+
+    .curtain-center{
+      position:absolute;inset:0;
+      display:grid;place-items:center;
+      text-align:center;
+      opacity:0;
+      transition:.2s .3s;
+      color:#fff;
+      pointer-events:none;
+    }
+    .curtain-layer.closing .curtain-center{opacity:1}
+
+    .cinema-flash{
+      position:absolute;inset:0;
+      background:radial-gradient(circle at center,rgba(255,235,170,.95) 0%,rgba(255,214,107,.42) 10%,rgba(255,255,255,0) 34%);
+      opacity:0;transform:scale(.2);
+      pointer-events:none;
+    }
+    .curtain-layer.handoff .cinema-flash{
+      animation:cinemaFlash .70s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+    @keyframes cinemaFlash{
+      0%{opacity:0;transform:scale(.18)}
+      35%{opacity:.72;transform:scale(.72)}
+      70%{opacity:.38;transform:scale(1.10)}
+      100%{opacity:0;transform:scale(1.55)}
+    }
+
+    .iris-dot{
+      position:absolute;
+      left:50%;top:50%;
+      width:18px;height:18px;
+      border-radius:50%;
+      transform:translate(-50%,-50%) scale(.05);
+      background:#050208;
+      box-shadow:
+        0 0 0 1px rgba(255,214,107,.95),
+        0 0 20px rgba(255,214,107,.42);
+      opacity:0;
+      will-change:transform,opacity;
+    }
+    .curtain-layer.handoff .iris-dot{
+      animation:irisPulse .82s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes irisPulse{
+      0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.05)
+      }
+      18%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(.22)
+      }
+      55%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(.72)
+      }
+      100%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.32)
+      }
+    }
+
+    .curtain-layer.handoff .curtain-center{
+      animation:titleSoften .45s ease forwards;
+    }
+    @keyframes titleSoften{
+      to{opacity:0;transform:scale(.98)}
+    }
+    .curtain-title{
+      font-size:24px;font-weight:900;
+      text-shadow:0 2px 12px rgba(0,0,0,.5)
+    }
+    .curtain-sub{
+      font-size:12px;color:#f6dbe4;margin-top:7px;
+    }
+
+    .spark{
+      position:absolute;
+      width:7px;height:7px;border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 14px var(--gold);
+      animation:sparkle 1.2s infinite ease-in-out;
+    }
+    @keyframes sparkle{50%{transform:scale(.3);opacity:.25}}
+
+    @media (min-width:700px){
+      .app:after{
+        content:"AskGenie247 is designed for mobile";
+        position:fixed;inset:0;
+        display:grid;place-items:center;
+        background:#080513;color:white;
+        z-index:9999;font-weight:700;font-size:18px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*:before,*:after{
+        animation:none!important;
+        transition:none!important;
+      }
+    }
+  
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+    .card-genie-mark{
+      width:58px;
+      height:58px;
+      object-fit:contain;
+      display:block;
+      margin:5px 0 10px;
+      filter:
+        drop-shadow(0 0 10px rgba(255,214,107,.24))
+        drop-shadow(0 0 16px rgba(169,116,255,.22));
+      animation:emojiFloat 3.1s ease-in-out infinite;
+    }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="stars"></div>
+
+    <header>
+      <div class="brand"><img class="brand-logo" src="images/genie-mark.png" alt="AskGenie247"><span>AskGenie247</span></div>
+      <button class="lang-toggle" id="langToggle" aria-label="Change language">VI</button>
+    </header>
+
+    <section class="hero">
+      <img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie">
+      <h1><span class="gradient-text" data-i18n="heroTitle">What are you curious about?</span></h1>
+      <p data-i18n="heroSub">Pick a mystery. Have some fun.</p>
+    </section>
+
+    <div class="section-title">
+      <h2 data-i18n="chooseTitle">✨ Choose Your Mystery</h2>
+      <p data-i18n="chooseSub">Tap any card to begin</p>
+    </div>
+
+    <main class="grid">
+      <article class="mystery-card" data-title="Palm Reading" data-page="palm-reading-v2.html">
+        <span class="badge">NEW</span>
+        <div class="card-emoji">✋</div>
+        <h3 data-i18n="palmTitle">Palm Reading</h3>
+        <div class="micro" data-i18n="palmMicro">Read My Palm</div>
+      </article>
+
+      <article class="mystery-card" data-title="Friend or Lover?" data-page="friend_or_lover_compatibility.html">
+        <span class="badge">POPULAR</span>
+        <div class="card-emoji">💞</div>
+        <h3 data-i18n="friendTitle">Friend or Lover?</h3>
+        <div class="micro" data-i18n="friendMicro">Check Our Vibe</div>
+      </article>
+
+      <article class="mystery-card" data-title="Future Predictor" data-page="future-predictor.html">
+        <div class="card-emoji">🔮</div>
+        <h3 data-i18n="futureTitle">Future</h3>
+        <div class="micro" data-i18n="futureMicro">Peek Ahead</div>
+      </article>
+
+      <article class="mystery-card" data-title="Tarot" data-page="tarot.html">
+        <div class="card-emoji">🃏</div>
+        <h3 data-i18n="tarotTitle">Tarot</h3>
+        <div class="micro" data-i18n="tarotMicro">Pick a Card</div>
+      </article>
+
+      <article class="mystery-card" data-title="Lucky Today" data-page="lucky-today.html">
+        <span class="badge">DAILY</span>
+        <div class="card-emoji">🍀</div>
+        <h3 data-i18n="luckyTitle">Lucky Today</h3>
+        <div class="micro" data-i18n="luckyMicro">My Luck Today</div>
+      </article>
+
+      <article class="mystery-card" data-title="Dream Decoder" data-page="dream-decoder.html">
+        <div class="card-emoji">🌙</div>
+        <h3 data-i18n="dreamTitle">Dream Decoder</h3>
+        <div class="micro" data-i18n="dreamMicro">Decode My Dream</div>
+      </article>
+
+      <article class="mystery-card" data-title="Ask the Genie" data-page="ask-the-genie.html">
+        <img class="card-genie-mark" src="images/genie-mark.png" alt="Ask Genie">
+        <h3 data-i18n="askTitle">Ask Genie</h3>
+        <div class="micro" data-i18n="askMicro">Ask Anything</div>
+      </article>
+
+      <article class="mystery-card" data-title="Love Compatibility" data-page="love-compatibility.html">
+        <div class="card-emoji">❤️</div>
+        <h3 data-i18n="compatTitle">Compatibility</h3>
+        <div class="micro" data-i18n="compatMicro">Are We a Match?</div>
+      </article>
+    </main>
+
+    <section class="daily">
+      <div class="daily-top">
+        <h3 data-i18n="todayTitle">🔮 Today’s Genie</h3>
+        <span style="color:var(--gold)">✦</span>
+      </div>
+      <div class="fortune" data-i18n="todayFortune">“A small surprise may lead to a bigger idea today.”</div>
+      <div class="chips">
+        <div class="chip">Lucky # <b>8</b></div>
+        <div class="chip">Color <b>Emerald</b></div>
+        <div class="chip">Energy <b>★★★★☆</b></div>
+      </div>
+    </section>
+
+    <button class="surprise" id="surprise" data-i18n="surpriseMe">🎲 Surprise Me</button>
+
+    <nav class="bottom-nav">
+      <div class="nav-item active"><div class="ni">🏠</div><div data-i18n="home">Home</div></div>
+      <div class="nav-item"><div class="ni">✨</div><div data-i18n="explore">Explore</div></div>
+      <div class="nav-item"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><div data-i18n="genie">Genie</div></div>
+      <div class="nav-item"><div class="ni">❤️</div><div data-i18n="me">Me</div></div>
+    </nav>
+  </div>
+
+  <div class="curtain-layer" id="curtain">
+    <div class="curtain left"></div>
+    <div class="curtain right"></div>
+    <div class="spark" style="left:22%;top:30%"></div>
+    <div class="spark" style="left:74%;top:22%;animation-delay:.35s"></div>
+    <div class="spark" style="left:66%;top:67%;animation-delay:.7s"></div>
+    <div class="cinema-flash"></div>
+    <div class="iris-dot"></div>
+    <div class="curtain-center">
+      <div>
+        <div class="curtain-title" id="curtainTitle">Opening...</div>
+        <div class="curtain-sub">The mystery begins ✨</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    const translations = {
+      en:{
+        heroTitle:"What are you curious about?", heroSub:"Pick a mystery. Have some fun.",
+        chooseTitle:"✨ Choose Your Mystery", chooseSub:"Tap any card to begin",
+        palmTitle:"Palm Reading", palmMicro:"Read My Palm",
+        friendTitle:"Friend or Lover?", friendMicro:"Check Our Vibe",
+        futureTitle:"Future", futureMicro:"Peek Ahead",
+        tarotTitle:"Tarot", tarotMicro:"Pick a Card",
+        luckyTitle:"Lucky Today", luckyMicro:"My Luck Today",
+        dreamTitle:"Dream Decoder", dreamMicro:"Decode My Dream",
+        askTitle:"Ask Genie", askMicro:"Ask Anything",
+        compatTitle:"Compatibility", compatMicro:"Are We a Match?",
+        todayTitle:"🔮 Today’s Genie", todayFortune:"“A small surprise may lead to a bigger idea today.”",
+        surpriseMe:"🎲 Surprise Me", home:"Home", explore:"Explore", genie:"Genie", me:"Me"
+      },
+      vi:{
+        heroTitle:"Hôm nay bạn tò mò điều gì?", heroSub:"Chọn một điều bí ẩn. Cùng vui một chút nhé.",
+        chooseTitle:"✨ Chọn Điều Bí Ẩn", chooseSub:"Chạm vào thẻ để bắt đầu",
+        palmTitle:"Xem Chỉ Tay", palmMicro:"Xem Bàn Tay Của Tôi",
+        friendTitle:"Bạn Hay Người Yêu?", friendMicro:"Xem Mức Độ Hợp Nhau",
+        futureTitle:"Tương Lai", futureMicro:"Nhìn Trước Một Chút",
+        tarotTitle:"Tarot", tarotMicro:"Rút Một Lá Bài",
+        luckyTitle:"May Mắn Hôm Nay", luckyMicro:"Xem Vận May",
+        dreamTitle:"Giải Mã Giấc Mơ", dreamMicro:"Giải Mã Giấc Mơ",
+        askTitle:"Hỏi Genie", askMicro:"Hỏi Bất Cứ Điều Gì",
+        compatTitle:"Độ Tương Hợp", compatMicro:"Chúng Ta Có Hợp Không?",
+        todayTitle:"🔮 Genie Hôm Nay", todayFortune:"“Một bất ngờ nhỏ hôm nay có thể dẫn đến một ý tưởng lớn hơn.”",
+        surpriseMe:"🎲 Làm Tôi Bất Ngờ", home:"Trang Chủ", explore:"Khám Phá", genie:"Genie", me:"Tôi"
+      }
+    };
+
+    function applyLanguage(lang){
+      document.documentElement.lang = lang === 'vi' ? 'vi' : 'en';
+      localStorage.setItem('askgenieLang', lang);
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key=el.dataset.i18n;
+        if(translations[lang][key]) el.textContent=translations[lang][key];
+      });
+      const btn=document.getElementById('langToggle');
+      if(btn) btn.textContent = lang === 'vi' ? 'EN' : 'VI';
+    }
+
+    let currentLang = localStorage.getItem('askgenieLang');
+    if(!currentLang){
+      currentLang = navigator.language && navigator.language.toLowerCase().startsWith('vi') ? 'vi' : 'en';
+    }
+    applyLanguage(currentLang);
+
+    document.getElementById('langToggle')?.addEventListener('click',()=>{
+      currentLang = currentLang === 'en' ? 'vi' : 'en';
+      applyLanguage(currentLang);
+    });
+
+    const allCards = [...document.querySelectorAll('.mystery-card')];
+    const curtain = document.getElementById('curtain');
+    const curtainTitle = document.getElementById('curtainTitle');
+
+    function openMystery(card){
+      const title = card.dataset.title || 'Opening';
+      const page = card.dataset.page || '#';
+
+      curtainTitle.textContent = title;
+      curtain.classList.add('active');
+      requestAnimationFrame(()=>curtain.classList.add('closing'));
+
+      setTimeout(()=>{
+        curtain.classList.add('handoff');
+        sessionStorage.setItem('askgenieCinematicEntry','1');
+      }, 760);
+
+      setTimeout(()=>{
+        if(page && page !== '#'){
+          window.location.href = page;
+        } else {
+          curtain.classList.remove('handoff','closing');
+          setTimeout(()=>curtain.classList.remove('active'),650);
+        }
+      }, 1450);
+    }
+
+    allCards.forEach(card=>{
+      card.addEventListener('click',()=>openMystery(card));
+    });
+
+    document.getElementById('surprise').addEventListener('click', ()=>{
+      const card = allCards[Math.floor(Math.random()*allCards.length)];
+      openMystery(card);
+    });
+  </script>
+</body>
+</html>

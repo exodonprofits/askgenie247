@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080513" />
+  <title>AskGenie247 — Future Predictor</title>
+  <style>
+    :root{
+      --bg:#080513;
+      --gold:#ffd66b;
+      --violet:#a974ff;
+      --pink:#ff7ac8;
+      --emerald:#55e6b8;
+      --text:#fff8ff;
+      --muted:#c9bfd2;
+      --line:rgba(255,255,255,.10);
+      --shadow:0 18px 50px rgba(0,0,0,.38);
+    }
+
+
+    .lang-toggle{
+      min-width:44px;height:40px;padding:0 10px;border-radius:14px;
+      border:1px solid var(--line);background:#ffffff0b;color:white;
+      font-size:11px;font-weight:850;letter-spacing:.4px;
+      display:grid;place-items:center;backdrop-filter:blur(12px);
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;min-height:100%;
+      background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+    }
+    body{overflow-x:hidden}
+
+    .app{
+      min-height:100dvh;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),
+        radial-gradient(circle at 14% 36%,rgba(255,122,200,.08),transparent 24%),
+        linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);
+      padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom));
+    }
+
+    .stars,.stars:before,.stars:after{
+      position:fixed;inset:0;content:"";pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.2px),
+        radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);
+      background-size:42px 42px,70px 70px;
+      background-position:0 0,17px 22px;
+      opacity:.14;
+      animation:drift 22s linear infinite;
+    }
+    .stars:before{opacity:.08;animation-duration:32s}
+    .stars:after{opacity:.05;animation-duration:40s}
+    @keyframes drift{to{transform:translateY(40px)}}
+
+    header{
+      position:relative;z-index:4;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 16px 8px;
+    }
+    .back,.magic{
+      width:42px;height:42px;border-radius:14px;border:1px solid var(--line);
+      background:#ffffff0b;color:white;
+      display:grid;place-items:center;
+      backdrop-filter:blur(12px);
+    }
+    .back{font-size:22px;text-decoration:none}
+    .magic{color:var(--gold);font-size:18px}
+    .brand{font-weight:850;font-size:16px}
+
+    main{position:relative;z-index:2;padding:0 14px 24px}
+
+    .hero{text-align:center;padding:10px 12px 14px}
+    .hero-logo{
+      width:104px;height:104px;object-fit:contain;
+      display:block;margin:0 auto 10px;
+      filter:drop-shadow(0 0 18px rgba(255,214,107,.22)) drop-shadow(0 0 28px rgba(169,116,255,.18));
+      animation:float 3.6s ease-in-out infinite;
+    }
+    @keyframes float{50%{transform:translateY(-5px)}}
+    h1{font-size:28px;line-height:1.08;margin:0 0 7px;font-weight:900}
+    .gradient{
+      background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero p{margin:0;color:var(--muted);font-size:14px}
+
+    .panel{
+      background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin-top:12px;
+      backdrop-filter:blur(16px);
+    }
+    .step-title{font-size:18px;font-weight:850;margin:0 0 4px}
+    .step-sub{color:var(--muted);font-size:12px;margin:0 0 14px}
+
+    .time-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .choice{
+      min-height:82px;border-radius:18px;border:1px solid var(--line);
+      background:#ffffff08;color:white;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:6px;font-weight:800;font-size:13px;
+    }
+    .choice span:first-child{font-size:26px}
+    .choice.active{
+      border-color:rgba(255,214,107,.55);
+      background:linear-gradient(180deg,rgba(255,214,107,.14),rgba(255,255,255,.04));
+      box-shadow:0 0 22px rgba(255,214,107,.10);
+    }
+
+    .field{margin-top:12px}
+    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    .field input{
+      width:100%;height:48px;border-radius:15px;border:1px solid var(--line);
+      background:#ffffff08;color:white;padding:0 46px 0 13px;font-size:14px;outline:none;
+      color-scheme:dark;
+    }
+    .date-wrap{position:relative}
+    .calendar-btn{
+      position:absolute;right:6px;top:50%;transform:translateY(-50%);
+      width:36px;height:36px;border:0;border-radius:11px;
+      background:#ffffff0d;color:#fff;font-size:18px;
+      display:grid;place-items:center;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .calendar-btn:active{transform:translateY(-50%) scale(.95)}
+    input[type="date"]::-webkit-calendar-picker-indicator{
+      opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer;
+    }
+
+    .focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .focus{
+      min-height:68px;border-radius:16px;border:1px solid var(--line);
+      background:#ffffff08;color:white;font-weight:800;font-size:12px;
+      display:flex;align-items:center;justify-content:center;gap:7px;
+    }
+    .focus.active{
+      border-color:rgba(169,116,255,.55);
+      background:rgba(169,116,255,.12);
+      box-shadow:0 0 18px rgba(169,116,255,.10);
+    }
+
+    .btn{
+      border:0;border-radius:16px;min-height:50px;padding:12px 14px;
+      font-weight:850;font-size:14px;
+    }
+    .btn.primary{
+      width:100%;
+      background:linear-gradient(90deg,#f0c554,#ffdc7c);
+      color:#1d1500;
+      box-shadow:0 10px 26px rgba(255,214,107,.14);
+    }
+    .btn.secondary{
+      background:#ffffff0b;color:white;border:1px solid var(--line)
+    }
+
+    .crystal-stage{display:none}
+    .crystal-stage.show{display:block}
+    .ball-wrap{
+      position:relative;width:220px;height:220px;margin:8px auto 6px;
+      display:grid;place-items:center;
+    }
+    .ball{
+      width:190px;height:190px;border-radius:50%;
+      position:relative;overflow:hidden;
+      background:
+        radial-gradient(circle at 35% 26%,rgba(255,255,255,.70),transparent 11%),
+        radial-gradient(circle at 50% 45%,rgba(185,143,255,.75),rgba(82,36,127,.9) 46%,rgba(15,6,27,.98) 74%);
+      box-shadow:
+        0 0 32px rgba(169,116,255,.45),
+        0 0 70px rgba(169,116,255,.20),
+        inset 0 0 24px rgba(255,255,255,.12);
+    }
+    .mist{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 30% 55%,rgba(255,255,255,.22),transparent 25%),
+        radial-gradient(circle at 66% 40%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 50% 68%,rgba(255,214,107,.10),transparent 30%);
+      animation:mist 2.6s ease-in-out infinite alternate;
+      filter:blur(6px);
+    }
+    @keyframes mist{
+      from{transform:translate(-10px,5px) scale(1)}
+      to{transform:translate(12px,-8px) scale(1.08)}
+    }
+    .portal{
+      position:absolute;left:50%;top:50%;
+      width:28px;height:28px;border-radius:50%;
+      transform:translate(-50%,-50%) scale(.2);
+      border:2px solid rgba(255,214,107,.9);
+      box-shadow:0 0 22px rgba(255,214,107,.7),inset 0 0 16px rgba(255,214,107,.35);
+      animation:portal 3.2s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes portal{
+      0%{transform:translate(-50%,-50%) scale(.2);opacity:0}
+      20%{opacity:1}
+      70%{transform:translate(-50%,-50%) scale(3.3);opacity:1}
+      100%{transform:translate(-50%,-50%) scale(5.8);opacity:0}
+    }
+    .scan-text{text-align:center}
+    .scan-text h3{margin:0 0 6px;font-size:19px}
+    .scan-text p{margin:0;color:var(--muted);font-size:12px}
+
+    .results{display:none}
+    .results.show{display:block}
+    .reveal{
+      text-align:center;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,214,107,.15),transparent 26%),
+        linear-gradient(180deg,rgba(38,20,55,.94),rgba(18,10,27,.96));
+      border:1px solid rgba(255,214,107,.20);
+      border-radius:28px;
+      padding:22px 16px;
+      box-shadow:var(--shadow);
+    }
+    .eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:850}
+    .theme-icon{font-size:52px;margin:10px 0 4px}
+    .theme-title{font-size:30px;font-weight:950;margin:0}
+    .traits{color:var(--muted);font-size:13px;margin-top:6px}
+    .summary{font-size:14px;line-height:1.5;color:#fbf4ff;margin:14px auto 0;max-width:320px}
+
+    .result-grid{display:grid;gap:10px;margin-top:12px}
+    .result-card{
+      border-radius:20px;padding:15px;
+      background:#ffffff08;border:1px solid var(--line);
+    }
+    .result-card h3{margin:0 0 6px;font-size:15px}
+    .result-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .result-card.primary-focus{
+      border-color:rgba(255,214,107,.34);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(255,214,107,.08),transparent 32%),
+        linear-gradient(180deg,rgba(169,116,255,.12),rgba(255,255,255,.05));
+      padding:18px;
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+    }
+    .result-card.primary-focus h3{font-size:18px}
+    .result-card.primary-focus p{font-size:14px;line-height:1.55;color:#f1e8f7}
+    .result-card.focus-hidden{display:none}
+    .reading-context{
+      display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:10px
+    }
+    .context-pill{
+      border-radius:999px;padding:7px 10px;font-size:10px;font-weight:800;
+      background:#ffffff0a;border:1px solid var(--line);color:#eee3f7
+    }
+
+    .signal-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .chip{
+      border-radius:999px;padding:7px 9px;font-size:11px;
+      background:#ffffff0a;border:1px solid var(--line);color:#eee3f7
+    }
+
+    .ask-box{
+      margin-top:12px;padding:16px;border-radius:22px;
+      background:linear-gradient(180deg,rgba(169,116,255,.13),rgba(255,255,255,.04));
+      border:1px solid rgba(169,116,255,.22)
+    }
+    .ask-box h3{margin:0 0 7px;font-size:17px}
+    .ask-box p{margin:0 0 12px;color:var(--muted);font-size:12px}
+    .quick-qs{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+    .quick{
+      min-width:0;border:1px solid var(--line);background:#ffffff09;color:white;
+      padding:9px 10px;border-radius:999px;font-size:11px;white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis;
+    }
+    .quick.more{width:42px;padding:9px 0;text-align:center;font-size:16px}
+    .more-questions{display:none;margin-top:9px;gap:8px;grid-template-columns:1fr 1fr}
+    .more-questions.show{display:grid}
+    .ask-own-row{margin-top:9px;display:grid;grid-template-columns:1fr auto;gap:8px}
+    .ask-own-row input{
+      min-width:0;height:40px;border-radius:13px;border:1px solid var(--line);
+      background:#ffffff08;color:white;padding:0 11px;font-size:11px;outline:none;
+    }
+    .ask-own-row button{
+      height:40px;min-width:42px;border-radius:13px;border:0;
+      background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900;
+    }
+
+    .genie-chat{
+      margin-top:12px;border-radius:22px;
+      background:linear-gradient(180deg,rgba(22,13,34,.96),rgba(13,8,21,.98));
+      border:1px solid rgba(169,116,255,.22);overflow:hidden;
+    }
+    .chat-head{
+      display:flex;align-items:center;gap:10px;padding:13px 14px;
+      border-bottom:1px solid var(--line);background:rgba(169,116,255,.08);
+    }
+    .chat-head img{width:34px;height:34px;object-fit:contain}
+    .chat-head strong{font-size:14px}
+    .chat-head small{display:block;margin-top:2px;font-size:10px;color:var(--muted)}
+    .chat-body{max-height:320px;overflow:auto;padding:12px;display:grid;gap:9px}
+    .msg{
+      max-width:88%;padding:10px 12px;border-radius:16px;
+      font-size:12px;line-height:1.45;white-space:pre-wrap;
+    }
+    .msg.user{
+      justify-self:end;background:linear-gradient(90deg,#f0c554,#ffdc7c);
+      color:#1d1500;border-bottom-right-radius:6px;font-weight:700;
+    }
+    .msg.genie{
+      justify-self:start;background:#ffffff0a;border:1px solid var(--line);
+      color:#f7effd;border-bottom-left-radius:6px;
+    }
+    .chat-input{
+      padding:10px;border-top:1px solid var(--line);
+      display:grid;grid-template-columns:1fr auto;gap:8px;
+    }
+    .chat-input input{
+      min-width:0;height:44px;border-radius:14px;border:1px solid var(--line);
+      background:#ffffff08;color:white;padding:0 12px;outline:none;font-size:12px;
+    }
+    .chat-send{
+      width:44px;height:44px;border-radius:14px;border:0;
+      background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900;font-size:17px;
+    }
+
+    .bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}
+
+    .bottom-nav{
+      position:fixed;left:10px;right:10px;
+      bottom:calc(8px + env(safe-area-inset-bottom));
+      height:62px;border-radius:21px;
+      background:rgba(14,9,22,.88);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(20px);
+      z-index:80;
+      display:grid;grid-template-columns:repeat(4,1fr);
+      box-shadow:0 18px 50px rgba(0,0,0,.48);
+    }
+    .nav-item{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:3px;color:#bfb4c8;text-decoration:none;font-size:10px;font-weight:700;
+    }
+    .nav-item .ni{font-size:19px}
+    .nav-item.active{color:var(--gold)}
+
+    .hidden{display:none!important}
+
+    @media (min-width:700px){
+      .app:after{
+        content:"AskGenie247 Future Predictor is designed for mobile";
+        position:fixed;inset:0;z-index:9999;background:#080513;color:white;
+        display:grid;place-items:center;font-size:18px;font-weight:800;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*:before,*:after{animation:none!important;transition:none!important}
+    }
+  
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+/* AskGenie AI wait animation — future-predictor.html */
+.ai-magic-wait{
+  --ai-c1:#a974ff;--ai-c2:#55e6b8;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:34px;max-width:100%;vertical-align:middle
+}
+.ai-magic-wheel{
+  width:34px;height:34px;flex:0 0 34px;position:relative;display:grid;place-items:center
+}
+.ai-magic-wheel:before{
+  content:"";position:absolute;inset:1px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--ai-c1);border-right-color:var(--ai-c2);
+  box-shadow:0 0 9px rgba(255,214,107,.24);
+  animation:aiMagicSpin 1.5s linear infinite
+}
+.ai-magic-wheel:after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.19);
+  animation:aiMagicSpinReverse 2.9s linear infinite
+}
+.ai-magic-core{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  font-size:12px;line-height:1;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.65),transparent 18%),
+             radial-gradient(circle,var(--ai-c1),rgba(31,14,46,.96) 72%);
+  box-shadow:0 0 12px rgba(169,116,255,.38);
+  animation:aiMagicPulse 1.15s ease-in-out infinite
+}
+.ai-magic-orbit{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ai-c2);
+  top:-1px;left:14px;box-shadow:0 0 8px var(--ai-c2);z-index:3;
+  transform-origin:3px 18px;animation:aiMagicOrbit 2.9s linear infinite
+}
+.ai-wait-copy{
+  color:#efe5f7;font-size:10px;font-weight:800;line-height:1.35;
+  animation:aiMagicGlow 1s ease-in-out infinite alternate;text-align:left
+}
+@keyframes aiMagicSpin{to{transform:rotate(360deg)}}
+@keyframes aiMagicSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes aiMagicOrbit{to{transform:rotate(360deg)}}
+@keyframes aiMagicPulse{50%{transform:scale(1.12);filter:brightness(1.18)}}
+@keyframes aiMagicGlow{from{opacity:.62}to{opacity:1}}
+.ai-answer-reveal{animation:aiAnswerReveal .48s cubic-bezier(.16,1,.3,1)}
+@keyframes aiAnswerReveal{
+  from{opacity:.2;transform:translateY(5px);filter:blur(3px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="stars"></div>
+
+    <header>
+      <a class="back" href="index.html" aria-label="Back">‹</a>
+      <div class="brand" data-i18n="pageTitle">🔮 Future Predictor</div>
+      <button class="lang-toggle" id="langToggle" aria-label="Change language">VI</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie">
+        <h1><span class="gradient" data-i18n="heroTitle">What might be ahead?</span></h1>
+        <p data-i18n="heroSub">Pick a timeframe and let Genie create your future vibe.</p>
+      </section>
+
+      <section class="panel" id="setupPanel">
+        <h2 class="step-title" data-i18n="timeTitle">Choose a timeframe</h2>
+        <p class="step-sub" data-i18n="timeSub">Start with the future you’re most curious about.</p>
+
+        <div class="time-grid">
+          <button class="choice" data-time="7 Days"><span>⚡</span><span data-i18n="d7">7 Days</span></button>
+          <button class="choice" data-time="30 Days"><span>🌙</span><span data-i18n="d30">30 Days</span></button>
+          <button class="choice" data-time="12 Months"><span>✨</span><span data-i18n="m12">12 Months</span></button>
+          <button class="choice" data-time="Next Year"><span>🔮</span><span data-i18n="nextYear">Next Year</span></button>
+        </div>
+
+        <div class="field">
+          <label for="birthday" data-i18n="birthday">Birthday</label>
+          <div class="date-wrap">
+            <input id="birthday" type="date" autocomplete="bday" />
+            <button class="calendar-btn" id="birthdayPickerBtn" type="button" aria-label="Open calendar">📅</button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px">
+          <h3 class="step-title" style="font-size:16px" data-i18n="focusTitle">What are you focused on?</h3>
+          <p class="step-sub" data-i18n="focusSub">Pick one. Genie will shape the reading around it.</p>
+          <div class="focus-grid">
+            <button class="focus" data-focus="Love">❤️ <span data-i18n="love">Love</span></button>
+            <button class="focus" data-focus="Money">💰 <span data-i18n="money">Money</span></button>
+            <button class="focus" data-focus="Career">💼 <span data-i18n="career">Career</span></button>
+            <button class="focus" data-focus="General">✨ <span data-i18n="general">General</span></button>
+          </div>
+        </div>
+
+        <button class="btn primary" id="predictBtn" style="margin-top:16px" data-i18n="reveal">Reveal My Future ✨</button>
+      </section>
+
+      <section class="panel crystal-stage" id="crystalStage">
+        <div class="ball-wrap">
+          <div class="ball">
+            <div class="mist"></div>
+            <div class="portal"></div>
+          </div>
+        </div>
+        <div class="scan-text">
+          <h3 data-i18n="scanHeading">🔮 Genie is looking ahead…</h3>
+          <p id="scanText" data-i18n="scanStart">Gathering your signals.</p>
+        </div>
+      </section>
+
+      <section class="results" id="results">
+        <div class="reveal">
+          <div class="eyebrow" data-i18n="futureThemeLabel">YOUR FUTURE THEME</div>
+          <div class="theme-icon">🚪</div>
+          <h2 class="theme-title">OPENING DOORS</h2>
+          <div class="traits">Opportunity • Decision • Change</div>
+          <div id="aiStatus" style="margin-top:8px;font-size:10px;color:var(--gold);font-weight:800"></div>
+          <p class="summary" id="summaryText">Your next phase carries a strong theme of new possibilities, but choosing where to focus may matter more than chasing every option.</p><div class="reading-context" id="readingContext"><span class="context-pill" id="contextTime">30 Days</span><span class="context-pill" id="contextFocus">General</span></div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-card" id="cardLove">
+            <h3 data-i18n="resultLove">❤️ Love</h3>
+            <p id="loveText">A conversation or new understanding may shift the emotional tone around you.</p>
+          </div>
+          <div class="result-card" id="cardMoney">
+            <h3 data-i18n="resultMoney">💰 Money</h3>
+            <p id="moneyText">The strongest money theme is building steadily rather than relying on sudden luck.</p>
+          </div>
+          <div class="result-card" id="cardCareer">
+            <h3 data-i18n="resultCareer">💼 Career</h3>
+            <p id="careerText">A new responsibility, project or decision may open a path you had not fully considered.</p>
+          </div>
+          <div class="result-card" id="cardLuck">
+            <h3 data-i18n="resultLuck">🍀 Luck</h3>
+            <p id="luckText">Luck looks strongest when you act on useful opportunities instead of waiting for perfect timing.</p>
+          </div>
+          <div class="result-card" id="cardChange">
+            <h3 data-i18n="resultChange">✨ Life Change</h3>
+            <p id="changeText">Your future vibe leans toward movement, adjustment and a stronger sense of direction.</p>
+          </div>
+          <div class="result-card" id="cardSurprise">
+            <h3 data-i18n="resultSurprise">🎁 Surprise Ahead</h3>
+            <p id="surpriseText">An unexpected conversation may lead to something useful.</p>
+          </div>
+          <div class="result-card" id="cardWatch">
+            <h3 data-i18n="resultWatch">⚠️ Watch For</h3>
+            <p id="watchText">Too many options at once. Focus may be more valuable than speed.</p>
+            <div class="signal-row">
+              <span class="chip" data-i18n="chipOpportunity">✨ Opportunity</span>
+              <span class="chip" data-i18n="chipChoice">🧭 Choice</span>
+              <span class="chip" data-i18n="chipGrowth">🌱 Growth</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ask-box">
+          <h3 data-i18n="askFuture">🧞 Ask Genie About My Future</h3>
+          <p data-i18n="askFutureSub">Pick a common question or ask your own.</p>
+          <div class="quick-qs">
+            <button class="quick" data-q="money" data-i18n="qMoney">💰 What about money?</button>
+            <button class="quick" data-q="love" data-i18n="qLove">❤️ What about love?</button>
+            <button class="quick more" id="moreQuestionsBtn">•••</button>
+          </div>
+          <div class="more-questions" id="moreQuestions">
+            <button class="quick" data-q="career" data-i18n="qCareer">💼 Career?</button>
+            <button class="quick" data-q="timing" data-i18n="qTiming">⏳ Timing?</button>
+            <button class="quick" data-q="watch" data-i18n="qWatch">⚠️ What should I watch?</button>
+            <button class="quick" data-q="surprise" data-i18n="qSurprise">🎁 What might surprise me?</button>
+          </div>
+          <div class="ask-own-row">
+            <input id="askOwnInput" type="text" placeholder="Ask your own question…" data-i18n-placeholder="askOwnPlaceholder">
+            <button id="askOwnBtn">➤</button>
+          </div>
+        </div>
+
+        <div class="genie-chat" id="genieChat">
+          <div class="chat-head">
+            <img src="images/genie-mark.png" alt="AskGenie247">
+            <div>
+              <strong data-i18n="askGenieTitle">Ask Genie</strong>
+              <small data-i18n="readingFromResult">Reading from your future result</small>
+            </div>
+          </div>
+          <div class="chat-body" id="chatBody">
+            <div class="msg genie" id="welcomeMsg" data-i18n="welcomeMsg">I’ve got your future reading. Ask me about love, money, career, timing, or anything else you’re curious about. ✨</div>
+          </div>
+          <div class="chat-input">
+            <input id="chatInput" type="text" placeholder="Ask about your future…" data-i18n-placeholder="chatPlaceholder" autocomplete="off">
+            <button class="chat-send" id="chatSend">➤</button>
+          </div>
+        </div>
+
+        <div class="bottom-actions">
+          <button class="btn secondary" id="retryBtn" data-i18n="retry">🔄 Try Another Time</button>
+          <button class="btn primary" id="shareBtn" data-i18n="share">📤 Share Result</button>
+        </div>
+
+        <p class="fineprint" data-i18n="fineprint">For fun, entertainment and self-reflection only. This is not a scientific prediction of future events.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <a class="nav-item" href="index.html"><span class="ni">🏠</span><span data-i18n="home">Home</span></a>
+      <a class="nav-item active" href="index.html#explore"><span class="ni">✨</span><span data-i18n="explore">Explore</span></a>
+      <a class="nav-item" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><span data-i18n="genie">Genie</span></a>
+      <a class="nav-item" href="my-genie.html"><span class="ni">❤️</span><span data-i18n="me">Me</span></a>
+    </nav>
+  </div>
+
+  <script src="js/askgenie-ai.js"></script>
+  <script>
+
+function aiWaitMarkup(){
+  const vi=document.documentElement.lang==='vi';
+  return `<span class="ai-magic-wait"><span class="ai-magic-wheel"><span class="ai-magic-orbit"></span><span class="ai-magic-core">🔮</span></span><span class="ai-wait-copy">${vi?"Đang nhìn qua màn pha lê…":"Peeking through the crystal veil…"}</span></span>`;
+}
+function showAIWait(el){
+  if(!el)return;
+  el.classList.remove('ai-answer-reveal');
+  el.innerHTML=aiWaitMarkup();
+}
+function revealAIText(el,text){
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.remove('ai-answer-reveal');
+  void el.offsetWidth;
+  el.classList.add('ai-answer-reveal');
+}
+
+
+
+    const translations = {
+      en:{
+        pageTitle:"🔮 Future Predictor", heroTitle:"What might be ahead?", heroSub:"Pick a timeframe and let Genie create your future vibe.",
+        timeTitle:"Choose a timeframe", timeSub:"Start with the future you’re most curious about.",
+        birthday:"Birthday", focusTitle:"What are you focused on?", focusSub:"Pick one. Genie will shape the reading around it.",
+        d7:"7 Days", d30:"30 Days", m12:"12 Months", nextYear:"Next Year",
+        love:"Love", money:"Money", career:"Career", general:"General", reveal:"Reveal My Future ✨",
+        scanHeading:"🔮 Genie is looking ahead…", scanStart:"Gathering your signals.",
+        futureThemeLabel:"YOUR FUTURE THEME",
+        resultLove:"❤️ Love", resultMoney:"💰 Money", resultCareer:"💼 Career", resultLuck:"🍀 Luck",
+        resultChange:"✨ Life Change", resultSurprise:"🎁 Surprise Ahead", resultWatch:"⚠️ Watch For",
+        chipOpportunity:"✨ Opportunity", chipChoice:"🧭 Choice", chipGrowth:"🌱 Growth",
+        askFuture:"🧞 Ask Genie About My Future", askFutureSub:"Pick a common question or ask your own.",
+        qMoney:"💰 What about money?", qLove:"❤️ What about love?", qCareer:"💼 Career?", qTiming:"⏳ Timing?",
+        qWatch:"⚠️ What should I watch?", qSurprise:"🎁 What might surprise me?",
+        askOwnPlaceholder:"Ask your own question…", askGenieTitle:"Ask Genie",
+        readingFromResult:"Reading from your future result",
+        welcomeMsg:"I’ve got your future reading. Ask me about love, money, career, timing, or anything else you’re curious about. ✨",
+        chatPlaceholder:"Ask about your future…", retry:"🔄 Try Another Time", share:"📤 Share Result",
+        aiThinking:"🧞 ChatGPT is creating your personalized reading…",aiReady:"✨ AI interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",fineprint:"For fun, entertainment and self-reflection only. This is not a scientific prediction of future events.",
+        home:"Home", explore:"Explore", genie:"Genie", me:"Me"
+      },
+      vi:{
+        pageTitle:"🔮 Dự Đoán Tương Lai", heroTitle:"Điều gì đang chờ bạn phía trước?", heroSub:"Chọn khoảng thời gian và để Genie tạo một bức tranh vui về tương lai.",
+        timeTitle:"Chọn khoảng thời gian", timeSub:"Bắt đầu với khoảng thời gian bạn tò mò nhất.",
+        birthday:"Ngày sinh", focusTitle:"Bạn đang quan tâm điều gì?", focusSub:"Chọn một mục. Genie sẽ điều chỉnh phần đọc theo điều đó.",
+        d7:"7 Ngày", d30:"30 Ngày", m12:"12 Tháng", nextYear:"Năm Sau",
+        love:"Tình Yêu", money:"Tiền Bạc", career:"Sự Nghiệp", general:"Tổng Quát", reveal:"Xem Tương Lai Của Tôi ✨",
+        scanHeading:"🔮 Genie đang nhìn về phía trước…", scanStart:"Đang kết nối các dấu hiệu.",
+        futureThemeLabel:"CHỦ ĐỀ TƯƠNG LAI CỦA BẠN",
+        resultLove:"❤️ Tình Yêu", resultMoney:"💰 Tiền Bạc", resultCareer:"💼 Sự Nghiệp", resultLuck:"🍀 May Mắn",
+        resultChange:"✨ Thay Đổi Cuộc Sống", resultSurprise:"🎁 Điều Bất Ngờ", resultWatch:"⚠️ Điều Cần Lưu Ý",
+        chipOpportunity:"✨ Cơ Hội", chipChoice:"🧭 Lựa Chọn", chipGrowth:"🌱 Phát Triển",
+        askFuture:"🧞 Hỏi Genie Về Tương Lai Của Tôi", askFutureSub:"Chọn câu hỏi phổ biến hoặc tự hỏi điều bạn muốn.",
+        qMoney:"💰 Tiền bạc thì sao?", qLove:"❤️ Tình yêu thì sao?", qCareer:"💼 Sự nghiệp?", qTiming:"⏳ Khi nào?",
+        qWatch:"⚠️ Tôi nên lưu ý điều gì?", qSurprise:"🎁 Điều gì có thể làm tôi bất ngờ?",
+        askOwnPlaceholder:"Tự đặt câu hỏi…", askGenieTitle:"Hỏi Genie",
+        readingFromResult:"Dựa trên kết quả tương lai của bạn",
+        welcomeMsg:"Genie đã có phần đọc tương lai của bạn. Hãy hỏi về tình yêu, tiền bạc, sự nghiệp, thời điểm hoặc bất cứ điều gì bạn tò mò. ✨",
+        chatPlaceholder:"Hỏi về tương lai của bạn…", retry:"🔄 Chọn Khoảng Thời Gian Khác", share:"📤 Chia Sẻ Kết Quả",
+        aiThinking:"🧞 ChatGPT đang tạo phần đọc cá nhân hóa cho bạn…",aiReady:"✨ Diễn giải AI bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",fineprint:"Chỉ dành cho mục đích giải trí và tự suy ngẫm. Đây không phải là dự đoán khoa học về các sự kiện trong tương lai.",
+        home:"Trang Chủ", explore:"Khám Phá", genie:"Genie", me:"Tôi"
+      }
+    };
+    function applyLanguage(lang){
+      document.documentElement.lang=lang==='vi'?'vi':'en';
+      localStorage.setItem('askgenieLang',lang);
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key=el.dataset.i18n;
+        if(translations[lang][key]) el.textContent=translations[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+        const key=el.dataset.i18nPlaceholder;
+        if(translations[lang][key]) el.placeholder=translations[lang][key];
+      });
+      const btn=document.getElementById('langToggle');
+      if(btn) btn.textContent=lang==='vi'?'EN':'VI';
+    }
+    let currentLang=localStorage.getItem('askgenieLang');
+    if(!currentLang) currentLang=navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en';
+    applyLanguage(currentLang);
+    document.getElementById('langToggle')?.addEventListener('click',()=>{
+      currentLang=currentLang==='en'?'vi':'en';
+      applyLanguage(currentLang);
+      if(document.getElementById('results')?.classList.contains('show')) makeLocalReading();
+    });
+
+    let timeframe = '';
+    let focus = '';
+    const setupPanel = document.getElementById('setupPanel');
+    const crystalStage = document.getElementById('crystalStage');
+    const results = document.getElementById('results');
+    const scanText = document.getElementById('scanText');
+
+    const birthdayInput = document.getElementById('birthday');
+    const birthdayPickerBtn = document.getElementById('birthdayPickerBtn');
+
+    function openBirthdayPicker(){
+      try{
+        if(typeof birthdayInput.showPicker === 'function'){
+          birthdayInput.showPicker();
+        }else{
+          birthdayInput.focus();
+          birthdayInput.click();
+        }
+      }catch(e){
+        birthdayInput.focus();
+        birthdayInput.click();
+      }
+    }
+
+    birthdayPickerBtn?.addEventListener('click',openBirthdayPicker);
+    birthdayInput?.addEventListener('click',()=>{
+      if(typeof birthdayInput.showPicker === 'function'){
+        try{ birthdayInput.showPicker(); }catch(e){}
+      }
+    });
+
+    document.querySelectorAll('[data-time]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-time]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        timeframe = btn.dataset.time;
+      });
+    });
+
+    document.querySelectorAll('[data-focus]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('[data-focus]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        focus = btn.dataset.focus;
+      });
+    });
+
+    function makeLocalReading(){
+      const tf = timeframe || '30 Days';
+      const fc = focus || 'General';
+      const isVi = currentLang === 'vi';
+
+      const profiles = {
+        en:{
+          '7 Days':{
+            icon:'⚡', baseTitle:'QUICK SHIFT', traits:'Momentum • Conversation • Small Opening',
+            summary:{
+              Love:'This week is more about a meaningful conversation or emotional clue than a major relationship turning point.',
+              Money:'This week favors small practical wins, useful information and quick decisions more than big financial changes.',
+              Career:'This week may bring a message, task or short-term opportunity that shows you where momentum is building.',
+              General:'The next 7 days look active but close-range: watch for a conversation, invitation or small opening that helps you choose your next move.'
+            },
+            love:'In the next 7 days, pay attention to tone and timing. A short conversation may tell you more than a dramatic gesture.',
+            money:'For the next 7 days, the strongest money signal is a small practical opportunity, expense decision or useful piece of information.',
+            career:'Over the next week, something work-related may move quickly: a request, idea, meeting or task could create momentum.',
+            luck:'This week, luck is strongest when you respond quickly to something useful instead of waiting for a perfect setup.',
+            change:'The 7-day theme is adjustment rather than reinvention. One small decision can improve the direction of the rest of the week.',
+            surprise:'A message, invitation or unexpected conversation may be the most noticeable surprise this week.',
+            watch:'Avoid overreacting to one moment. This timeframe is short, so small events can feel bigger than they really are.'
+          },
+          '30 Days':{
+            icon:'🌙', baseTitle:'BUILDING MOMENTUM', traits:'Progress • Clarity • Follow-through',
+            summary:{
+              Love:'Over the next month, emotional clarity grows through repeated conversations and seeing which connections stay consistent.',
+              Money:'The next month favors steady building, better use of resources and noticing which opportunities are actually repeatable.',
+              Career:'The next 30 days may bring a project, responsibility or decision that becomes more important as the month unfolds.',
+              General:'The next 30 days carry a theme of momentum. What starts small may become clearer if you keep following the strongest signal.'
+            },
+            love:'During the next 30 days, consistency matters. A relationship or connection may become clearer through repeated actions, not one dramatic moment.',
+            money:'Over the next month, money looks strongest through discipline, useful opportunities and avoiding scattered spending or too many experiments.',
+            career:'Over the next 30 days, a responsibility or project may grow into something more meaningful if you keep showing up for it.',
+            luck:'This month, luck improves when preparation meets timing. The more organized you are, the easier it is to notice good openings.',
+            change:'The 30-day theme is momentum. You may not see a complete transformation, but you can clearly feel which direction is gaining strength.',
+            surprise:'Something that looks minor at first may become useful later in the month.',
+            watch:'Watch for divided attention. A month is long enough to build momentum, but only if you do not keep restarting.'
+          },
+          '12 Months':{
+            icon:'✨', baseTitle:'A NEW CHAPTER', traits:'Growth • Reinvention • Long Game',
+            summary:{
+              Love:'Across the next 12 months, relationships may become more defined: stronger commitments, clearer boundaries or a shift in what you truly want.',
+              Money:'The next 12 months favor long-game thinking, building assets or skills, and making choices that compound rather than only paying off immediately.',
+              Career:'Over the next year, your career path may develop through a larger transition, leadership opportunity or a new direction that takes time to mature.',
+              General:'The next 12 months look less like one event and more like a chapter: growth, course-correction and a stronger sense of what deserves your energy.'
+            },
+            love:'Across 12 months, the love theme is definition. Connections may deepen, fade or change as you become clearer about what fits your life.',
+            money:'Across 12 months, the money theme is compounding: stronger habits, smarter allocation and opportunities that reward patience more than impulse.',
+            career:'Over 12 months, career energy points to a larger chapter rather than one task. A new role, business direction or skill may gradually reshape your path.',
+            luck:'Over a year, luck matters less as a single moment and more as repeated exposure to good opportunities.',
+            change:'The 12-month theme is meaningful evolution. You may look back and realize several small decisions created a much larger change.',
+            surprise:'A path you do not take seriously at first could become important later in the year.',
+            watch:'Do not judge a long-term path too early. Some of the best developments in a 12-month window need time before they make sense.'
+          },
+          'Next Year':{
+            icon:'🔮', baseTitle:'TURNING POINT', traits:'Direction • Expansion • Big Choice',
+            summary:{
+              Love:'Next year may bring a relationship turning point: a deeper commitment, a fresh start or a clearer decision about what belongs in your future.',
+              Money:'Next year carries a stronger expansion theme. A larger financial or business decision may matter more than short-term wins.',
+              Career:'Next year may ask for a bigger career choice: expand, lead, change direction or commit more seriously to one path.',
+              General:'Next year carries the widest lens: a turning point, a bigger choice and a stronger need to decide what kind of future you want to build.'
+            },
+            love:'Next year, love looks less about hints and more about decisions. A relationship may become more defined one way or another.',
+            money:'Next year, the money theme is expansion with selectivity. One larger opportunity may deserve more attention than many small ones.',
+            career:'Next year may bring a more visible career crossroads involving leadership, independence, expansion or a meaningful change of direction.',
+            luck:'Next year, luck is strongest when you are prepared for a larger opportunity instead of chasing every smaller one.',
+            change:'The next-year theme is a turning point. The most important change may come from choosing one direction and giving it enough energy to grow.',
+            surprise:'A larger opportunity may come from a person, place or idea you did not originally expect to matter.',
+            watch:'The biggest risk is saying yes to too much. Bigger opportunities require stronger filters.'
+          }
+        },
+        vi:{
+          '7 Days':{
+            icon:'⚡', baseTitle:'CHUYỂN BIẾN NHANH', traits:'Động Lực • Trò Chuyện • Cơ Hội Nhỏ',
+            summary:{
+              Love:'Tuần này thiên về một cuộc trò chuyện có ý nghĩa hoặc một tín hiệu cảm xúc nhỏ hơn là một bước ngoặt lớn trong tình cảm.',
+              Money:'Tuần này thuận lợi cho những kết quả nhỏ nhưng thực tế, thông tin hữu ích và quyết định nhanh hơn là thay đổi tài chính lớn.',
+              Career:'Tuần này có thể xuất hiện một tin nhắn, nhiệm vụ hoặc cơ hội ngắn hạn cho bạn thấy động lực đang hình thành ở đâu.',
+              General:'7 ngày tới khá năng động nhưng ở phạm vi gần: hãy chú ý một cuộc trò chuyện, lời mời hoặc cơ hội nhỏ giúp bạn chọn bước tiếp theo.'
+            },
+            love:'Trong 7 ngày tới, hãy chú ý cách người khác nói và thời điểm họ hành động. Một cuộc trò chuyện ngắn có thể cho bạn biết nhiều hơn một cử chỉ lớn.',
+            money:'Trong 7 ngày tới, tín hiệu tiền bạc mạnh nhất là một cơ hội thực tế nhỏ, một quyết định chi tiêu hoặc một thông tin hữu ích.',
+            career:'Trong tuần tới, công việc có thể chuyển động nhanh qua một yêu cầu, ý tưởng, cuộc họp hoặc nhiệm vụ mới.',
+            luck:'Tuần này, may mắn mạnh nhất khi bạn phản ứng nhanh với điều hữu ích thay vì chờ một thời điểm hoàn hảo.',
+            change:'Chủ đề 7 ngày là điều chỉnh chứ chưa phải thay đổi hoàn toàn. Một quyết định nhỏ có thể cải thiện hướng đi của cả tuần.',
+            surprise:'Một tin nhắn, lời mời hoặc cuộc trò chuyện bất ngờ có thể là điều đáng chú ý nhất trong tuần này.',
+            watch:'Đừng phản ứng quá mạnh với một khoảnh khắc đơn lẻ. Khoảng thời gian ngắn có thể khiến những việc nhỏ trông lớn hơn thực tế.'
+          },
+          '30 Days':{
+            icon:'🌙', baseTitle:'ĐANG TẠO ĐÀ', traits:'Tiến Triển • Rõ Ràng • Theo Đuổi Đến Cùng',
+            summary:{
+              Love:'Trong tháng tới, cảm xúc trở nên rõ ràng hơn qua những cuộc trò chuyện lặp lại và việc nhận ra mối quan hệ nào thực sự ổn định.',
+              Money:'30 ngày tới phù hợp với việc xây dựng đều đặn, sử dụng nguồn lực tốt hơn và nhận ra cơ hội nào có thể lặp lại bền vững.',
+              Career:'30 ngày tới có thể mang đến một dự án, trách nhiệm hoặc quyết định ngày càng quan trọng khi tháng trôi qua.',
+              General:'30 ngày tới mang chủ đề tạo đà. Điều bắt đầu nhỏ có thể trở nên rõ ràng hơn nếu bạn tiếp tục đi theo tín hiệu mạnh nhất.'
+            },
+            love:'Trong 30 ngày tới, sự nhất quán rất quan trọng. Một mối quan hệ có thể trở nên rõ ràng hơn qua hành động lặp lại chứ không phải một khoảnh khắc kịch tính.',
+            money:'Trong tháng tới, tiền bạc thuận lợi nhất khi bạn giữ kỷ luật, tận dụng cơ hội hữu ích và tránh chi tiêu phân tán hoặc thử quá nhiều thứ cùng lúc.',
+            career:'Trong 30 ngày tới, một trách nhiệm hoặc dự án có thể phát triển thành điều có ý nghĩa hơn nếu bạn tiếp tục theo đuổi.',
+            luck:'Tháng này, may mắn tăng lên khi sự chuẩn bị gặp đúng thời điểm. Càng có tổ chức, bạn càng dễ nhận ra cơ hội tốt.',
+            change:'Chủ đề 30 ngày là tạo đà. Có thể chưa phải thay đổi hoàn toàn, nhưng bạn sẽ cảm nhận rõ hướng nào đang mạnh lên.',
+            surprise:'Một điều ban đầu có vẻ nhỏ có thể trở nên hữu ích hơn vào cuối tháng.',
+            watch:'Hãy tránh phân tán sự chú ý. Một tháng đủ dài để tạo đà, nhưng chỉ khi bạn không liên tục bắt đầu lại.'
+          },
+          '12 Months':{
+            icon:'✨', baseTitle:'MỘT CHƯƠNG MỚI', traits:'Phát Triển • Đổi Mới • Đường Dài',
+            summary:{
+              Love:'Trong 12 tháng tới, các mối quan hệ có thể trở nên rõ ràng hơn: cam kết sâu hơn, ranh giới rõ hơn hoặc thay đổi trong điều bạn thực sự mong muốn.',
+              Money:'12 tháng tới phù hợp với tư duy dài hạn, xây dựng tài sản hoặc kỹ năng và lựa chọn những điều có thể tích lũy giá trị theo thời gian.',
+              Career:'Trong năm tới, con đường sự nghiệp có thể phát triển qua một bước chuyển lớn hơn, cơ hội lãnh đạo hoặc hướng đi mới cần thời gian để trưởng thành.',
+              General:'12 tháng tới giống một chương mới hơn là một sự kiện đơn lẻ: phát triển, điều chỉnh hướng đi và hiểu rõ hơn điều gì xứng đáng với năng lượng của bạn.'
+            },
+            love:'Trong 12 tháng, chủ đề tình cảm là sự xác định rõ ràng. Một số mối quan hệ có thể sâu hơn, nhạt dần hoặc thay đổi khi bạn hiểu mình phù hợp với điều gì.',
+            money:'Trong 12 tháng, chủ đề tiền bạc là tích lũy: thói quen tốt hơn, phân bổ thông minh hơn và cơ hội thưởng cho sự kiên nhẫn.',
+            career:'Trong 12 tháng, sự nghiệp nghiêng về một chương lớn hơn chứ không phải một nhiệm vụ riêng lẻ. Vai trò, hướng kinh doanh hoặc kỹ năng mới có thể dần định hình lại con đường của bạn.',
+            luck:'Trong một năm, may mắn ít nằm ở một khoảnh khắc đơn lẻ mà nhiều hơn ở việc bạn liên tục xuất hiện trước những cơ hội tốt.',
+            change:'Chủ đề 12 tháng là sự tiến hóa có ý nghĩa. Nhìn lại, bạn có thể nhận ra nhiều quyết định nhỏ đã tạo nên thay đổi lớn.',
+            surprise:'Một hướng đi ban đầu bạn không coi trọng có thể trở nên quan trọng hơn về sau trong năm.',
+            watch:'Đừng đánh giá một con đường dài hạn quá sớm. Một số phát triển tốt nhất cần thời gian mới thể hiện rõ.'
+          },
+          'Next Year':{
+            icon:'🔮', baseTitle:'BƯỚC NGOẶT', traits:'Định Hướng • Mở Rộng • Lựa Chọn Lớn',
+            summary:{
+              Love:'Năm tới có thể mang đến một bước ngoặt trong tình cảm: cam kết sâu hơn, khởi đầu mới hoặc quyết định rõ ràng hơn về điều gì thuộc về tương lai của bạn.',
+              Money:'Năm tới mang chủ đề mở rộng mạnh hơn. Một quyết định tài chính hoặc kinh doanh lớn có thể quan trọng hơn những lợi ích ngắn hạn.',
+              Career:'Năm tới có thể đặt bạn trước một lựa chọn nghề nghiệp lớn hơn: mở rộng, lãnh đạo, đổi hướng hoặc cam kết nghiêm túc hơn với một con đường.',
+              General:'Năm tới mang góc nhìn rộng nhất: một bước ngoặt, một lựa chọn lớn và nhu cầu rõ ràng hơn về tương lai bạn muốn xây dựng.'
+            },
+            love:'Năm tới, tình yêu ít nói về tín hiệu mơ hồ và nhiều hơn về quyết định. Một mối quan hệ có thể trở nên rõ ràng theo một hướng cụ thể.',
+            money:'Năm tới, chủ đề tiền bạc là mở rộng nhưng có chọn lọc. Một cơ hội lớn có thể đáng chú ý hơn nhiều cơ hội nhỏ.',
+            career:'Năm tới có thể xuất hiện một ngã rẽ nghề nghiệp rõ rệt hơn liên quan đến lãnh đạo, độc lập, mở rộng hoặc thay đổi hướng đi.',
+            luck:'Năm tới, may mắn mạnh nhất khi bạn đã chuẩn bị cho một cơ hội lớn thay vì chạy theo mọi cơ hội nhỏ.',
+            change:'Chủ đề năm tới là bước ngoặt. Thay đổi quan trọng nhất có thể đến từ việc chọn một hướng rồi dành đủ năng lượng để nó phát triển.',
+            surprise:'Một cơ hội lớn có thể đến từ người, nơi hoặc ý tưởng mà hiện tại bạn chưa nghĩ sẽ quan trọng.',
+            watch:'Rủi ro lớn nhất là đồng ý với quá nhiều thứ. Cơ hội lớn cần bộ lọc lựa chọn rõ ràng hơn.'
+          }
+        }
+      };
+
+      const p = profiles[isVi ? 'vi' : 'en'][tf] || profiles[isVi ? 'vi' : 'en']['30 Days'];
+
+      const focusMeta = isVi ? {
+        General:{label:'Tổng Quát',emoji:'✨',title:p.baseTitle},
+        Love:{label:'Tình Yêu',emoji:'❤️',title:'TÌNH YÊU ' + p.baseTitle},
+        Money:{label:'Tiền Bạc',emoji:'💰',title:'TIỀN BẠC ' + p.baseTitle},
+        Career:{label:'Sự Nghiệp',emoji:'💼',title:'SỰ NGHIỆP ' + p.baseTitle}
+      } : {
+        General:{label:'General',emoji:'✨',title:p.baseTitle},
+        Love:{label:'Love',emoji:'❤️',title:'LOVE ' + p.baseTitle},
+        Money:{label:'Money',emoji:'💰',title:'MONEY ' + p.baseTitle},
+        Career:{label:'Career',emoji:'💼',title:'CAREER ' + p.baseTitle}
+      };
+
+      const timeLabels = isVi ? {
+        '7 Days':'7 Ngày','30 Days':'30 Ngày','12 Months':'12 Tháng','Next Year':'Năm Sau'
+      } : {
+        '7 Days':'7 Days','30 Days':'30 Days','12 Months':'12 Months','Next Year':'Next Year'
+      };
+
+      document.querySelector('.theme-icon').textContent = focusMeta[fc].emoji;
+      document.querySelector('.theme-title').textContent = focusMeta[fc].title;
+      document.querySelector('.traits').textContent = p.traits;
+      document.getElementById('summaryText').textContent = p.summary[fc] || p.summary.General;
+      document.getElementById('contextTime').textContent = timeLabels[tf] || tf;
+      document.getElementById('contextFocus').textContent = focusMeta[fc].label;
+
+      const cards = {
+        Love:document.getElementById('cardLove'),
+        Money:document.getElementById('cardMoney'),
+        Career:document.getElementById('cardCareer'),
+        Luck:document.getElementById('cardLuck'),
+        Change:document.getElementById('cardChange'),
+        Surprise:document.getElementById('cardSurprise'),
+        Watch:document.getElementById('cardWatch')
+      };
+
+      Object.values(cards).forEach(card=>{
+        card.classList.remove('focus-hidden','primary-focus');
+      });
+
+      document.getElementById('loveText').textContent = p.love;
+      document.getElementById('moneyText').textContent = p.money;
+      document.getElementById('careerText').textContent = p.career;
+      document.getElementById('luckText').textContent = p.luck;
+      document.getElementById('changeText').textContent = p.change;
+      document.getElementById('surpriseText').textContent = p.surprise;
+      document.getElementById('watchText').textContent = p.watch;
+
+      if(fc === 'General'){
+        // General = complete overview.
+      } else if(fc === 'Love'){
+        cards.Love.classList.add('primary-focus');
+        ['Money','Career','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+
+        cards.Change.querySelector('h3').textContent = isVi ? '💞 Hướng Phát Triển' : '💞 Relationship Direction';
+        cards.Surprise.querySelector('h3').textContent = isVi ? '🎁 Điều Bất Ngờ Trong Tình Cảm' : '🎁 Love Surprise';
+        cards.Watch.querySelector('h3').textContent = isVi ? '⚠️ Điều Cần Lưu Ý Trong Tình Cảm' : '⚠️ Love Watch-Out';
+
+        document.getElementById('changeText').textContent = isVi
+          ? (tf==='7 Days'?'Trong ngắn hạn, hãy để hành động lặp lại nói lên mức độ quan tâm thật sự thay vì cố đọc quá nhiều vào một khoảnh khắc.'
+            :tf==='30 Days'?'Trong tháng tới, mối quan hệ có thể trở nên rõ hơn qua sự nhất quán, mức độ chủ động và cách hai người xử lý những cuộc trò chuyện quan trọng.'
+            :tf==='12 Months'?'Trong 12 tháng, hướng tình cảm có thể rõ dần qua cam kết, ranh giới và việc cả hai có cùng hình dung về tương lai hay không.'
+            :'Năm tới, tình cảm có thể đi đến một quyết định rõ ràng hơn: tiến sâu hơn, bắt đầu lại hoặc chọn một hướng phù hợp hơn.')
+          : (tf==='7 Days'?'In the short term, let repeated actions reveal genuine interest instead of over-reading one moment.'
+            :tf==='30 Days'?'Over the next month, the relationship may become clearer through consistency, initiative and how important conversations are handled.'
+            :tf==='12 Months'?'Across 12 months, love direction may become clearer through commitment, boundaries and whether you share a similar vision of the future.'
+            :'Next year, love may move toward a clearer decision: deepen, reset or choose a direction that fits better.');
+
+        document.getElementById('surpriseText').textContent = isVi
+          ? (tf==='7 Days'?'Một tin nhắn hoặc cuộc trò chuyện có thể khiến bạn nhìn cảm xúc của ai đó khác đi.'
+            :tf==='30 Days'?'Một mối liên hệ có thể trở nên đều đặn hơn — hoặc cho thấy nó không ổn định như bạn nghĩ.'
+            :tf==='12 Months'?'Một mối quan hệ có thể phát triển theo hướng bạn không ngờ tới ở đầu năm.'
+            :'Một người nào đó có thể đóng vai trò quan trọng hơn trong tương lai của bạn so với hiện tại.')
+          : (tf==='7 Days'?'A message or conversation may change how you read someone’s feelings.'
+            :tf==='30 Days'?'A connection may become more consistent—or reveal that it is less steady than expected.'
+            :tf==='12 Months'?'A relationship may develop in a direction you did not expect at the start of the year.'
+            :'Someone may play a more important role in your future than you currently realize.');
+
+      } else if(fc === 'Money'){
+        cards.Money.classList.add('primary-focus');
+        ['Love','Career','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+
+        cards.Change.querySelector('h3').textContent = isVi ? '📈 Hướng Phát Triển Tiền Bạc' : '📈 Money Direction';
+        cards.Surprise.querySelector('h3').textContent = isVi ? '🎁 Cơ Hội Có Thể Bất Ngờ' : '🎁 Possible Opportunity';
+        cards.Watch.querySelector('h3').textContent = isVi ? '⚠️ Rủi Ro Cần Lưu Ý' : '⚠️ Money Watch-Out';
+
+        document.getElementById('changeText').textContent = isVi
+          ? (tf==='7 Days'?'Ưu tiên quyết định nhỏ nhưng có tác dụng ngay: kiểm soát chi tiêu, tận dụng ưu đãi hoặc xử lý một khoản tiền hiệu quả hơn.'
+            :tf==='30 Days'?'Trong tháng tới, tiền bạc có thể cải thiện tốt nhất nhờ sự đều đặn: kiểm soát dòng tiền, chọn lọc cơ hội và tránh phân tán vốn.'
+            :tf==='12 Months'?'Trong 12 tháng, trọng tâm nên là tích lũy giá trị: tài sản, kỹ năng, dòng tiền hoặc một hệ thống giúp kết quả cộng dồn theo thời gian.'
+            :'Năm tới có thể là lúc một quyết định tài chính hoặc kinh doanh lớn hơn đáng chú ý hơn nhiều cơ hội nhỏ.')
+          : (tf==='7 Days'?'Prioritize small decisions with immediate value: control spending, use a useful offer or handle one money item more efficiently.'
+            :tf==='30 Days'?'Over the next month, money may improve most through consistency: cash-flow control, selective opportunities and avoiding scattered capital.'
+            :tf==='12 Months'?'Across 12 months, focus on compounding value through assets, skills, cash flow or systems that build over time.'
+            :'Next year, one larger financial or business decision may matter more than many smaller opportunities.');
+
+        document.getElementById('surpriseText').textContent = isVi
+          ? (tf==='7 Days'?'Một ý tưởng tiết kiệm hoặc cơ hội nhỏ nhưng hữu ích có thể xuất hiện bất ngờ.'
+            :tf==='30 Days'?'Một cơ hội tài chính hoặc kinh doanh vừa phải có thể hữu ích hơn bạn nghĩ.'
+            :tf==='12 Months'?'Một kỹ năng, tài sản hoặc ý tưởng kinh doanh có thể tạo ra nhiều giá trị hơn dự kiến.'
+            :'Một cơ hội tài chính lớn hơn có thể đến từ hướng hiện tại bạn chưa ưu tiên.')
+          : (tf==='7 Days'?'A small money-saving idea or useful opportunity may appear unexpectedly.'
+            :tf==='30 Days'?'A modest financial or business opportunity may become more useful than expected.'
+            :tf==='12 Months'?'A skill, asset or business idea may create more value than you initially expect.'
+            :'A larger financial opportunity may come from a direction you are not currently prioritizing.');
+
+      } else if(fc === 'Career'){
+        cards.Career.classList.add('primary-focus');
+        ['Love','Money','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+
+        cards.Change.querySelector('h3').textContent = isVi ? '🧭 Hướng Đi Sự Nghiệp' : '🧭 Career Direction';
+        cards.Surprise.querySelector('h3').textContent = isVi ? '🎁 Cơ Hội Có Thể Xuất Hiện' : '🎁 Possible Opportunity';
+        cards.Watch.querySelector('h3').textContent = isVi ? '⚠️ Điều Cần Lưu Ý Trong Công Việc' : '⚠️ Career Watch-Out';
+
+        document.getElementById('changeText').textContent = isVi
+          ? (tf==='7 Days'?'Hãy chú ý nhiệm vụ, cuộc họp hoặc người nào tạo cho bạn nhiều quyền chủ động hơn. Đó có thể là tín hiệu của hướng đi tốt hơn.'
+            :tf==='30 Days'?'Trong 30 ngày tới, hướng đi tốt nhất có thể xuất hiện qua một dự án ngày càng quan trọng hoặc một trách nhiệm cho bạn thêm quyền quyết định.'
+            :tf==='12 Months'?'Trong 12 tháng, một vai trò mới, kỹ năng mới hoặc hướng kinh doanh mới có thể dần trở thành phần lớn hơn trong con đường của bạn.'
+            :'Năm tới có thể xuất hiện một ngã rẽ rõ ràng hơn liên quan đến lãnh đạo, mở rộng, độc lập hoặc đổi hướng.')
+          : (tf==='7 Days'?'Watch for a task, meeting or person that gives you more ownership. That may be an early sign of a stronger direction.'
+            :tf==='30 Days'?'Over the next 30 days, the better direction may emerge through a project that gains importance or a responsibility that gives you more control.'
+            :tf==='12 Months'?'Across 12 months, a new role, skill or business direction may gradually become a larger part of your path.'
+            :'Next year may bring a clearer crossroads involving leadership, expansion, independence or a change of direction.');
+
+        document.getElementById('surpriseText').textContent = isVi
+          ? (tf==='7 Days'?'Một yêu cầu hoặc cuộc trò chuyện nhanh có thể đưa bạn đến đúng người.'
+            :tf==='30 Days'?'Một dự án hoặc trách nhiệm có thể phát triển vượt khỏi phạm vi ban đầu.'
+            :tf==='12 Months'?'Một vai trò, hướng kinh doanh hoặc kỹ năng có thể trở thành phần lớn hơn trong tương lai nghề nghiệp.'
+            :'Một cơ hội lớn có thể đến qua lãnh đạo, sự độc lập hoặc thay đổi hướng đi.')
+          : (tf==='7 Days'?'A quick request or conversation could put you in front of the right person.'
+            :tf==='30 Days'?'A project or responsibility may grow beyond its original scope.'
+            :tf==='12 Months'?'A role, business direction or skill may become a larger part of your career future.'
+            :'A major opportunity may arrive through leadership, independence or a change in direction.');
+      }
+
+      // Restore default headings when General is selected.
+      if(fc === 'General'){
+        cards.Change.querySelector('h3').textContent = translations[currentLang].resultChange;
+        cards.Surprise.querySelector('h3').textContent = translations[currentLang].resultSurprise;
+        cards.Watch.querySelector('h3').textContent = translations[currentLang].resultWatch;
+      }
+    }
+
+
+    let currentFutureAI=null;
+
+    function futurePayload(extraQuestion=''){
+      return {
+        birthday:document.getElementById('birthday').value,
+        timeframe,
+        focus,
+        followup_question:extraQuestion || undefined,
+        previous_reading:currentFutureAI || undefined
+      };
+    }
+
+    function configureFocusedCardsForAI(){
+      const fc=focus||'General';
+      const isVi=currentLang==='vi';
+      const cards={
+        Love:document.getElementById('cardLove'),
+        Money:document.getElementById('cardMoney'),
+        Career:document.getElementById('cardCareer'),
+        Luck:document.getElementById('cardLuck'),
+        Change:document.getElementById('cardChange'),
+        Surprise:document.getElementById('cardSurprise'),
+        Watch:document.getElementById('cardWatch')
+      };
+      Object.values(cards).forEach(c=>c.classList.remove('focus-hidden','primary-focus'));
+
+      if(fc==='General'){
+        cards.Change.querySelector('h3').textContent=translations[currentLang].resultChange;
+        cards.Surprise.querySelector('h3').textContent=translations[currentLang].resultSurprise;
+        cards.Watch.querySelector('h3').textContent=translations[currentLang].resultWatch;
+        return;
+      }
+
+      const primary=cards[fc];
+      if(primary) primary.classList.add('primary-focus');
+
+      if(fc==='Love'){
+        ['Money','Career','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+        cards.Change.querySelector('h3').textContent=isVi?'💞 Hướng Phát Triển':'💞 Relationship Direction';
+        cards.Surprise.querySelector('h3').textContent=isVi?'🎁 Điều Bất Ngờ Trong Tình Cảm':'🎁 Love Surprise';
+        cards.Watch.querySelector('h3').textContent=isVi?'⚠️ Điều Cần Lưu Ý Trong Tình Cảm':'⚠️ Love Watch-Out';
+      }else if(fc==='Money'){
+        ['Love','Career','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+        cards.Change.querySelector('h3').textContent=isVi?'📈 Hướng Phát Triển Tiền Bạc':'📈 Money Direction';
+        cards.Surprise.querySelector('h3').textContent=isVi?'🎁 Cơ Hội Có Thể Bất Ngờ':'🎁 Possible Opportunity';
+        cards.Watch.querySelector('h3').textContent=isVi?'⚠️ Rủi Ro Cần Lưu Ý':'⚠️ Money Watch-Out';
+      }else if(fc==='Career'){
+        ['Love','Money','Luck'].forEach(k=>cards[k].classList.add('focus-hidden'));
+        cards.Change.querySelector('h3').textContent=isVi?'🧭 Hướng Đi Sự Nghiệp':'🧭 Career Direction';
+        cards.Surprise.querySelector('h3').textContent=isVi?'🎁 Cơ Hội Có Thể Xuất Hiện':'🎁 Possible Opportunity';
+        cards.Watch.querySelector('h3').textContent=isVi?'⚠️ Điều Cần Lưu Ý Trong Công Việc':'⚠️ Career Watch-Out';
+      }
+    }
+
+    function renderAIFuture(ai){
+      const isVi=currentLang==='vi';
+      const fc=focus||'General';
+      const focusLabels=isVi?{Love:'Tình Yêu',Money:'Tiền Bạc',Career:'Sự Nghiệp',General:'Tổng Quát'}:{Love:'Love',Money:'Money',Career:'Career',General:'General'};
+      const timeLabels=isVi?{'7 Days':'7 Ngày','30 Days':'30 Ngày','12 Months':'12 Tháng','Next Year':'Năm Sau'}:{'7 Days':'7 Days','30 Days':'30 Days','12 Months':'12 Months','Next Year':'Next Year'};
+
+      document.querySelector('.theme-icon').textContent={Love:'❤️',Money:'💰',Career:'💼',General:'✨'}[fc]||'✨';
+      document.querySelector('.theme-title').textContent=ai.title||'';
+      document.querySelector('.traits').textContent=(ai.traits||[]).join(' • ');
+      document.getElementById('summaryText').textContent=ai.summary||'';
+      document.getElementById('contextTime').textContent=timeLabels[timeframe]||timeframe;
+      document.getElementById('contextFocus').textContent=focusLabels[fc]||fc;
+      configureFocusedCardsForAI();
+
+      if(fc==='Love'){
+        document.getElementById('loveText').textContent=ai.primary||'';
+      }else if(fc==='Money'){
+        document.getElementById('moneyText').textContent=ai.primary||'';
+      }else if(fc==='Career'){
+        document.getElementById('careerText').textContent=ai.primary||'';
+      }else{
+        document.getElementById('loveText').textContent=ai.primary||'';
+        document.getElementById('moneyText').textContent=ai.direction||'';
+        document.getElementById('careerText').textContent=ai.surprise||'';
+        document.getElementById('luckText').textContent=ai.watch_for||'';
+      }
+
+      document.getElementById('changeText').textContent=ai.direction||'';
+      document.getElementById('surpriseText').textContent=ai.surprise||'';
+      document.getElementById('watchText').textContent=ai.watch_for||'';
+      document.getElementById('aiStatus').textContent=translations[currentLang].aiReady;
+
+      const qs=(ai.followups||[]).slice(0,4);
+      const quickBtns=[...document.querySelectorAll('.quick[data-q]')];
+      qs.forEach((q,i)=>{ if(quickBtns[i]) quickBtns[i].textContent=q; });
+    }
+
+    async function buildFutureReading(){
+      showAIWait(document.getElementById('aiStatus'));
+      if(!window.AskGenieAI || typeof window.AskGenieAI.future!=='function'){
+        makeLocalReading();
+        document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+        return false;
+      }
+      try{
+        const ai=await window.AskGenieAI.future(futurePayload(),{language:currentLang});
+        currentFutureAI=ai;
+        renderAIFuture(ai);
+        return true;
+      }catch(err){
+        console.warn('AskGenie future AI failed:',err);
+        makeLocalReading();
+        document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+        return false;
+      }
+    }
+
+    async function askFutureAI(question){
+      const text=(question||'').trim();
+      if(!text)return;
+      addMsg(text,'user');
+      chatInput.value='';
+      askOwnInput.value='';
+      const typing=addMsg(currentLang==='vi'?'ChatGPT đang suy ngẫm…':'ChatGPT is thinking…','genie');showAIWait(typing);
+      try{
+        if(!window.AskGenieAI || typeof window.AskGenieAI.future!=='function') throw new Error('AI unavailable');
+        const ai=await window.AskGenieAI.future(futurePayload(text),{language:currentLang});
+        revealAIText(typing,ai.answer || ai.summary || ai.primary || ai.direction || '');
+      }catch(err){
+        typing.textContent=futureReply(text);
+      }
+    }
+
+    document.getElementById('predictBtn').addEventListener('click',()=>{
+      if(!timeframe){
+        alert(currentLang==='vi'?'Hãy chọn khoảng thời gian trước.':'Choose a timeframe first.');
+        return;
+      }
+      if(!document.getElementById('birthday').value){
+        alert(currentLang==='vi'?'Hãy nhập ngày sinh trước.':'Add your birthday first.');
+        return;
+      }
+      if(!focus){
+        alert(currentLang==='vi'?'Hãy chọn điều bạn đang quan tâm.':'Choose what you are focused on.');
+        return;
+      }
+
+      setupPanel.classList.add('hidden');
+      crystalStage.classList.add('show');
+      crystalStage.scrollIntoView({behavior:'smooth',block:'center'});
+
+      const msgsByTime = currentLang==='vi' ? {
+        '7 Days':['Đang nhìn kỹ 7 ngày tới…','Đang kiểm tra tín hiệu ngắn hạn…','Đang đọc điều bạn quan tâm…','Một mô hình gần đang hình thành…'],
+        '30 Days':['Đang nhìn qua 30 ngày tới…','Đang xem động lực đang hình thành ở đâu…','Đang đọc điều bạn quan tâm…','Mô hình trong tháng đang hiện rõ…'],
+        '12 Months':['Đang nhìn qua 12 tháng tới…','Đang theo dõi những chủ đề dài hạn…','Đang đọc điều bạn quan tâm…','Một chương lớn hơn đang hình thành…'],
+        'Next Year':['Đang nhìn vào năm tới…','Đang kiểm tra những bước ngoặt lớn…','Đang đọc điều bạn quan tâm…','Một mô hình dài hạn đang hình thành…']
+      } : {
+        '7 Days':['Looking closely at the next 7 days…','Checking short-term signals…','Reading your current focus…','A near-term pattern is forming…'],
+        '30 Days':['Looking across the next 30 days…','Checking where momentum is building…','Reading your current focus…','Your monthly pattern is forming…'],
+        '12 Months':['Looking across the next 12 months…','Tracing longer-term themes…','Reading your current focus…','A bigger chapter is taking shape…'],
+        'Next Year':['Looking into next year…','Checking larger turning points…','Reading your current focus…','A long-range pattern is forming…']
+      };
+      const msgs = msgsByTime[timeframe] || msgsByTime['30 Days'];
+      msgs.forEach((m,i)=>setTimeout(()=>scanText.textContent=m,650+i*650));
+
+      setTimeout(async()=>{
+        crystalStage.classList.remove('show');
+        results.classList.add('show');
+        results.scrollIntoView({behavior:'smooth',block:'start'});
+        await buildFutureReading();
+      },3400);
+    });
+
+    document.getElementById('retryBtn').addEventListener('click',()=>{
+      results.classList.remove('show');
+      setupPanel.classList.remove('hidden');
+      document.getElementById('aiStatus').textContent='';
+      currentFutureAI=null;
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    document.getElementById('shareBtn').addEventListener('click',async()=>{
+      const text=currentLang==='vi' ? `🔮 Chủ đề tương lai AskGenie247 của tôi là ${document.querySelector('.theme-title').textContent}. Còn bạn thì sao?` : `🔮 My AskGenie247 Future Theme is ${document.querySelector('.theme-title').textContent}. What's yours?`;
+      if(navigator.share){
+        try{await navigator.share({title:'My AskGenie247 Future',text,url:window.location.href})}catch(e){}
+      }else{
+        try{await navigator.clipboard.writeText(text+' '+window.location.href);alert(currentLang==='vi'?'Đã sao chép kết quả!':'Result copied!')}catch(e){}
+      }
+    });
+
+    const moreQuestionsBtn=document.getElementById('moreQuestionsBtn');
+    const moreQuestions=document.getElementById('moreQuestions');
+    moreQuestionsBtn.addEventListener('click',()=>{
+      moreQuestions.classList.toggle('show');
+      moreQuestionsBtn.textContent=moreQuestions.classList.contains('show')?'×':'•••';
+    });
+
+    const chatBody=document.getElementById('chatBody');
+    const chatInput=document.getElementById('chatInput');
+    const chatSend=document.getElementById('chatSend');
+    const askOwnInput=document.getElementById('askOwnInput');
+    const askOwnBtn=document.getElementById('askOwnBtn');
+
+    function addMsg(text,who='genie'){
+      const el=document.createElement('div');
+      el.className='msg '+who;
+      el.textContent=text;
+      chatBody.appendChild(el);
+      chatBody.scrollTop=chatBody.scrollHeight;
+      return el;
+    }
+
+    function futureReply(raw){
+      const q=raw.toLowerCase();
+      const tf=timeframe || (currentLang==='vi'?'khoảng thời gian bạn đã chọn':'your chosen timeframe');
+      const isVi=currentLang==='vi';
+      const isMoney=q.includes('money')||q.includes('wealth')||q.includes('finance')||q.includes('tiền')||q.includes('tài chính');
+      const isLove=q.includes('love')||q.includes('relationship')||q.includes('romance')||q.includes('tình yêu')||q.includes('tình cảm');
+      const isCareer=q.includes('career')||q.includes('job')||q.includes('business')||q.includes('work')||q.includes('sự nghiệp')||q.includes('công việc')||q.includes('kinh doanh');
+      const isTiming=q.includes('timing')||q.includes('when')||q.includes('khi nào')||q.includes('thời điểm');
+      const isWatch=q.includes('watch')||q.includes('careful')||q.includes('avoid')||q.includes('lưu ý')||q.includes('cẩn thận');
+      const isSurprise=q.includes('surprise')||q.includes('unexpected')||q.includes('bất ngờ');
+
+      if(isMoney) return isVi
+        ? `💰 Tiền Bạc
+Trong ${tf}, chủ đề mạnh nhất là xây dựng đều đặn hơn là trông chờ may mắn bất ngờ. Một cơ hội thực tế có thể đáng giá hơn một lựa chọn hào nhoáng.
+
+Gợi ý vui của Genie: giữ sự tập trung và tránh chia nguồn lực cho quá nhiều ý tưởng cùng lúc.`
+        : `💰 Money
+For ${tf}, the strongest theme is steady building rather than sudden luck. A practical opportunity may matter more than a flashy one.
+
+Genie’s fun advice: protect your attention and avoid spreading resources across too many ideas at once.`;
+      if(isLove) return isVi
+        ? `❤️ Tình Yêu
+Phần đọc của bạn nghiêng về sự rõ ràng qua trò chuyện. Ai đó có thể bộc lộ nhiều hơn qua điều họ nói — hoặc điều họ tránh nói.
+
+Chủ đề mạnh nhất là hiểu rõ điều bạn thực sự muốn thay vì cố ép một kết quả.`
+        : `❤️ Love
+Your reading points toward clarity through conversation. Someone may reveal more through what they say—or what they avoid saying.
+
+The strongest theme is understanding what you actually want, not forcing an outcome.`;
+      if(isCareer) return isVi
+        ? `💼 Sự Nghiệp
+Phần đọc nghiêng về một trách nhiệm, dự án hoặc lựa chọn mới. Cơ hội có thể chưa nổi bật ngay lúc đầu nhưng có thể mở ra bước tiếp theo hữu ích.
+
+Hãy chú ý những tình huống cho bạn nhiều quyền chủ động, khả năng được nhìn thấy hoặc không gian để xây dựng.`
+        : `💼 Career
+Your reading leans toward a new responsibility, project or choice. The opportunity may not look dramatic at first, but it could create a useful next step.
+
+Look for situations where you gain more control, visibility or room to build.`;
+      if(isTiming) return isVi
+        ? `⏳ Thời Điểm
+Phần đọc này phù hợp nhất để xem xu hướng hơn là một ngày chính xác. Trong ${tf}, các quyết định, cuộc trò chuyện và cơ hội có thể trở nên rõ hơn khi bạn chủ động tham gia.`
+        : `⏳ Timing
+This reading is strongest as a theme, not an exact date. For ${tf}, the energy builds around decisions, conversations and opportunities that become clearer as you engage with them.`;
+      if(isWatch) return isVi
+        ? `⚠️ Điều Cần Lưu Ý
+Điểm cần cẩn thận nhất là có quá nhiều lựa chọn cùng lúc. Phần đọc cho thấy sự tập trung — không phải tốc độ — có thể tạo ra kết quả tốt hơn.`
+        : `⚠️ Watch For
+Your biggest caution is too many choices at once. The reading suggests that focus—not speed—may create the best outcome.`;
+      if(isSurprise) return isVi
+        ? `🎁 Điều Bất Ngờ
+Một cuộc trò chuyện, ý tưởng hoặc lời mời có thể quan trọng hơn bạn nghĩ. Hãy chú ý một điều ban đầu trông nhỏ nhưng hữu ích.`
+        : `🎁 Surprise Ahead
+A conversation, idea or invitation may matter more than you expect. Pay attention to something that initially seems small but useful.`;
+      return isVi
+        ? `🧞 Góc nhìn của Genie
+Phần đọc tương lai của bạn xoay quanh Cơ Hội • Lựa Chọn • Thay Đổi. Trong ${tf}, chủ đề mạnh nhất là chọn điều xứng đáng với năng lượng của bạn.
+
+Bạn có thể hỏi thêm về tiền bạc, tình yêu, sự nghiệp, thời điểm, điều bất ngờ hoặc điều cần lưu ý.`
+        : `🧞 Genie’s take
+Your future reading centers on Opportunity • Decision • Change. For ${tf}, the strongest theme is choosing what deserves your energy.
+
+Ask me about money, love, career, timing, surprises or what to watch for.`;
+    }
+
+    function askGenie(question){
+      askFutureAI(question);
+    }
+
+    document.querySelectorAll('.quick').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const map=currentLang==='vi' ? {
+          money:'Tiền bạc thì sao?',
+          love:'Tình yêu thì sao?',
+          career:'Sự nghiệp thì sao?',
+          timing:'Khi nào?',
+          watch:'Tôi nên lưu ý điều gì?',
+          surprise:'Điều gì có thể làm tôi bất ngờ?'
+        } : {
+          money:'What about money?',
+          love:'What about love?',
+          career:'What about career?',
+          timing:'What about timing?',
+          watch:'What should I watch for?',
+          surprise:'What might surprise me?'
+        };
+        if(btn.dataset.q) askGenie(map[btn.dataset.q]||btn.textContent);
+      });
+    });
+
+    chatSend.addEventListener('click',()=>askGenie(chatInput.value));
+    chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')askGenie(chatInput.value)});
+    askOwnBtn.addEventListener('click',()=>askGenie(askOwnInput.value));
+    askOwnInput.addEventListener('keydown',e=>{if(e.key==='Enter')askGenie(askOwnInput.value)});
+  </script>
+</body>
+</html>

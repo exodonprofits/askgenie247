@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080513" />
+<title>AskGenie247 — Friend or Lover?</title>
+<style>
+:root{
+  --bg:#080513;--bg2:#12071d;--gold:#ffd66b;--violet:#a974ff;--pink:#ff7ac8;
+  --text:#fff8ff;--muted:#c9bfd2;--line:rgba(255,255,255,.10);--shadow:0 18px 50px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{overflow-x:hidden}
+.app{
+  min-height:100dvh;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),
+    radial-gradient(circle at 14% 36%,rgba(255,122,200,.08),transparent 24%),
+    linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);
+  padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom));
+}
+.stars,.stars:before,.stars:after{
+  position:fixed;inset:0;content:"";pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.2px),
+    radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);
+  background-size:42px 42px,70px 70px;background-position:0 0,17px 22px;
+  opacity:.14;animation:drift 22s linear infinite;
+}
+.stars:before{opacity:.08;animation-duration:32s}.stars:after{opacity:.05;animation-duration:40s}
+@keyframes drift{to{transform:translateY(40px)}}
+header{
+  position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 8px;
+}
+.back,.lang-toggle{
+  min-width:42px;height:42px;border-radius:14px;border:1px solid var(--line);
+  background:#ffffff0b;color:white;display:grid;place-items:center;backdrop-filter:blur(12px);
+}
+.back{font-size:22px;text-decoration:none;width:42px}
+.lang-toggle{padding:0 11px;font-weight:850;font-size:11px;letter-spacing:.4px}
+.brand{font-weight:850;font-size:16px}
+main{position:relative;z-index:2;padding:0 14px 24px}
+.hero{text-align:center;padding:10px 12px 14px}
+.hero-logo{
+  width:104px;height:104px;object-fit:contain;display:block;margin:0 auto 9px;
+  filter:drop-shadow(0 0 18px rgba(255,214,107,.22)) drop-shadow(0 0 28px rgba(169,116,255,.18));
+  animation:float 3.6s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-5px)}}
+h1{font-size:29px;line-height:1.08;margin:0 0 7px;font-weight:900}
+.gradient{
+  background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.panel{
+  background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));
+  border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);
+  margin-top:12px;backdrop-filter:blur(16px);
+}
+.step-title{font-size:18px;font-weight:850;margin:0 0 4px}
+.step-sub{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.45}
+.people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.person-card{
+  border:1px solid var(--line);border-radius:20px;background:#ffffff07;padding:13px;
+}
+.person-title{font-size:14px;font-weight:850;margin-bottom:10px}
+.field{margin-top:9px}
+.field label{display:block;font-size:10px;color:var(--muted);margin-bottom:5px}
+.field input,.field select{
+  width:100%;height:42px;border-radius:13px;border:1px solid var(--line);background:#ffffff08;
+  color:white;padding:0 11px;font-size:12px;outline:none;color-scheme:dark;
+}
+.field select option{background:#1a1024;color:white}
+.question{margin-top:14px}
+.question-title{font-size:13px;font-weight:800;margin:0 0 8px}
+.segment{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg{
+  min-height:46px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:white;
+  font-weight:800;font-size:11px;padding:7px;
+}
+.seg.active{border-color:rgba(255,214,107,.48);background:rgba(255,214,107,.12);box-shadow:0 0 18px rgba(255,214,107,.08)}
+.btn{border:0;border-radius:16px;min-height:50px;padding:12px 14px;font-weight:850;font-size:14px}
+.btn.primary{
+  width:100%;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;
+  box-shadow:0 10px 26px rgba(255,214,107,.14)
+}
+.btn.secondary{background:#ffffff0b;color:white;border:1px solid var(--line)}
+.scan-view{display:none}.scan-view.show{display:block}
+.heart-stage{display:grid;place-items:center;padding:8px 0}
+.heart-orb{
+  width:190px;height:190px;border-radius:50%;display:grid;place-items:center;font-size:70px;
+  background:
+    radial-gradient(circle at 35% 27%,rgba(255,255,255,.62),transparent 11%),
+    radial-gradient(circle,rgba(255,122,200,.65),rgba(104,44,134,.86) 48%,rgba(16,7,30,.98) 75%);
+  box-shadow:0 0 34px rgba(255,122,200,.36),0 0 70px rgba(169,116,255,.18),inset 0 0 24px rgba(255,255,255,.10);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse{50%{transform:scale(1.04)}}
+.scan-copy{text-align:center}.scan-copy h3{margin:0 0 6px;font-size:19px}.scan-copy p{margin:0;color:var(--muted);font-size:12px}
+.results{display:none}.results.show{display:block}
+.reveal{
+  text-align:center;background:
+    radial-gradient(circle at 50% 0%,rgba(255,122,200,.14),transparent 28%),
+    linear-gradient(180deg,rgba(38,20,55,.94),rgba(18,10,27,.96));
+  border:1px solid rgba(255,214,107,.18);border-radius:28px;padding:22px 16px;box-shadow:var(--shadow);
+}
+.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:850}
+.match-icon{font-size:54px;margin:10px 0 3px}
+.match-title{font-size:29px;font-weight:950;margin:0}
+.match-sub{font-size:13px;color:var(--muted);margin-top:6px}
+.meter{margin:18px auto 2px;max-width:300px}
+.meter-track{height:14px;border-radius:999px;background:#ffffff0a;border:1px solid var(--line);overflow:hidden}
+.meter-fill{
+  height:100%;width:50%;border-radius:999px;background:linear-gradient(90deg,#a974ff,#ff7ac8,#ffd66b);
+  transition:width .8s cubic-bezier(.16,1,.3,1);
+}
+.meter-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
+.score{font-size:13px;font-weight:850;color:#fff;margin-top:8px}
+.summary{font-size:14px;line-height:1.5;color:#fbf4ff;margin:14px auto 0;max-width:320px}
+.result-grid{display:grid;gap:10px;margin-top:12px}
+.result-card{border-radius:20px;padding:15px;background:#ffffff08;border:1px solid var(--line)}
+.result-card h3{margin:0 0 6px;font-size:15px}.result-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.48}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{border-radius:999px;padding:7px 9px;font-size:11px;background:#ffffff0a;border:1px solid var(--line);color:#eee3f7}
+.ask-box{
+  margin-top:12px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(169,116,255,.13),rgba(255,255,255,.04));
+  border:1px solid rgba(169,116,255,.22)
+}
+.ask-box h3{margin:0 0 7px;font-size:17px}.ask-box p{margin:0 0 12px;color:var(--muted);font-size:12px}
+.quick-qs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick{
+  border:1px solid var(--line);background:#ffffff09;color:white;padding:10px;border-radius:999px;font-size:11px;
+}
+.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}
+.bottom-nav{
+  position:fixed;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));height:62px;border-radius:21px;
+  background:rgba(14,9,22,.88);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);
+  z-index:80;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 18px 50px rgba(0,0,0,.48);
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#bfb4c8;text-decoration:none;font-size:10px;font-weight:700}
+.nav-item .ni{font-size:19px}.nav-item.active{color:var(--gold)}
+.hidden{display:none!important}
+@media (min-width:700px){
+  .app:after{content:"AskGenie247 Friend or Lover is designed for mobile";position:fixed;inset:0;z-index:9999;background:#080513;color:white;display:grid;place-items:center;font-size:18px;font-weight:800}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+/* AskGenie AI wait animation — friend_or_lover_compatibility.html */
+.ai-magic-wait{
+  --ai-c1:#ff7ac8;--ai-c2:#ffd66b;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:34px;max-width:100%;vertical-align:middle
+}
+.ai-magic-wheel{
+  width:34px;height:34px;flex:0 0 34px;position:relative;display:grid;place-items:center
+}
+.ai-magic-wheel:before{
+  content:"";position:absolute;inset:1px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--ai-c1);border-right-color:var(--ai-c2);
+  box-shadow:0 0 9px rgba(255,214,107,.24);
+  animation:aiMagicSpin 1.15s linear infinite
+}
+.ai-magic-wheel:after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.19);
+  animation:aiMagicSpinReverse 2.35s linear infinite
+}
+.ai-magic-core{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  font-size:12px;line-height:1;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.65),transparent 18%),
+             radial-gradient(circle,var(--ai-c1),rgba(31,14,46,.96) 72%);
+  box-shadow:0 0 12px rgba(169,116,255,.38);
+  animation:aiMagicPulse 1.15s ease-in-out infinite
+}
+.ai-magic-orbit{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ai-c2);
+  top:-1px;left:14px;box-shadow:0 0 8px var(--ai-c2);z-index:3;
+  transform-origin:3px 18px;animation:aiMagicOrbit 2.35s linear infinite
+}
+.ai-wait-copy{
+  color:#efe5f7;font-size:10px;font-weight:800;line-height:1.35;
+  animation:aiMagicGlow 1s ease-in-out infinite alternate;text-align:left
+}
+@keyframes aiMagicSpin{to{transform:rotate(360deg)}}
+@keyframes aiMagicSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes aiMagicOrbit{to{transform:rotate(360deg)}}
+@keyframes aiMagicPulse{50%{transform:scale(1.12);filter:brightness(1.18)}}
+@keyframes aiMagicGlow{from{opacity:.62}to{opacity:1}}
+.ai-answer-reveal{animation:aiAnswerReveal .48s cubic-bezier(.16,1,.3,1)}
+@keyframes aiAnswerReveal{
+  from{opacity:.2;transform:translateY(5px);filter:blur(3px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="stars"></div>
+
+  <header>
+    <a class="back" href="index.html" aria-label="Back">‹</a>
+    <div class="brand" data-i18n="pageTitle">💞 Friend or Lover?</div>
+    <button class="lang-toggle" id="langToggle" aria-label="Change language">VI</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie">
+      <h1><span class="gradient" data-i18n="heroTitle">Friend… or something more?</span></h1>
+      <p data-i18n="heroSub">Tell Genie a little about both of you and check the vibe.</p>
+    </section>
+
+    <section class="panel" id="setupPanel">
+      <h2 class="step-title" data-i18n="whoTitle">Tell Genie about both of you</h2>
+      <p class="step-sub" data-i18n="whoSub">This is for fun and self-reflection — not a scientific compatibility test.</p>
+
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="person-title" data-i18n="you">🧑 You</div>
+          <div class="field">
+            <label data-i18n="name">Name</label>
+            <input id="name1" type="text" placeholder="Your name" data-i18n-placeholder="yourName">
+          </div>
+          <div class="field">
+            <label data-i18n="birthday">Birthday</label>
+            <input id="dob1" type="date">
+          </div>
+        </div>
+
+        <div class="person-card">
+          <div class="person-title" data-i18n="them">💫 Them</div>
+          <div class="field">
+            <label data-i18n="name">Name</label>
+            <input id="name2" type="text" placeholder="Their name" data-i18n-placeholder="theirName">
+          </div>
+          <div class="field">
+            <label data-i18n="birthday">Birthday</label>
+            <input id="dob2" type="date">
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-title" data-i18n="q1">How often do you talk?</div>
+        <div class="segment" data-question="talk">
+          <button class="seg" data-value="1" data-i18n="rarely">Rarely</button>
+          <button class="seg" data-value="2" data-i18n="sometimes">Sometimes</button>
+          <button class="seg" data-value="3" data-i18n="often">Often</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-title" data-i18n="q2">How much flirting is there?</div>
+        <div class="segment" data-question="flirt">
+          <button class="seg" data-value="1" data-i18n="little">Little</button>
+          <button class="seg" data-value="2" data-i18n="some">Some</button>
+          <button class="seg" data-value="3" data-i18n="lots">A lot</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-title" data-i18n="q3">How emotionally open are you with each other?</div>
+        <div class="segment" data-question="open">
+          <button class="seg" data-value="1" data-i18n="guarded">Guarded</button>
+          <button class="seg" data-value="2" data-i18n="mixed">Mixed</button>
+          <button class="seg" data-value="3" data-i18n="open">Very open</button>
+        </div>
+      </div>
+
+      <button class="btn primary" id="checkBtn" style="margin-top:16px" data-i18n="check">Check Our Vibe ✨</button>
+    </section>
+
+    <section class="panel scan-view" id="scanView">
+      <div class="heart-stage"><div class="heart-orb">💞</div></div>
+      <div class="scan-copy">
+        <h3 data-i18n="scanTitle">Genie is comparing your vibe…</h3>
+        <p id="scanText" data-i18n="scanStart">Looking at the signals between you two.</p>
+      </div>
+    </section>
+
+    <section class="results" id="results">
+      <div class="reveal">
+        <div class="eyebrow" data-i18n="resultLabel">YOUR CONNECTION VIBE</div>
+        <div class="match-icon" id="matchIcon">💞</div>
+        <h2 class="match-title" id="matchTitle">COULD BE MORE</h2>
+        <div class="match-sub" id="matchSub">Friendship with romantic potential</div>
+        <div id="aiStatus" style="margin-top:8px;font-size:10px;color:var(--gold);font-weight:800"></div>
+
+        <div class="meter">
+          <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+          <div class="meter-labels">
+            <span data-i18n="friendSide">Friend</span>
+            <span data-i18n="loverSide">Lover</span>
+          </div>
+          <div class="score" id="scoreText">Romantic signal: 68%</div>
+        </div>
+
+        <p class="summary" id="summaryText"></p>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-card">
+          <h3 data-i18n="chemistryTitle">✨ Chemistry</h3>
+          <p id="chemistryText"></p>
+        </div>
+        <div class="result-card">
+          <h3 data-i18n="friendshipTitle">🤝 Friendship Base</h3>
+          <p id="friendshipText"></p>
+        </div>
+        <div class="result-card">
+          <h3 data-i18n="romanceTitle">❤️ Romantic Signal</h3>
+          <p id="romanceText"></p>
+        </div>
+        <div class="result-card">
+          <h3 data-i18n="watchTitle">⚠️ Watch For</h3>
+          <p id="watchText"></p>
+          <div class="chips" id="chips"></div>
+        </div>
+      </div>
+
+      <div class="ask-box">
+        <h3 data-i18n="askTitle">🧞 Ask Genie About Us</h3>
+        <p data-i18n="askSub">Try one of these follow-up questions.</p>
+        <div class="quick-qs">
+          <button class="quick" id="qMore" data-i18n="qMore">❤️ Could this become more?</button>
+          <button class="quick" id="qRisk" data-i18n="qRisk">⚠️ What could get in the way?</button>
+        </div>
+        <div class="result-card" id="genieAnswer" style="margin-top:10px;display:none">
+          <h3 data-i18n="genieSays">🧞 Genie Says</h3>
+          <p id="genieAnswerText"></p>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <button class="btn secondary" id="retryBtn" data-i18n="tryAgain">🔄 Try Again</button>
+        <button class="btn primary" id="shareBtn" data-i18n="share">📤 Share Result</button>
+      </div>
+
+      <p class="fineprint" data-i18n="fineprint">For fun, entertainment and self-reflection only. This does not determine whether two people should date.</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="index.html"><span class="ni">🏠</span><span data-i18n="home">Home</span></a>
+    <a class="nav-item active" href="index.html#explore"><span class="ni">✨</span><span data-i18n="explore">Explore</span></a>
+    <a class="nav-item" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><span data-i18n="genie">Genie</span></a>
+    <a class="nav-item" href="my-genie.html"><span class="ni">❤️</span><span data-i18n="me">Me</span></a>
+  </nav>
+</div>
+
+<script src="js/askgenie-ai.js"></script>
+<script>
+
+function aiWaitMarkup(){
+  const vi=document.documentElement.lang==='vi';
+  return `<span class="ai-magic-wait"><span class="ai-magic-wheel"><span class="ai-magic-orbit"></span><span class="ai-magic-core">💞</span></span><span class="ai-wait-copy">${vi?"Đang đọc sự kết nối giữa hai bạn…":"Reading the connection between you…"}</span></span>`;
+}
+function showAIWait(el){
+  if(!el)return;
+  el.classList.remove('ai-answer-reveal');
+  el.innerHTML=aiWaitMarkup();
+}
+function revealAIText(el,text){
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.remove('ai-answer-reveal');
+  void el.offsetWidth;
+  el.classList.add('ai-answer-reveal');
+}
+
+
+const translations={
+  en:{
+    pageTitle:"💞 Friend or Lover?",heroTitle:"Friend… or something more?",heroSub:"Tell Genie a little about both of you and check the vibe.",
+    whoTitle:"Tell Genie about both of you",whoSub:"This is for fun and self-reflection — not a scientific compatibility test.",
+    you:"🧑 You",them:"💫 Them",name:"Name",birthday:"Birthday",yourName:"Your name",theirName:"Their name",
+    q1:"How often do you talk?",q2:"How much flirting is there?",q3:"How emotionally open are you with each other?",
+    rarely:"Rarely",sometimes:"Sometimes",often:"Often",little:"Little",some:"Some",lots:"A lot",guarded:"Guarded",mixed:"Mixed",open:"Very open",
+    check:"Check Our Vibe ✨",scanTitle:"Genie is comparing your vibe…",scanStart:"Looking at the signals between you two.",
+    resultLabel:"YOUR CONNECTION VIBE",friendSide:"Friend",loverSide:"Lover",chemistryTitle:"✨ Chemistry",friendshipTitle:"🤝 Friendship Base",
+    romanceTitle:"❤️ Romantic Signal",watchTitle:"⚠️ Watch For",askTitle:"🧞 Ask Genie About Us",askSub:"Try one of these follow-up questions.",
+    qMore:"❤️ Could this become more?",qRisk:"⚠️ What could get in the way?",genieSays:"🧞 Genie Says",tryAgain:"🔄 Try Again",share:"📤 Share Result",
+    aiThinking:"🧞 ChatGPT is interpreting your connection…",aiReady:"✨ AI interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",fineprint:"For fun, entertainment and self-reflection only. This does not determine whether two people should date.",
+    home:"Home",explore:"Explore",genie:"Genie",me:"Me"
+  },
+  vi:{
+    pageTitle:"💞 Bạn Hay Người Yêu?",heroTitle:"Chỉ là bạn… hay còn hơn thế?",heroSub:"Cho Genie biết một chút về hai bạn rồi xem mức độ hợp nhau nhé.",
+    whoTitle:"Cho Genie biết về hai bạn",whoSub:"Chỉ để vui và tự suy ngẫm — không phải bài kiểm tra tương hợp khoa học.",
+    you:"🧑 Bạn",them:"💫 Người Ấy",name:"Tên",birthday:"Ngày sinh",yourName:"Tên của bạn",theirName:"Tên người ấy",
+    q1:"Hai bạn nói chuyện với nhau thường xuyên đến mức nào?",q2:"Mức độ thả thính giữa hai bạn?",q3:"Hai bạn cởi mở cảm xúc với nhau đến mức nào?",
+    rarely:"Ít khi",sometimes:"Thỉnh thoảng",often:"Thường xuyên",little:"Ít",some:"Có một chút",lots:"Khá nhiều",guarded:"Khá kín",mixed:"Lúc có lúc không",open:"Rất cởi mở",
+    check:"Xem Mức Độ Hợp Nhau ✨",scanTitle:"Genie đang xem năng lượng giữa hai bạn…",scanStart:"Đang xem các tín hiệu kết nối.",
+    resultLabel:"NĂNG LƯỢNG KẾT NỐI CỦA HAI BẠN",friendSide:"Bạn bè",loverSide:"Tình yêu",chemistryTitle:"✨ Sức Hút",friendshipTitle:"🤝 Nền Tảng Bạn Bè",
+    romanceTitle:"❤️ Tín Hiệu Tình Cảm",watchTitle:"⚠️ Điều Cần Lưu Ý",askTitle:"🧞 Hỏi Genie Về Hai Chúng Tôi",askSub:"Thử một trong các câu hỏi sau.",
+    qMore:"❤️ Có thể tiến xa hơn không?",qRisk:"⚠️ Điều gì có thể cản trở?",genieSays:"🧞 Genie Nói",tryAgain:"🔄 Thử Lại",share:"📤 Chia Sẻ Kết Quả",
+    aiThinking:"🧞 ChatGPT đang diễn giải kết nối của hai bạn…",aiReady:"✨ Diễn giải AI bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",fineprint:"Chỉ dành cho giải trí và tự suy ngẫm. Kết quả này không quyết định hai người có nên hẹn hò hay không.",
+    home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi"
+  }
+};
+
+let currentLang=localStorage.getItem('askgenieLang');
+if(!currentLang) currentLang=navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en';
+
+function applyLanguage(lang){
+  document.documentElement.lang=lang==='vi'?'vi':'en';
+  localStorage.setItem('askgenieLang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;if(translations[lang][k]) el.textContent=translations[lang][k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const k=el.dataset.i18nPlaceholder;if(translations[lang][k]) el.placeholder=translations[lang][k];
+  });
+  document.getElementById('langToggle').textContent=lang==='vi'?'EN':'VI';
+  if(document.getElementById('results').classList.contains('show')) renderLocalResult();
+}
+applyLanguage(currentLang);
+document.getElementById('langToggle').onclick=()=>{currentLang=currentLang==='en'?'vi':'en';applyLanguage(currentLang)};
+
+const answers={talk:0,flirt:0,open:0};
+document.querySelectorAll('.segment').forEach(group=>{
+  group.querySelectorAll('.seg').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      group.querySelectorAll('.seg').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      answers[group.dataset.question]=Number(btn.dataset.value);
+    });
+  });
+});
+
+function hashString(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return Math.abs(h>>>0);
+}
+function zodiacBias(d1,d2){
+  if(!d1||!d2)return 0;
+  const a=new Date(d1),b=new Date(d2);
+  const delta=Math.abs((a.getMonth()+1)-(b.getMonth()+1));
+  return (delta%3)-1;
+}
+function calcScore(){
+  const n1=document.getElementById('name1').value.trim();
+  const n2=document.getElementById('name2').value.trim();
+  const d1=document.getElementById('dob1').value;
+  const d2=document.getElementById('dob2').value;
+  const seed=hashString((n1+'|'+n2+'|'+d1+'|'+d2).toLowerCase());
+  let score=28;
+  score += answers.talk*7 + answers.flirt*12 + answers.open*8;
+  score += (seed%9)-4;
+  score += zodiacBias(d1,d2)*2;
+  return Math.max(18,Math.min(92,score));
+}
+
+function getBand(score){
+  if(score<42)return 'friend';
+  if(score<62)return 'maybe';
+  if(score<78)return 'more';
+  return 'spark';
+}
+
+function renderLocalResult(){
+  const score=calcScore(),band=getBand(score),vi=currentLang==='vi';
+  const name1=document.getElementById('name1').value.trim()|| (vi?'Bạn':'You');
+  const name2=document.getElementById('name2').value.trim()|| (vi?'Người ấy':'Them');
+
+  const copy=vi?{
+    friend:{
+      icon:'🤝',title:'NỀN TẢNG BẠN BÈ',sub:'Kết nối thoải mái hơn là lãng mạn',
+      summary:`${name1} và ${name2} hiện có dấu hiệu mạnh về sự thoải mái và tin tưởng. Năng lượng giống một tình bạn tốt hơn là một tín hiệu tình cảm rõ ràng.`,
+      chemistry:'Sức hút có thể nhẹ hoặc chưa rõ. Hai bạn có vẻ dễ ở cạnh nhau, nhưng tín hiệu lãng mạn chưa thật sự nổi bật.',
+      friendship:'Đây là điểm mạnh nhất: sự quen thuộc, dễ nói chuyện và cảm giác an toàn có thể tạo nền tảng tốt.',
+      romance:'Nếu có tình cảm, nó có thể cần thêm thời gian hoặc một dấu hiệu chủ động hơn từ một trong hai người.',
+      watch:'Đừng cố biến sự thân thiết thành tình yêu nếu cả hai chưa thật sự muốn điều đó.'
+    },
+    maybe:{
+      icon:'💫',title:'CÓ THỂ HƠN BẠN BÈ',sub:'Có tín hiệu, nhưng vẫn chưa rõ ràng',
+      summary:`Giữa ${name1} và ${name2} có vài dấu hiệu vượt qua mức bạn bè, nhưng năng lượng vẫn còn lẫn lộn. Điều quan trọng nhất là xem hành động có nhất quán hay không.`,
+      chemistry:'Có chút sức hút và tò mò, nhưng có thể lúc gần lúc xa.',
+      friendship:'Nền tảng bạn bè giúp hai bạn dễ kết nối, nhưng cũng có thể khiến cả hai ngại thay đổi mối quan hệ.',
+      romance:'Tín hiệu tình cảm hiện ở mức vừa phải. Một cuộc trò chuyện rõ ràng có thể giúp hai người hiểu nhau hơn.',
+      watch:'Tránh đọc quá nhiều vào tin nhắn hoặc những khoảnh khắc đơn lẻ.'
+    },
+    more:{
+      icon:'💞',title:'CÓ THỂ TIẾN XA HƠN',sub:'Tình bạn có tiềm năng tình cảm',
+      summary:`Giữa ${name1} và ${name2} có khá nhiều tín hiệu cho thấy mối quan hệ có thể hơn mức bạn bè — đặc biệt nếu sự quan tâm và cởi mở diễn ra đều đặn.`,
+      chemistry:'Sức hút có vẻ đủ rõ để tạo cảm giác “có gì đó” giữa hai người.',
+      friendship:'Nền tảng bạn bè là lợi thế lớn vì hai bạn có thể đã có sự tin tưởng và thoải mái.',
+      romance:'Tín hiệu tình cảm khá mạnh. Bước tiếp theo nên là sự rõ ràng, không phải đoán ý nhau.',
+      watch:'Nếu cả hai đều chờ người kia nói trước, mối quan hệ có thể đứng yên lâu hơn cần thiết.'
+    },
+    spark:{
+      icon:'❤️‍🔥',title:'TIA LỬA RÕ RỆT',sub:'Năng lượng tình cảm khá mạnh',
+      summary:`Kết nối giữa ${name1} và ${name2} có nhiều dấu hiệu của sức hút, sự cởi mở và tương tác thường xuyên. Năng lượng hiện nghiêng rõ về khả năng tình cảm.`,
+      chemistry:'Sức hút và độ chú ý dành cho nhau khá nổi bật.',
+      friendship:'Tình bạn tốt có thể giúp mối quan hệ tình cảm phát triển tự nhiên hơn.',
+      romance:'Tín hiệu tình cảm mạnh, nhưng sự rõ ràng vẫn quan trọng hơn bất kỳ “điểm số” nào.',
+      watch:'Đừng để sự hào hứng thay thế cho giao tiếp thẳng thắn về kỳ vọng.'
+    }
+  }:{
+    friend:{
+      icon:'🤝',title:'STRONG FRIENDSHIP',sub:'Comfort feels stronger than romance',
+      summary:`${name1} and ${name2} currently show stronger signs of comfort and trust than obvious romance. The vibe reads more like a solid friendship base.`,
+      chemistry:'The chemistry may be light or not fully expressed yet. You seem comfortable together, but the romantic signal is not especially strong.',
+      friendship:'This is the strongest area: familiarity, ease and emotional safety can make the connection feel natural.',
+      romance:'If romantic interest exists, it may need more time or a clearer move from one of you.',
+      watch:'Do not force a friendship into romance unless both people genuinely want that.'
+    },
+    maybe:{
+      icon:'💫',title:'MAYBE MORE',sub:'There are signals, but they are mixed',
+      summary:`There are some signs that ${name1} and ${name2} could be more than friends, but the vibe is still mixed. Consistency matters more than one flirtatious moment.`,
+      chemistry:'There is some attraction and curiosity, but it may come and go.',
+      friendship:'The friendship base helps you connect, though it can also make both people cautious about changing the dynamic.',
+      romance:'The romantic signal is moderate. A clearer conversation could help both of you understand what is actually there.',
+      watch:'Avoid reading too much into individual texts or isolated moments.'
+    },
+    more:{
+      icon:'💞',title:'COULD BE MORE',sub:'Friendship with romantic potential',
+      summary:`${name1} and ${name2} show several signs that this connection could move beyond friendship — especially if the attention and openness stay consistent.`,
+      chemistry:'There appears to be enough attraction to create that “something more” feeling.',
+      friendship:'The friendship base is a real advantage because trust and comfort may already be there.',
+      romance:'The romantic signal is fairly strong. The next useful step is clarity, not guessing.',
+      watch:'If both of you wait for the other person to speak first, the connection may stay stuck longer than necessary.'
+    },
+    spark:{
+      icon:'❤️‍🔥',title:'CLEAR SPARK',sub:'The romantic energy looks strong',
+      summary:`The connection between ${name1} and ${name2} shows several signs of attraction, openness and frequent interaction. The current vibe leans clearly romantic.`,
+      chemistry:'Attraction and attention toward each other appear fairly noticeable.',
+      friendship:'A strong friendship base can make romance feel more natural if both people want it.',
+      romance:'The romantic signal is strong, but real communication matters more than any compatibility score.',
+      watch:'Do not let excitement replace an honest conversation about expectations.'
+    }
+  };
+
+  const c=copy[band];
+  document.getElementById('matchIcon').textContent=c.icon;
+  document.getElementById('matchTitle').textContent=c.title;
+  document.getElementById('matchSub').textContent=c.sub;
+  document.getElementById('meterFill').style.width=score+'%';
+  document.getElementById('scoreText').textContent=vi?`Tín hiệu tình cảm: ${score}%`:`Romantic signal: ${score}%`;
+  document.getElementById('summaryText').textContent=c.summary;
+  document.getElementById('chemistryText').textContent=c.chemistry;
+  document.getElementById('friendshipText').textContent=c.friendship;
+  document.getElementById('romanceText').textContent=c.romance;
+  document.getElementById('watchText').textContent=c.watch;
+  document.getElementById('chips').innerHTML=(vi?
+    ['💬 Giao Tiếp','🤝 Tin Tưởng','❤️ Sức Hút']:
+    ['💬 Communication','🤝 Trust','❤️ Attraction']
+  ).map(x=>`<span class="chip">${x}</span>`).join('');
+}
+
+
+let currentCompatibilityAI=null;
+
+function compatibilityPayload(extraQuestion=''){
+  const score=calcScore();
+  return {
+    person1:{
+      name:document.getElementById('name1').value.trim(),
+      birthday:document.getElementById('dob1').value
+    },
+    person2:{
+      name:document.getElementById('name2').value.trim(),
+      birthday:document.getElementById('dob2').value
+    },
+    answers:{
+      talk_frequency:answers.talk,
+      flirting_level:answers.flirt,
+      emotional_openness:answers.open
+    },
+    local_romantic_signal_score:score,
+    local_band:getBand(score),
+    followup_question:extraQuestion || undefined,
+    previous_reading:currentCompatibilityAI || undefined
+  };
+}
+
+function renderAICompatibility(ai){
+  const score=calcScore();
+  const band=getBand(score);
+  const icon={friend:'🤝',maybe:'💫',more:'💞',spark:'❤️‍🔥'}[band] || '💞';
+  document.getElementById('matchIcon').textContent=icon;
+  document.getElementById('matchTitle').textContent=ai.title || '';
+  document.getElementById('matchSub').textContent=ai.subtitle || '';
+  document.getElementById('meterFill').style.width=score+'%';
+  document.getElementById('scoreText').textContent=currentLang==='vi'
+    ? `Tín hiệu tình cảm: ${score}%`
+    : `Romantic signal: ${score}%`;
+  document.getElementById('summaryText').textContent=ai.summary || '';
+  document.getElementById('chemistryText').textContent=ai.chemistry || '';
+  document.getElementById('friendshipText').textContent=ai.friendship || '';
+  document.getElementById('romanceText').textContent=ai.romance_signal || '';
+  document.getElementById('watchText').textContent=ai.watch_for || '';
+  document.getElementById('chips').innerHTML=(currentLang==='vi'
+    ? ['💬 Giao Tiếp','🤝 Tin Tưởng','❤️ Sức Hút']
+    : ['💬 Communication','🤝 Trust','❤️ Attraction'])
+    .map(x=>`<span class="chip">${x}</span>`).join('');
+  document.getElementById('aiStatus').textContent=translations[currentLang].aiReady;
+
+  const qs=(ai.followups||[]).slice(0,2);
+  if(qs[0]) document.getElementById('qMore').textContent=qs[0];
+  if(qs[1]) document.getElementById('qRisk').textContent=qs[1];
+}
+
+async function buildCompatibilityReading(){
+  showAIWait(document.getElementById('aiStatus'));
+  if(!window.AskGenieAI || typeof window.AskGenieAI.compatibility!=='function'){
+    renderLocalResult();
+    document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+    return false;
+  }
+  try{
+    const ai=await window.AskGenieAI.compatibility(
+      compatibilityPayload(),
+      {language:currentLang}
+    );
+    currentCompatibilityAI=ai;
+    renderAICompatibility(ai);
+    return true;
+  }catch(err){
+    console.warn('AskGenie compatibility AI failed:',err);
+    renderLocalResult();
+    document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+    return false;
+  }
+}
+
+async function askCompatibilityAI(question){
+  const q=(question||'').trim();
+  if(!q)return;
+  document.getElementById('genieAnswer').style.display='block';
+  showAIWait(document.getElementById('genieAnswerText'));
+  try{
+    if(!window.AskGenieAI || typeof window.AskGenieAI.compatibility!=='function') throw new Error('AI client unavailable');
+    const ai=await window.AskGenieAI.compatibility(
+      compatibilityPayload(q),
+      {language:currentLang}
+    );
+    document.getElementById('genieAnswerText').textContent =
+      ai.summary || ai.romance_signal || ai.watch_for || '';
+  }catch(err){
+    const s=calcScore();
+    document.getElementById('genieAnswerText').textContent=currentLang==='vi'
+      ? (s>=62?'Có tiềm năng, nhưng cách tốt nhất để biết là nhìn vào sự nhất quán và nói chuyện rõ ràng.':'Hiện tín hiệu chưa đủ rõ. Hãy chú ý sự chủ động và mức độ quan tâm ổn định.')
+      : (s>=62?'There is potential, but the best way to know is through consistent actions and a clear conversation.':'The signal is not clear enough yet. Watch for consistent initiative and attention.');
+  }
+}
+
+document.getElementById('checkBtn').onclick=()=>{
+  const n1=document.getElementById('name1').value.trim(),n2=document.getElementById('name2').value.trim();
+  if(!n1||!n2){alert(currentLang==='vi'?'Hãy nhập tên của cả hai người.':'Please enter both names.');return}
+  if(!answers.talk||!answers.flirt||!answers.open){alert(currentLang==='vi'?'Hãy trả lời cả 3 câu hỏi.':'Please answer all 3 questions.');return}
+
+  document.getElementById('setupPanel').classList.add('hidden');
+  document.getElementById('scanView').classList.add('show');
+  document.getElementById('scanView').scrollIntoView({behavior:'smooth',block:'center'});
+
+  const msgs=currentLang==='vi'?
+    ['Đang xem cách hai bạn tương tác…','Đang xem mức độ cởi mở…','Đang đọc tín hiệu tình cảm…','Kết quả đang hiện ra…']:
+    ['Looking at how you interact…','Checking emotional openness…','Reading the romantic signal…','Your connection vibe is forming…'];
+
+  msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('scanText').textContent=m,550+i*550));
+  setTimeout(()=>{
+    buildCompatibilityReading();
+    document.getElementById('scanView').classList.remove('show');
+    document.getElementById('results').classList.add('show');
+    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+  },2800);
+};
+
+document.getElementById('retryBtn').onclick=()=>{
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('setupPanel').classList.remove('hidden');
+  document.getElementById('genieAnswer').style.display='none';
+  document.getElementById('aiStatus').textContent='';
+  document.getElementById('qMore').textContent=translations[currentLang].qMore;
+  document.getElementById('qRisk').textContent=translations[currentLang].qRisk;
+  currentCompatibilityAI=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+document.getElementById('qMore').onclick=()=>askCompatibilityAI(document.getElementById('qMore').textContent);
+document.getElementById('qRisk').onclick=()=>askCompatibilityAI(document.getElementById('qRisk').textContent);
+
+document.getElementById('shareBtn').onclick=async()=>{
+  const text=currentLang==='vi'
+    ?`💞 Kết quả Friend or Lover của tôi trên AskGenie247: ${document.getElementById('matchTitle').textContent}`
+    :`💞 My AskGenie247 Friend or Lover result: ${document.getElementById('matchTitle').textContent}`;
+  if(navigator.share){try{await navigator.share({title:'AskGenie247',text,url:location.href})}catch(e){}}
+  else{try{await navigator.clipboard.writeText(text+' '+location.href);alert(currentLang==='vi'?'Đã sao chép kết quả!':'Result copied!')}catch(e){}}
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080513">
+<title>AskGenie247 — Ask the Genie</title>
+<style>
+:root{
+  --bg:#080513;--gold:#ffd66b;--violet:#a974ff;--pink:#ff7ac8;
+  --text:#fff8ff;--muted:#c9bfd2;--line:rgba(255,255,255,.10);--shadow:0 18px 50px rgba(0,0,0,.38)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{overflow-x:hidden}button,input,textarea{font:inherit}
+.app{
+  min-height:100dvh;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),
+    radial-gradient(circle at 15% 35%,rgba(255,122,200,.08),transparent 24%),
+    linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);
+  padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom))
+}
+.stars,.stars:before,.stars:after{
+  position:fixed;inset:0;content:"";pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.82) 1px,transparent 1.2px),
+    radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);
+  background-size:42px 42px,70px 70px;background-position:0 0,17px 22px;
+  opacity:.14;animation:drift 22s linear infinite
+}
+.stars:before{opacity:.08;animation-duration:32s}.stars:after{opacity:.05;animation-duration:40s}
+@keyframes drift{to{transform:translateY(40px)}}
+header{position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
+.back,.lang-toggle{
+  min-width:42px;height:42px;border-radius:14px;border:1px solid var(--line);
+  background:#ffffff0b;color:white;display:grid;place-items:center;backdrop-filter:blur(12px)
+}
+.back{font-size:22px;text-decoration:none;width:42px}
+.lang-toggle{padding:0 11px;font-weight:850;font-size:11px;letter-spacing:.4px}
+.brand{font-weight:850;font-size:16px}
+main{position:relative;z-index:2;padding:0 14px 24px}
+.hero{text-align:center;padding:10px 12px 14px}
+.genie-mark{
+  width:118px;height:118px;object-fit:contain;display:block;margin:0 auto 10px;
+  filter:drop-shadow(0 0 18px rgba(255,214,107,.28)) drop-shadow(0 0 30px rgba(169,116,255,.22));
+  animation:float 3.6s ease-in-out infinite
+}
+@keyframes float{50%{transform:translateY(-6px) scale(1.02)}}
+h1{font-size:30px;line-height:1.08;margin:0 0 7px;font-weight:950}
+.gradient{background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 auto;color:var(--muted);font-size:14px;line-height:1.45;max-width:340px}
+.panel{
+  background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));
+  border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);
+  margin-top:12px;backdrop-filter:blur(16px)
+}
+.step-title{font-size:18px;font-weight:850;margin:0 0 4px}
+.step-sub{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.45}
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.topic{
+  min-height:58px;border-radius:16px;border:1px solid var(--line);background:#ffffff08;color:white;
+  font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;gap:7px;padding:8px
+}
+.topic.active{
+  border-color:rgba(255,214,107,.48);background:linear-gradient(180deg,rgba(255,214,107,.13),rgba(255,255,255,.04));
+  color:#fff5ce;box-shadow:0 0 18px rgba(255,214,107,.08)
+}
+.field{margin-top:14px}
+.field textarea{
+  width:100%;min-height:122px;border-radius:18px;border:1px solid var(--line);background:#ffffff08;
+  color:white;padding:14px;font-size:14px;line-height:1.45;resize:vertical;outline:none
+}
+.field textarea::placeholder,.chat-input input::placeholder{color:#8f8497}
+.btn{border:0;border-radius:16px;min-height:50px;padding:12px 14px;font-weight:850;font-size:14px}
+.btn.primary{width:100%;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;box-shadow:0 10px 26px rgba(255,214,107,.14)}
+.examples{margin-top:12px}
+.example-label{font-size:11px;color:var(--muted);margin-bottom:7px}
+.example-row{display:grid;grid-template-columns:1fr;gap:8px}
+.example{
+  width:100%;
+  min-width:0;
+  border-radius:14px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background:#ffffff08;
+  color:#eee5f5;
+  font-size:11px;
+  line-height:1.4;
+  text-align:left;
+  white-space:normal;
+}
+.example-more{
+  width:100%;
+  min-height:38px;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,.14);
+  background:#ffffff05;
+  color:#d8cde2;
+  font-size:16px;
+  font-weight:900;
+}
+.extra-examples{
+  display:none;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.extra-examples.show{display:grid}
+
+.chat-wrap{display:none}.chat-wrap.show{display:block}
+.chat-card{
+  margin-top:12px;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,rgba(22,13,34,.97),rgba(12,7,20,.99));
+  border:1px solid rgba(169,116,255,.22);box-shadow:var(--shadow)
+}
+.chat-head{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);background:rgba(169,116,255,.08)}
+.chat-head img{width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,214,107,.25))}
+.chat-head strong{font-size:15px}.chat-head small{display:block;margin-top:2px;font-size:10px;color:var(--muted)}
+.chat-body{min-height:260px;max-height:54vh;overflow:auto;padding:12px;display:grid;gap:9px;scroll-behavior:smooth}
+.msg{max-width:88%;padding:11px 12px;border-radius:17px;font-size:13px;line-height:1.48;white-space:pre-wrap}
+.msg.user{justify-self:end;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;border-bottom-right-radius:6px;font-weight:700}
+.msg.genie{justify-self:start;background:#ffffff0a;border:1px solid var(--line);color:#f7effd;border-bottom-left-radius:6px}
+.typing{display:inline-flex;gap:4px;align-items:center;min-width:42px}
+.typing i{width:5px;height:5px;border-radius:50%;background:#d9c8eb;display:block;animation:blink 1s infinite ease-in-out}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.2;transform:translateY(-2px)}}
+
+.mystery-thinking{
+  min-width:210px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  overflow:hidden;
+}
+.mystery-spinner{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  position:relative;
+  display:grid;
+  place-items:center;
+}
+.mystery-spinner .core{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 36% 28%,rgba(255,255,255,.75),transparent 13%),
+    radial-gradient(circle,rgba(153,255,130,.75),rgba(33,119,89,.94) 58%,rgba(7,36,31,.98));
+  box-shadow:
+    0 0 12px rgba(85,230,184,.55),
+    0 0 20px rgba(255,214,107,.16),
+    inset 0 0 8px rgba(255,255,255,.10);
+  color:var(--gold);
+  font-size:13px;
+  z-index:3;
+  animation:corePulse 1.35s ease-in-out infinite;
+}
+.mystery-spinner .ring{
+  position:absolute;
+  inset:2px;
+  border-radius:50%;
+  border:2px solid transparent;
+  border-top-color:var(--gold);
+  border-right-color:rgba(169,116,255,.9);
+  border-bottom-color:rgba(255,122,200,.72);
+  filter:drop-shadow(0 0 5px rgba(255,214,107,.35));
+  animation:spinMystery 1.05s linear infinite;
+}
+.mystery-spinner .ring:before,
+.mystery-spinner .ring:after{
+  content:"✦";
+  position:absolute;
+  color:var(--gold);
+  font-size:10px;
+  text-shadow:0 0 7px rgba(255,214,107,.9);
+}
+.mystery-spinner .ring:before{top:-8px;left:17px}
+.mystery-spinner .ring:after{bottom:-7px;right:4px}
+.mystery-spinner .orbit{
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:1px dashed rgba(255,255,255,.16);
+  animation:spinMysteryReverse 2.2s linear infinite;
+}
+.mystery-spinner .orbit:before{
+  content:"";
+  position:absolute;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--pink);
+  top:4px;left:7px;
+  box-shadow:0 0 8px rgba(255,122,200,.75);
+}
+.thinking-copy{
+  color:#f3eafa;
+  font-size:11px;
+  line-height:1.38;
+  position:relative;
+  z-index:2;
+  animation:thinkingGlow 1.2s ease-in-out infinite alternate;
+}
+.mystery-thinking:after{
+  content:"";
+  position:absolute;
+  inset:auto -10% -8px -10%;
+  height:22px;
+  background:radial-gradient(ellipse at center,rgba(169,116,255,.14),transparent 68%);
+  pointer-events:none;
+}
+@keyframes spinMystery{to{transform:rotate(360deg)}}
+@keyframes spinMysteryReverse{to{transform:rotate(-360deg)}}
+@keyframes corePulse{50%{transform:scale(1.10);filter:brightness(1.15)}}
+@keyframes thinkingGlow{from{opacity:.68}to{opacity:1}}
+
+.msg.genie.answer-reveal{
+  position:relative;
+  animation:answerReveal .52s cubic-bezier(.16,1,.3,1);
+}
+.msg.genie.answer-reveal:before,
+.msg.genie.answer-reveal:after{
+  position:absolute;
+  color:var(--gold);
+  pointer-events:none;
+  text-shadow:0 0 8px rgba(255,214,107,.8);
+  animation:sparkPop .8s ease-out forwards;
+}
+.msg.genie.answer-reveal:before{content:"✦";left:-6px;top:-8px;font-size:14px}
+.msg.genie.answer-reveal:after{content:"✧";right:-7px;top:7px;font-size:12px;animation-delay:.08s}
+@keyframes answerReveal{
+  0%{opacity:0;transform:translateY(8px) scale(.985);filter:blur(5px)}
+  65%{opacity:1;filter:blur(0)}
+  100%{transform:translateY(0) scale(1)}
+}
+@keyframes sparkPop{
+  0%{opacity:0;transform:scale(.2) rotate(0)}
+  35%{opacity:1;transform:scale(1.25) rotate(15deg)}
+  100%{opacity:0;transform:translateY(-10px) scale(.7) rotate(35deg)}
+}
+.suggestions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  overflow:visible;
+  padding:0 12px 10px;
+}
+.followup{
+  width:100%;
+  min-width:0;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#ffffff08;
+  color:white;
+  padding:10px 12px;
+  font-size:11px;
+  line-height:1.4;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.related{
+  margin:0 12px 12px;padding:12px;border-radius:18px;border:1px solid rgba(255,214,107,.20);
+  background:linear-gradient(180deg,rgba(255,214,107,.08),rgba(255,255,255,.03));display:none
+}
+.related.show{display:block}
+.related small{display:block;color:var(--muted);font-size:10px;margin-bottom:5px}
+.related strong{display:block;font-size:13px;margin-bottom:5px}
+.related p{margin:0;color:#ddd0e8;font-size:11px;line-height:1.42}
+.related a{
+  display:inline-flex;margin-top:9px;text-decoration:none;border-radius:999px;padding:8px 10px;
+  background:rgba(255,214,107,.12);border:1px solid rgba(255,214,107,.25);color:#fff3c6;font-size:11px;font-weight:850
+}
+.chat-input{padding:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:8px;background:rgba(255,255,255,.02)}
+.chat-input input{min-width:0;height:46px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:white;padding:0 12px;outline:none;font-size:12px}
+.chat-send{width:46px;height:46px;border-radius:14px;border:0;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900;font-size:17px}
+.chat-actions{display:flex;justify-content:center;margin-top:10px}
+.clear-btn{border:1px solid var(--line);background:#ffffff07;color:#cfc4d8;border-radius:999px;padding:8px 11px;font-size:10px}
+.fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}
+.bottom-nav{
+  position:fixed;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));height:62px;border-radius:21px;
+  background:rgba(14,9,22,.88);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);
+  z-index:80;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 18px 50px rgba(0,0,0,.48)
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#bfb4c8;text-decoration:none;font-size:10px;font-weight:700}
+.nav-item .ni{font-size:19px}.nav-item.active{color:var(--gold)}
+.nav-genie-icon{width:24px;height:24px;object-fit:contain;display:block;filter:drop-shadow(0 0 5px rgba(255,214,107,.28))}
+.hidden{display:none!important}
+@media(min-width:700px){.app{max-width:520px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app"><div class="stars"></div>
+<header>
+  <a class="back" href="index.html" aria-label="Back">‹</a>
+  <div class="brand" data-i18n="pageTitle">🧞 Ask Genie</div>
+  <button class="lang-toggle" id="langToggle">VI</button>
+</header>
+
+<main>
+<section class="hero">
+  <img class="genie-mark" src="images/genie-mark.png" alt="Ask Genie">
+  <h1><span class="gradient" data-i18n="heroTitle">What’s on your mind?</span></h1>
+  <p data-i18n="heroSub">Ask freely. Genie can help you reflect, clarify the real question, and find the next useful step.</p>
+</section>
+
+<section class="panel" id="askPanel">
+  <h2 class="step-title" data-i18n="topicTitle">Choose a topic — or skip it</h2>
+  <p class="step-sub" data-i18n="topicSub">A topic helps Genie frame the answer, but you can ask anything.</p>
+
+  <div class="topic-grid">
+    <button class="topic" data-topic="Love">❤️ <span data-i18n="love">Love</span></button>
+    <button class="topic" data-topic="Money">💰 <span data-i18n="money">Money</span></button>
+    <button class="topic" data-topic="Career">💼 <span data-i18n="career">Career</span></button>
+    <button class="topic" data-topic="Future">🔮 <span data-i18n="future">Future</span></button>
+    <button class="topic" data-topic="Dreams">🌙 <span data-i18n="dreams">Dreams</span></button>
+    <button class="topic" data-topic="Luck">🍀 <span data-i18n="luck">Luck</span></button>
+    <button class="topic" data-topic="Life">🧠 <span data-i18n="life">Life / Personal</span></button>
+    <button class="topic" data-topic="Anything">✨ <span data-i18n="anything">Anything</span></button>
+  </div>
+
+  <div class="field">
+    <textarea id="questionInput" data-i18n-placeholder="questionPlaceholder" placeholder="Ask Genie anything…"></textarea>
+  </div>
+
+  <div class="examples">
+    <div class="example-label" data-i18n="tryLabel">Try asking:</div>
+    <div class="example-row">
+      <button class="example" data-i18n="ex1">Should I stay in this relationship?</button>
+      <button class="example" data-i18n="ex2">What am I missing about this decision?</button>
+      <button class="example-more" id="exampleMoreBtn" aria-label="More example questions">•••</button>
+    </div>
+    <div class="extra-examples" id="extraExamples">
+      <button class="example" data-i18n="ex3">Why do I keep thinking about the same problem?</button>
+      <button class="example" data-i18n="ex4">What should I focus on right now?</button>
+      <button class="example" data-i18n="ex5">What am I avoiding?</button>
+      <button class="example" data-i18n="ex6">What would change my decision?</button>
+    </div>
+  </div>
+
+  <button class="btn primary" id="askBtn" style="margin-top:14px" data-i18n="askBtn">Ask Genie ✨</button>
+</section>
+
+<section class="chat-wrap" id="chatWrap">
+  <div class="chat-card">
+    <div class="chat-head">
+      <img src="images/genie-mark.png" alt="Ask Genie">
+      <div><strong data-i18n="askGenieTitle">Ask Genie</strong><small data-i18n="sessionOnly">This conversation stays in this page session</small></div>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="suggestions" id="suggestions"></div>
+
+    <div class="related" id="relatedBox">
+      <small data-i18n="relatedLabel">Related AskGenie247 experience</small>
+      <strong id="relatedTitle"></strong>
+      <p id="relatedReason"></p>
+      <a id="relatedLink" href="#" data-i18n="openExperience">Open Experience →</a>
+    </div>
+
+    <div class="chat-input">
+      <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Ask a follow-up…">
+      <button class="chat-send" id="chatSend">➤</button>
+    </div>
+  </div>
+  <div class="chat-actions"><button class="clear-btn" id="clearBtn" data-i18n="clearChat">Clear Conversation</button></div>
+  <p class="fineprint" data-i18n="fineprint">Genie is for reflection and entertainment. For important medical, legal, financial, or safety decisions, use qualified professional guidance.</p>
+</section>
+</main>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html"><span class="ni">🏠</span><span data-i18n="home">Home</span></a>
+  <a class="nav-item" href="index.html#explore"><span class="ni">✨</span><span data-i18n="explore">Explore</span></a>
+  <a class="nav-item active" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><span data-i18n="genie">Genie</span></a>
+  <a class="nav-item" href="my-genie.html"><span class="ni">❤️</span><span data-i18n="me">Me</span></a>
+</nav>
+</div>
+
+<script src="js/askgenie-ai.js"></script>
+<script>
+const translations={
+en:{
+pageTitle:"🧞 Ask Genie",heroTitle:"What’s on your mind?",heroSub:"Ask freely. Genie can help you reflect, clarify the real question, and find the next useful step.",
+topicTitle:"Choose a topic — or skip it",topicSub:"A topic helps Genie frame the answer, but you can ask anything.",
+love:"Love",money:"Money",career:"Career",future:"Future",dreams:"Dreams",luck:"Luck",life:"Life / Personal",anything:"Anything",
+questionPlaceholder:"Ask Genie anything…",tryLabel:"Try asking:",ex1:"Should I stay in this relationship?",ex2:"What am I missing about this decision?",ex3:"Why do I keep thinking about the same problem?",ex4:"What should I focus on right now?",ex5:"What am I avoiding?",ex6:"What would change my decision?",
+askBtn:"Ask Genie ✨",askGenieTitle:"Ask Genie",sessionOnly:"This conversation stays in this page session",relatedLabel:"Related AskGenie247 experience",openExperience:"Open Experience →",
+chatPlaceholder:"Ask a follow-up…",clearChat:"Clear Conversation",fineprint:"Genie is for reflection and entertainment. For important medical, legal, financial, or safety decisions, use qualified professional guidance.",
+home:"Home",explore:"Explore",genie:"Genie",me:"Me",needQuestion:"Ask Genie a question first.",thinking:"Genie is thinking…"
+},
+vi:{
+pageTitle:"🧞 Hỏi Genie",heroTitle:"Bạn đang nghĩ điều gì?",heroSub:"Cứ hỏi tự nhiên. Genie có thể giúp bạn suy ngẫm, làm rõ câu hỏi thật sự và tìm bước tiếp theo hữu ích.",
+topicTitle:"Chọn chủ đề — hoặc bỏ qua",topicSub:"Chủ đề giúp Genie định hướng câu trả lời, nhưng bạn vẫn có thể hỏi bất cứ điều gì.",
+love:"Tình Yêu",money:"Tiền Bạc",career:"Sự Nghiệp",future:"Tương Lai",dreams:"Giấc Mơ",luck:"May Mắn",life:"Cuộc Sống / Cá Nhân",anything:"Bất Cứ Điều Gì",
+questionPlaceholder:"Hỏi Genie bất cứ điều gì…",tryLabel:"Thử hỏi:",ex1:"Tôi có nên tiếp tục mối quan hệ này không?",ex2:"Tôi đang bỏ sót điều gì trong quyết định này?",ex3:"Tại sao tôi cứ nghĩ mãi về cùng một vấn đề?",ex4:"Tôi nên tập trung vào điều gì ngay lúc này?",ex5:"Tôi đang né tránh điều gì?",ex6:"Điều gì sẽ làm thay đổi quyết định của tôi?",
+askBtn:"Hỏi Genie ✨",askGenieTitle:"Hỏi Genie",sessionOnly:"Cuộc trò chuyện chỉ được giữ trong phiên trang này",relatedLabel:"Trải nghiệm AskGenie247 liên quan",openExperience:"Mở Trải Nghiệm →",
+chatPlaceholder:"Hỏi tiếp…",clearChat:"Xóa Cuộc Trò Chuyện",fineprint:"Genie dành cho suy ngẫm và giải trí. Với quyết định quan trọng về y tế, pháp lý, tài chính hoặc an toàn, hãy dùng hướng dẫn từ chuyên gia phù hợp.",
+home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",needQuestion:"Hãy hỏi Genie một câu trước.",thinking:"Genie đang suy nghĩ…"
+}};
+let lang=localStorage.getItem('askgenieLang')||(navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en');
+let topic="",history=[];
+
+function applyLanguage(){
+  document.documentElement.lang=lang==='vi'?'vi':'en';
+  localStorage.setItem('askgenieLang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(translations[lang][k])el.textContent=translations[lang][k]});
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.dataset.i18nPlaceholder;if(translations[lang][k])el.placeholder=translations[lang][k]});
+  document.getElementById('langToggle').textContent=lang==='vi'?'EN':'VI';
+}
+applyLanguage();
+document.getElementById('langToggle').onclick=()=>{lang=lang==='en'?'vi':'en';applyLanguage()};
+
+document.querySelectorAll('.topic').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');topic=btn.dataset.topic;
+});
+document.querySelectorAll('.example').forEach(btn=>btn.onclick=()=>document.getElementById('questionInput').value=btn.textContent);
+document.getElementById('exampleMoreBtn').onclick=()=>{
+  const box=document.getElementById('extraExamples');
+  box.classList.toggle('show');
+  document.getElementById('exampleMoreBtn').textContent=box.classList.contains('show')?'×':'•••';
+};
+
+const chatBody=document.getElementById('chatBody');
+function addMsg(text,who){
+  const el=document.createElement('div');el.className='msg '+who;el.textContent=text;chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el;
+}
+function addTyping(){
+  const el=document.createElement('div');
+  el.className='msg genie';
+  el.innerHTML='<div class="mystery-thinking"><div class="mystery-spinner"><div class="orbit"></div><div class="ring"></div><div class="core">✦</div></div><div class="thinking-copy"></div></div>';
+  chatBody.appendChild(el);
+  chatBody.scrollTop=chatBody.scrollHeight;
+  return el;
+}
+function thinkingPhrases(){
+  return lang==='vi'
+    ?[
+      'Genie đang xoay vòng những manh mối… ✨',
+      'Đang kết nối những tín hiệu bí ẩn… 🔮',
+      'Có điều gì đó đang dần hiện ra… 🌙',
+      'Vòng phép đang hoàn tất… ✦'
+    ]
+    :[
+      'Genie is spinning through the clues… ✨',
+      'Connecting mysterious signals… 🔮',
+      'Something is beginning to appear… 🌙',
+      'The magic circle is almost complete… ✦'
+    ];
+}
+function startMysteryThinking(el){
+  const copy=el.querySelector('.thinking-copy');
+  const phrases=thinkingPhrases();
+  let i=0;
+  copy.textContent=phrases[0];
+  const timer=setInterval(()=>{
+    i=(i+1)%phrases.length;
+    copy.animate(
+      [{opacity:.15,transform:'translateY(3px)'},{opacity:1,transform:'translateY(0)'}],
+      {duration:280,easing:'ease-out'}
+    );
+    copy.textContent=phrases[i];
+  },1050);
+  return ()=>clearInterval(timer);
+}
+const routes={
+  palm:{title:{en:"Palm Reading",vi:"Xem Chỉ Tay"},href:"palm-reading-v2.html"},
+  dream:{title:{en:"Dream Decoder",vi:"Giải Mã Giấc Mơ"},href:"dream-decoder.html"},
+  love:{title:{en:"Love Compatibility",vi:"Độ Hợp Tình Yêu"},href:"love-compatibility.html"},
+  friend:{title:{en:"Friend or Lover?",vi:"Bạn Hay Người Yêu?"},href:"friend_or_lover_compatibility.html"},
+  lucky:{title:{en:"Lucky Today",vi:"May Mắn Hôm Nay"},href:"lucky-today.html"},
+  tarot:{title:{en:"Tarot",vi:"Tarot"},href:"tarot.html"},
+  future:{title:{en:"Future Predictor",vi:"Dự Đoán Tương Lai"},href:"future-predictor.html"}
+};
+function renderSuggestions(items=[]){
+  const box=document.getElementById('suggestions');box.innerHTML='';
+  (items||[]).slice(0,3).forEach(q=>{const b=document.createElement('button');b.className='followup';b.textContent=q;b.onclick=()=>sendQuestion(q);box.appendChild(b)});
+}
+function renderRelated(key,reason){
+  const box=document.getElementById('relatedBox'),r=routes[key];
+  if(!r){box.classList.remove('show');return}
+  document.getElementById('relatedTitle').textContent=r.title[lang];
+  document.getElementById('relatedReason').textContent=reason||'';
+  document.getElementById('relatedLink').href=r.href;
+  box.classList.add('show');
+}
+async function sendQuestion(q){
+  q=(q||'').trim();if(!q)return;
+  document.getElementById('chatWrap').classList.add('show');
+  document.getElementById('askPanel').classList.add('hidden');
+  addMsg(q,'user');history.push({role:'user',content:q});
+  const typing=addTyping();
+  const stopThinking=startMysteryThinking(typing);
+  try{
+    if(!window.AskGenieAI||typeof AskGenieAI.chat!=='function')throw new Error('Chat AI client method unavailable');
+    const recent=history.slice(-10);
+    const ai=await AskGenieAI.chat({topic:topic||"Anything",message:q,conversation:recent},{language:lang});
+    stopThinking();
+    typing.textContent=ai.answer||'';
+    typing.classList.add('answer-reveal');
+    history.push({role:'assistant',content:ai.answer||''});
+    renderSuggestions(ai.followups||[]);
+    renderRelated(ai.related_experience||'',ai.related_reason||'');
+    chatBody.scrollTop=chatBody.scrollHeight;
+  }catch(err){
+    stopThinking();
+    console.warn('Ask Genie chat failed:',err);
+    typing.textContent=lang==='vi'
+      ?'Genie tạm thời không kết nối được với AI. Hãy thử lại sau một chút.'
+      :'Genie could not reach AI right now. Please try again in a moment.';
+    typing.classList.add('answer-reveal');
+    renderSuggestions([]);renderRelated('', '');
+  }
+}
+document.getElementById('askBtn').onclick=()=>{
+  const q=document.getElementById('questionInput').value.trim();
+  if(!q){alert(translations[lang].needQuestion);return}
+  document.getElementById('questionInput').value='';sendQuestion(q);
+};
+document.getElementById('chatSend').onclick=()=>{const i=document.getElementById('chatInput'),q=i.value.trim();if(q){i.value='';sendQuestion(q)}};
+document.getElementById('chatInput').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('chatSend').click()}};
+document.getElementById('clearBtn').onclick=()=>{
+  history=[];topic='';chatBody.innerHTML='';renderSuggestions([]);renderRelated('','');
+  document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active'));
+  document.getElementById('chatWrap').classList.remove('show');
+  document.getElementById('askPanel').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+</body>
+</html>

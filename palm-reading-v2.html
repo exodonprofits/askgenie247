@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080513" />
+  <title>AskGenie247 — Palm Reading</title>
+  <style>
+    :root{--bg:#080513;--gold:#ffd66b;--violet:#a974ff;--text:#fff8ff;--muted:#c9bfd2;--line:rgba(255,255,255,.10);--emerald:#55e6b8;--shadow:0 18px 50px rgba(0,0,0,.38)}
+
+    .brand-logo{
+      display:block;
+      width:34px;
+      height:34px;
+      object-fit:contain;
+      filter:drop-shadow(0 0 10px rgba(255,214,107,.24));
+    }
+    .hero-logo{
+      display:block;
+      width:112px;
+      height:112px;
+      object-fit:contain;
+      margin:0 auto 12px;
+      filter:
+        drop-shadow(0 0 18px rgba(255,214,107,.24))
+        drop-shadow(0 0 28px rgba(169,116,255,.20));
+      animation:logoFloat 3.8s ease-in-out infinite;
+    }
+    @keyframes logoFloat{
+      50%{transform:translateY(-5px) scale(1.018)}
+    }
+
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}body{overflow-x:hidden}
+    .app{min-height:100dvh;position:relative;overflow:hidden;background:radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),radial-gradient(circle at 10% 34%,rgba(255,122,200,.08),transparent 24%),linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom))}
+    .stars,.stars:before,.stars:after{position:fixed;inset:0;content:"";pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.2px),radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);background-size:42px 42px,70px 70px;background-position:0 0,17px 22px;opacity:.14;animation:drift 22s linear infinite}.stars:before{opacity:.08;animation-duration:32s}.stars:after{opacity:.05;animation-duration:40s}@keyframes drift{to{transform:translateY(40px)}}
+    header{position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}.back,.magic{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:#ffffff0b;color:white;display:grid;place-items:center;backdrop-filter:blur(12px)}.back{text-decoration:none;font-size:22px}.magic{color:var(--gold);font-size:18px}.brand{font-weight:850;font-size:16px}
+    main{position:relative;z-index:2;padding:0 14px 24px}.hero{text-align:center;padding:12px 12px 14px}.hand{width:92px;height:92px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:50px;background:radial-gradient(circle at 38% 28%,rgba(255,255,255,.38),transparent 15%),radial-gradient(circle,rgba(169,116,255,.65),rgba(69,29,102,.78) 54%,rgba(16,8,25,.92) 76%);box-shadow:0 0 34px rgba(169,116,255,.34),inset 0 0 20px rgba(255,255,255,.08);animation:float 3.6s ease-in-out infinite}@keyframes float{50%{transform:translateY(-6px)}}
+    h1{font-size:28px;line-height:1.08;margin:0 0 7px;font-weight:900}.gradient{background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{margin:0;color:var(--muted);font-size:14px}
+    .panel{background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);margin-top:12px;backdrop-filter:blur(16px)}.step-title{font-size:18px;font-weight:850;margin:0 0 4px}.step-sub{color:var(--muted);font-size:12px;margin:0 0 14px}
+    .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.choice{border:1px solid var(--line);background:#ffffff08;color:white;border-radius:18px;min-height:92px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13px}.choice .emoji{font-size:30px}.choice.active{border-color:rgba(255,214,107,.56);background:linear-gradient(180deg,rgba(255,214,107,.14),rgba(255,255,255,.04));box-shadow:0 0 22px rgba(255,214,107,.10)}
+    .instruction{margin:14px 0 0;padding:13px 14px;border-radius:16px;background:rgba(255,214,107,.07);border:1px solid rgba(255,214,107,.16);font-size:13px;color:#fff5d8;display:none}.instruction.show{display:block}
+    .upload-box{border:1px dashed rgba(255,255,255,.22);border-radius:22px;padding:18px;text-align:center;background:rgba(255,255,255,.025)}.upload-icon{font-size:40px;margin-bottom:7px}.upload-box h3{font-size:16px;margin:0 0 5px}.upload-box p{font-size:12px;color:var(--muted);margin:0 0 14px}.upload-actions,.preview-actions,.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:16px;min-height:48px;padding:12px 14px;font-weight:850;font-size:14px}.btn.primary{background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;box-shadow:0 10px 26px rgba(255,214,107,.14)}.btn.secondary{background:#ffffff0b;color:white;border:1px solid var(--line)}input[type=file]{display:none}
+    .preview-wrap{display:none;margin-top:14px}.preview-wrap.show{display:block}.preview{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:22px;border:1px solid var(--line);background:#0c0811;box-shadow:0 12px 26px rgba(0,0,0,.3)}.preview-actions{margin-top:10px}
+    .scan-view{display:none}.scan-view.show{display:block}.scan-stage{position:relative;overflow:hidden;border-radius:22px;background:#100a18;border:1px solid var(--line);margin-top:12px}.scan-stage img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;opacity:.82}.scan-line{position:absolute;left:6%;right:6%;height:3px;top:8%;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 18px var(--gold);animation:scan 2.7s ease-in-out infinite}@keyframes scan{50%{top:88%}}.scan-status{text-align:center;padding:16px 8px 4px}.scan-status h3{margin:0 0 8px;font-size:19px}.scan-status p{margin:0;color:var(--muted);font-size:13px}.scan-list{margin-top:14px;display:grid;gap:8px}.scan-item{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-radius:14px;background:#ffffff08;border:1px solid var(--line);font-size:12px;color:#e9dff0}.done{color:var(--emerald)}
+    .results{display:none}.results.show{display:block}.reveal-card{text-align:center;padding:22px 16px;background:radial-gradient(circle at 50% 10%,rgba(255,214,107,.16),transparent 28%),linear-gradient(180deg,rgba(38,20,55,.94),rgba(18,10,27,.96));border:1px solid rgba(255,214,107,.2);border-radius:28px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:850}.archetype-icon{font-size:58px;margin:12px 0 5px}.archetype{font-size:30px;font-weight:950;margin:0}.traits{color:var(--muted);font-size:13px;margin:6px 0 0}.one-liner{margin:14px auto 0;max-width:320px;font-size:14px;line-height:1.5;color:#fbf4ff}
+    .result-grid{display:grid;gap:10px;margin-top:12px}.result-card{border-radius:20px;padding:15px;background:#ffffff08;border:1px solid var(--line)}.result-card h3{margin:0 0 6px;font-size:15px}.result-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.future-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{border-radius:999px;padding:7px 9px;font-size:11px;background:#ffffff0a;border:1px solid var(--line);color:#eee3f7}
+    .ask-box{margin-top:12px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(169,116,255,.13),rgba(255,255,255,.04));border:1px solid rgba(169,116,255,.22)}.ask-box h3{margin:0 0 7px;font-size:17px}.ask-box p{margin:0 0 12px;color:var(--muted);font-size:12px}.quick-qs{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;overflow:visible}
+.quick{min-width:0;border:1px solid var(--line);background:#ffffff09;color:white;padding:9px 10px;border-radius:999px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick.more{width:42px;padding:9px 0;text-align:center;font-size:16px}
+.more-questions{display:none;margin-top:9px;gap:8px;grid-template-columns:1fr 1fr}
+.more-questions.show{display:grid}
+.more-questions .quick{width:100%}
+.ask-own-row{margin-top:9px;display:grid;grid-template-columns:1fr auto;gap:8px}
+.ask-own-row input{min-width:0;height:40px;border-radius:13px;border:1px solid var(--line);background:#ffffff08;color:white;padding:0 11px;font-size:11px;outline:none}
+.ask-own-row input::placeholder{color:#8f8497}
+.ask-own-row button{height:40px;min-width:42px;border-radius:13px;border:0;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900}
+
+.genie-chat{margin-top:12px;border-radius:22px;background:linear-gradient(180deg,rgba(22,13,34,.96),rgba(13,8,21,.98));border:1px solid rgba(169,116,255,.22);overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,.28)}
+.chat-head{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);background:rgba(169,116,255,.08)}
+.chat-head img{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 0 9px rgba(255,214,107,.25))}
+.chat-head strong{font-size:14px}.chat-head small{display:block;margin-top:2px;font-size:10px;color:var(--muted);font-weight:600}
+.chat-body{max-height:320px;overflow:auto;padding:12px;display:grid;gap:9px;scroll-behavior:smooth}
+.msg{max-width:88%;padding:10px 12px;border-radius:16px;font-size:12px;line-height:1.45;white-space:pre-wrap}
+.msg.user{justify-self:end;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;border-bottom-right-radius:6px;font-weight:700}
+.msg.genie{justify-self:start;background:#ffffff0a;border:1px solid var(--line);color:#f7effd;border-bottom-left-radius:6px}
+.typing{display:inline-flex;gap:4px;align-items:center;min-width:42px}.typing i{width:5px;height:5px;border-radius:50%;background:#d9c8eb;display:block;animation:blink 1s infinite ease-in-out}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes blink{50%{opacity:.2;transform:translateY(-2px)}}
+.chat-input{padding:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:8px;background:rgba(255,255,255,.025)}
+.chat-input input{min-width:0;height:44px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:white;padding:0 12px;outline:none;font-size:12px}.chat-input input::placeholder{color:#8f8497}
+.chat-send{width:44px;height:44px;border-radius:14px;border:0;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900;font-size:17px}
+.bottom-actions{margin-top:12px}.fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}.hidden{display:none!important}
+
+    .bottom-nav{
+      position:fixed;
+      left:10px;
+      right:10px;
+      bottom:calc(8px + env(safe-area-inset-bottom));
+      height:62px;
+      border-radius:21px;
+      background:rgba(14,9,22,.88);
+      border:1px solid rgba(255,255,255,.10);
+      -webkit-backdrop-filter:blur(20px);
+      backdrop-filter:blur(20px);
+      z-index:80;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      box-shadow:0 18px 50px rgba(0,0,0,.48);
+    }
+    .nav-item{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      color:#bfb4c8;
+      text-decoration:none;
+      font-size:10px;
+      font-weight:700;
+      -webkit-tap-highlight-color:transparent;
+      transition:color .18s ease, transform .18s ease;
+    }
+    .nav-item:active{transform:scale(.94)}
+    .nav-item .ni{font-size:19px;line-height:1}
+    .nav-item.active{color:var(--gold)}
+
+    @media (min-width:700px){.app:after{content:"AskGenie247 Palm Reading is designed for mobile";position:fixed;inset:0;z-index:9999;background:#080513;color:white;display:grid;place-items:center;font-size:18px;font-weight:800}}
+    @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+  
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+/* AskGenie AI wait animation — palm-reading-v2.html */
+.ai-magic-wait{
+  --ai-c1:#ffd66b;--ai-c2:#a974ff;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:34px;max-width:100%;vertical-align:middle
+}
+.ai-magic-wheel{
+  width:34px;height:34px;flex:0 0 34px;position:relative;display:grid;place-items:center
+}
+.ai-magic-wheel:before{
+  content:"";position:absolute;inset:1px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--ai-c1);border-right-color:var(--ai-c2);
+  box-shadow:0 0 9px rgba(255,214,107,.24);
+  animation:aiMagicSpin 1.4s linear infinite
+}
+.ai-magic-wheel:after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.19);
+  animation:aiMagicSpinReverse 2.65s linear infinite
+}
+.ai-magic-core{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  font-size:12px;line-height:1;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.65),transparent 18%),
+             radial-gradient(circle,var(--ai-c1),rgba(31,14,46,.96) 72%);
+  box-shadow:0 0 12px rgba(169,116,255,.38);
+  animation:aiMagicPulse 1.15s ease-in-out infinite
+}
+.ai-magic-orbit{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ai-c2);
+  top:-1px;left:14px;box-shadow:0 0 8px var(--ai-c2);z-index:3;
+  transform-origin:3px 18px;animation:aiMagicOrbit 2.65s linear infinite
+}
+.ai-wait-copy{
+  color:#efe5f7;font-size:10px;font-weight:800;line-height:1.35;
+  animation:aiMagicGlow 1s ease-in-out infinite alternate;text-align:left
+}
+@keyframes aiMagicSpin{to{transform:rotate(360deg)}}
+@keyframes aiMagicSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes aiMagicOrbit{to{transform:rotate(360deg)}}
+@keyframes aiMagicPulse{50%{transform:scale(1.12);filter:brightness(1.18)}}
+@keyframes aiMagicGlow{from{opacity:.62}to{opacity:1}}
+.ai-answer-reveal{animation:aiAnswerReveal .48s cubic-bezier(.16,1,.3,1)}
+@keyframes aiAnswerReveal{
+  from{opacity:.2;transform:translateY(5px);filter:blur(3px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+</style>
+</head>
+<body>
+  <div class="app"><div class="stars"></div>
+    <header><a class="back" href="index.html" aria-label="Back">‹</a><div class="brand" data-i18n="pageTitle">✋ Palm Reading</div><button class="lang-toggle" id="langToggle" aria-label="Change language">VI</button></header>
+    <main>
+      <section class="hero"><img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie"><h1><span class="gradient" data-i18n="heroTitle">Your hand has a story.</span></h1><p data-i18n="heroSub">Let Genie take a look.</p></section>
+
+      <section class="panel" id="setupPanel">
+        <h2 class="step-title" data-i18n="whoTitle">Who is this reading for?</h2><p class="step-sub" data-i18n="whoSub">Choose one to get the right palm prompt.</p>
+        <div class="choice-grid">
+          <button class="choice" data-gender="female"><span class="emoji">👩</span><span data-i18n="female">Female</span></button>
+          <button class="choice" data-gender="male"><span class="emoji">👨</span><span data-i18n="male">Male</span></button>
+          <button class="choice" data-gender="other"><span class="emoji">✨</span><span data-i18n="other">Other</span></button>
+        </div>
+        <div class="instruction" id="instruction"></div>
+      </section>
+
+      <section class="panel" id="uploadPanel">
+        <h2 class="step-title" data-i18n="showPalm">Show Genie your palm</h2><p class="step-sub" data-i18n="showPalmSub">Open your hand, relax your fingers, and keep the full palm in frame.</p>
+        <div class="upload-box"><div class="upload-icon">📸</div><h3 data-i18n="ready">Ready when you are</h3><p data-i18n="light">Bright light works best.</p>
+          <div class="upload-actions"><button class="btn primary" id="takePhotoBtn" data-i18n="takePhoto">Take Photo</button><button class="btn secondary" id="uploadBtn" data-i18n="upload">Upload</button></div>
+          <input id="cameraInput" type="file" accept="image/*" capture="environment"/><input id="fileInput" type="file" accept="image/*"/>
+        </div>
+        <div class="preview-wrap" id="previewWrap"><img id="preview" class="preview" alt="Palm preview"/><div class="preview-actions"><button class="btn secondary" id="retakeBtn" data-i18n="tryAgain">Try Again</button><button class="btn primary" id="readPalmBtn" data-i18n="readPalm">Read My Palm ✨</button></div></div>
+      </section>
+
+      <section class="panel scan-view" id="scanView">
+        <div class="scan-stage"><img id="scanImage" alt="Scanning palm"/><div class="scan-line"></div></div>
+        <div class="scan-status"><h3 data-i18n="scanTitle">✨ Genie is reading your palm…</h3><p id="scanMessage" data-i18n="scanCloser">Looking closer.</p></div>
+        <div class="scan-list"><div class="scan-item"><span data-i18n="heartLine">❤️ Heart Line</span><span id="s1" data-i18n="reading">Reading…</span></div><div class="scan-item"><span data-i18n="headLine">🧠 Head Line</span><span id="s2" data-i18n="waiting">Waiting</span></div><div class="scan-item"><span data-i18n="lifeLine">✨ Life Line</span><span id="s3" data-i18n="waiting">Waiting</span></div><div class="scan-item"><span data-i18n="fateLine">🧭 Fate Line</span><span id="s4" data-i18n="waiting">Waiting</span></div></div>
+      </section>
+
+      <section class="results" id="results">
+        <div class="reveal-card"><div class="eyebrow" data-i18n="archetypeLabel">YOUR PALM ARCHETYPE</div><div class="archetype-icon">🏗️</div><h2 class="archetype" data-i18n="builderTitle">THE BUILDER</h2><div id="aiStatus" style="margin-top:8px;font-size:10px;color:var(--gold);font-weight:800"></div><div class="traits" id="palmTraits" data-i18n="builderTraits">Ambitious • Persistent • Independent</div><p class="one-liner" id="palmSummary" data-i18n="builderOneLiner">You tend to create opportunities rather than wait around for them.</p></div>
+        <div class="result-grid">
+          <div class="result-card"><h3 data-i18n="youTitle">🧠 You</h3><p id="palmYouText" data-i18n="youText">You come across as practical, driven and mentally active. Once something matters to you, you usually want to understand it, improve it and make it your own.</p></div>
+          <div class="result-card"><h3 data-i18n="loveTitle">❤️ Love</h3><p id="palmLoveText" data-i18n="loveTextResult">You may care more deeply than you always show. Loyalty, consistency and feeling respected matter more than dramatic gestures.</p></div>
+          <div class="result-card"><h3 data-i18n="moneyCareerTitle">💰 Money & Career</h3><p id="palmMoneyCareerText" data-i18n="moneyCareerText">Your palm pattern fits a builder-style path: steady progress, multiple chapters and a preference for creating your own options instead of relying on one fixed route.</p></div>
+          <div class="result-card"><h3 data-i18n="futureVibeTitle">🔮 Future Vibe</h3><p id="palmFutureText" data-i18n="futureVibeText">Traditional palmistry would associate this pattern with a period of change, expansion and new choices competing for your attention.</p><div class="future-chips"><span class="chip" data-i18n="opportunityChip">💼 Opportunity</span><span class="chip" data-i18n="buildingChip">💰 Building</span><span class="chip" data-i18n="changeChip">✨ Change</span></div></div>
+          <div class="result-card"><h3 data-i18n="hiddenStrengthTitle">✨ Hidden Strength</h3><p id="palmHiddenText" data-i18n="hiddenStrengthText">You may recover from setbacks faster than people around you realize.</p></div>
+        </div>
+        <div class="ask-box">
+  <h3 data-i18n="askPalm">🧞 Ask Genie About My Palm</h3>
+  <p data-i18n="askPalmSub">Pick a common question or ask your own.</p>
+
+  <div class="quick-qs">
+    <button class="quick" data-q="money" data-i18n="qMoney">💰 What about money?</button>
+    <button class="quick" data-q="love" data-i18n="qLove">❤️ Tell me more about love</button>
+    <button class="quick more" id="moreQuestionsBtn" aria-label="More questions">•••</button>
+  </div>
+
+  <div class="more-questions" id="moreQuestions">
+    <button class="quick" data-q="career" data-i18n="qCareer">💼 What about career?</button>
+    <button class="quick" data-q="future" data-i18n="qFuture">🔮 What's ahead?</button>
+    <button class="quick" data-q="unusual" data-i18n="qUnusual">✨ What's unusual?</button>
+    <button class="quick" data-q="luck" data-i18n="qLuck">🍀 What about luck?</button>
+  </div>
+
+  <div class="ask-own-row">
+    <input id="askOwnInput" type="text" placeholder="Ask your own question…" data-i18n-placeholder="askOwnPlaceholder">
+    <button id="askOwnBtn" aria-label="Ask Genie">➤</button>
+  </div>
+</div>
+<div class="genie-chat" id="genieChat"><div class="chat-head"><img src="images/genie-mark.png" alt="AskGenie247"><div><strong data-i18n="askGenieTitle">Ask Genie</strong><small data-i18n="readingFromPalm">Reading from your palm result</small></div></div><div class="chat-body" id="chatBody"><div class="msg genie" id="welcomeMsg" data-i18n="welcomeMsg">I’ve got your palm reading. Ask me about money, love, career, what’s ahead, or anything else you’re curious about. ✨</div></div><div class="chat-input"><input id="chatInput" type="text" placeholder="Ask about your palm…" data-i18n-placeholder="chatPlaceholder" autocomplete="off"><button class="chat-send" id="chatSend" aria-label="Send">➤</button></div></div>
+        <div class="bottom-actions"><button class="btn secondary" id="otherHandBtn" data-i18n="otherHand">✋ Other Hand</button><button class="btn primary" id="shareBtn" data-i18n="shareResult">📤 Share Result</button></div>
+        <button class="btn secondary" style="width:100%;margin-top:10px" id="futureBtn" data-i18n="seeFuture">🔮 See My Future</button>
+        <p class="fineprint" data-i18n="fineprint">For fun, entertainment and self-reflection only. Palmistry is not scientifically proven and does not predict future events with certainty.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <a class="nav-item" href="index.html">
+        <span class="ni">🏠</span>
+        <span data-i18n="navHome">Home</span>
+      </a>
+      <a class="nav-item active" href="index.html#explore" aria-current="page">
+        <span class="ni">✨</span>
+        <span data-i18n="navExplore">Explore</span>
+      </a>
+      <a class="nav-item" href="ask-the-genie.html">
+        <img class="nav-genie-icon" src="images/genie-mark.png" alt="">
+        <span data-i18n="navGenie">Genie</span>
+      </a>
+      <a class="nav-item" href="my-genie.html">
+        <span class="ni">❤️</span>
+        <span data-i18n="navMe">Me</span>
+      </a>
+    </nav>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="js/askgenie-ai.js"></script>
+  <script>
+
+function aiWaitMarkup(){
+  const vi=document.documentElement.lang==='vi';
+  return `<span class="ai-magic-wait"><span class="ai-magic-wheel"><span class="ai-magic-orbit"></span><span class="ai-magic-core">✋</span></span><span class="ai-wait-copy">${vi?"Đang lần theo những đường chỉ tay…":"Tracing the palm lines…"}</span></span>`;
+}
+function showAIWait(el){
+  if(!el)return;
+  el.classList.remove('ai-answer-reveal');
+  el.innerHTML=aiWaitMarkup();
+}
+function revealAIText(el,text){
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.remove('ai-answer-reveal');
+  void el.offsetWidth;
+  el.classList.add('ai-answer-reveal');
+}
+
+
+
+    const translations = {
+      en:{
+        pageTitle:"✋ Palm Reading", heroTitle:"Your hand has a story.", heroSub:"Let Genie take a look.",
+        whoTitle:"Who is this reading for?", whoSub:"Choose one to get the right palm prompt.",
+        female:"Female", male:"Male", other:"Other",
+        showPalm:"Show Genie your palm", showPalmSub:"Open your hand, relax your fingers, and keep the full palm in frame.",
+        ready:"Ready when you are", light:"Bright light works best.",
+        takePhoto:"Take Photo", upload:"Upload", tryAgain:"Try Again", readPalm:"Read My Palm ✨",
+        askPalm:"🧞 Ask Genie About My Palm", askPalmSub:"Pick a common question or ask your own.",
+        scanTitle:"✨ Genie is reading your palm…", scanCloser:"Looking closer.", heartLine:"❤️ Heart Line", headLine:"🧠 Head Line", lifeLine:"✨ Life Line", fateLine:"🧭 Fate Line", reading:"Reading…", waiting:"Waiting",
+        archetypeLabel:"YOUR PALM ARCHETYPE", builderTitle:"THE BUILDER", builderTraits:"Ambitious • Persistent • Independent", builderOneLiner:"You tend to create opportunities rather than wait around for them.",
+        youTitle:"🧠 You", youText:"You come across as practical, driven and mentally active. Once something matters to you, you usually want to understand it, improve it and make it your own.",
+        loveTitle:"❤️ Love", loveTextResult:"You may care more deeply than you always show. Loyalty, consistency and feeling respected matter more than dramatic gestures.",
+        moneyCareerTitle:"💰 Money & Career", moneyCareerText:"Your palm pattern fits a builder-style path: steady progress, multiple chapters and a preference for creating your own options instead of relying on one fixed route.",
+        futureVibeTitle:"🔮 Future Vibe", futureVibeText:"Traditional palmistry would associate this pattern with a period of change, expansion and new choices competing for your attention.",
+        opportunityChip:"💼 Opportunity", buildingChip:"💰 Building", changeChip:"✨ Change", hiddenStrengthTitle:"✨ Hidden Strength", hiddenStrengthText:"You may recover from setbacks faster than people around you realize.",
+        qMoney:"💰 What about money?", qLove:"❤️ Tell me more about love", qCareer:"💼 What about career?", qFuture:"🔮 What's ahead?", qUnusual:"✨ What's unusual?", qLuck:"🍀 What about luck?",
+        askOwnPlaceholder:"Ask your own question…", askGenieTitle:"Ask Genie", readingFromPalm:"Reading from your palm result", welcomeMsg:"I’ve got your palm reading. Ask me about money, love, career, what’s ahead, or anything else you’re curious about. ✨", chatPlaceholder:"Ask about your palm…",
+        otherHand:"✋ Other Hand", shareResult:"📤 Share Result", seeFuture:"🔮 See My Future", fineprint:"For fun, entertainment and self-reflection only. Palmistry is not scientifically proven and does not predict future events with certainty.",
+        navHome:"Home", navExplore:"Explore", navGenie:"Genie", navMe:"Me",
+        aiThinking:"🧞 ChatGPT Vision is analyzing your palm…",aiReady:"✨ Palm interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",chooseFirst:"Choose who this reading is for first.", addPhoto:"Add a palm photo first.", copied:"Result copied!", shareUnavailable:"Sharing is not available on this device."
+      },
+      vi:{
+        pageTitle:"✋ Xem Chỉ Tay", heroTitle:"Bàn tay của bạn có một câu chuyện.", heroSub:"Hãy để Genie xem thử nhé.",
+        whoTitle:"Bài xem này dành cho ai?", whoSub:"Chọn một mục để Genie hướng dẫn đúng bàn tay.",
+        female:"Nữ", male:"Nam", other:"Khác",
+        showPalm:"Đưa lòng bàn tay cho Genie xem", showPalmSub:"Mở bàn tay, thả lỏng các ngón và giữ trọn lòng bàn tay trong khung hình.",
+        ready:"Sẵn sàng chưa?", light:"Ánh sáng rõ sẽ cho kết quả tốt hơn.",
+        takePhoto:"Chụp Ảnh", upload:"Tải Ảnh Lên", tryAgain:"Chụp Lại", readPalm:"Xem Chỉ Tay ✨",
+        askPalm:"🧞 Hỏi Genie Về Bàn Tay Của Tôi", askPalmSub:"Chọn câu hỏi phổ biến hoặc tự hỏi điều bạn muốn.",
+        scanTitle:"✨ Genie đang xem chỉ tay của bạn…", scanCloser:"Đang nhìn kỹ hơn.", heartLine:"❤️ Đường Tâm Đạo", headLine:"🧠 Đường Trí Đạo", lifeLine:"✨ Đường Sinh Đạo", fateLine:"🧭 Đường Định Mệnh", reading:"Đang đọc…", waiting:"Đang chờ",
+        archetypeLabel:"KIỂU BÀN TAY CỦA BẠN", builderTitle:"NGƯỜI KIẾN TẠO", builderTraits:"Tham vọng • Kiên trì • Độc lập", builderOneLiner:"Bạn có xu hướng tự tạo ra cơ hội cho mình thay vì chỉ ngồi chờ cơ hội xuất hiện.",
+        youTitle:"🧠 Bạn", youText:"Bạn tạo cảm giác là người thực tế, có động lực và luôn suy nghĩ. Khi điều gì thật sự quan trọng với bạn, bạn thường muốn hiểu rõ, cải thiện nó và biến nó thành điều của riêng mình.",
+        loveTitle:"❤️ Tình Yêu", loveTextResult:"Bạn có thể yêu sâu sắc hơn những gì bạn thường thể hiện. Sự chung thủy, ổn định và cảm giác được tôn trọng quan trọng với bạn hơn những cử chỉ quá phô trương.",
+        moneyCareerTitle:"💰 Tiền Bạc & Sự Nghiệp", moneyCareerText:"Đường nét bàn tay của bạn gợi lên hình mẫu của một người kiến tạo: tiến từng bước vững chắc, trải qua nhiều chặng đường và thích tự tạo lựa chọn cho mình hơn là phụ thuộc vào một con đường cố định.",
+        futureVibeTitle:"🔮 Xu Hướng Tương Lai", futureVibeText:"Theo cách diễn giải truyền thống của thuật xem tay, kiểu đường nét này thường gắn với một giai đoạn thay đổi, mở rộng và có nhiều lựa chọn mới cùng xuất hiện.",
+        opportunityChip:"💼 Cơ Hội", buildingChip:"💰 Kiến Tạo", changeChip:"✨ Thay Đổi", hiddenStrengthTitle:"✨ Sức Mạnh Tiềm Ẩn", hiddenStrengthText:"Bạn có khả năng phục hồi sau khó khăn nhanh hơn những gì người khác thường nhận ra.",
+        qMoney:"💰 Tiền bạc thì sao?", qLove:"❤️ Nói thêm về tình yêu", qCareer:"💼 Sự nghiệp thì sao?", qFuture:"🔮 Sắp tới có gì?", qUnusual:"✨ Điều gì nổi bật?", qLuck:"🍀 Vận may thì sao?",
+        askOwnPlaceholder:"Tự đặt câu hỏi…", askGenieTitle:"Hỏi Genie", readingFromPalm:"Dựa trên kết quả xem chỉ tay của bạn", welcomeMsg:"Genie đã có kết quả xem chỉ tay của bạn. Hãy hỏi về tiền bạc, tình yêu, sự nghiệp, tương lai hoặc bất cứ điều gì bạn tò mò. ✨", chatPlaceholder:"Hỏi về bàn tay của bạn…",
+        otherHand:"✋ Xem Tay Khác", shareResult:"📤 Chia Sẻ Kết Quả", seeFuture:"🔮 Xem Tương Lai Của Tôi", fineprint:"Chỉ để giải trí và tự chiêm nghiệm. Xem chỉ tay chưa được khoa học chứng minh và không thể dự đoán chắc chắn các sự kiện tương lai.",
+        navHome:"Trang Chủ", navExplore:"Khám Phá", navGenie:"Genie", navMe:"Tôi",
+        aiThinking:"🧞 ChatGPT Vision đang phân tích lòng bàn tay của bạn…",aiReady:"✨ Diễn giải bàn tay bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",chooseFirst:"Hãy chọn người được xem chỉ tay trước.", addPhoto:"Hãy thêm ảnh lòng bàn tay trước.", copied:"Đã sao chép kết quả!", shareUnavailable:"Thiết bị này không hỗ trợ chia sẻ."
+      }
+    };
+    function applyLanguage(lang){
+      document.documentElement.lang = lang === 'vi' ? 'vi' : 'en';
+      localStorage.setItem('askgenieLang',lang);
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key=el.dataset.i18n;
+        if(translations[lang][key]) el.textContent=translations[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+        const key=el.dataset.i18nPlaceholder;
+        if(translations[lang][key]) el.placeholder=translations[lang][key];
+      });
+      if(typeof updatePalmInstruction==='function') updatePalmInstruction();
+      const btn=document.getElementById('langToggle');
+      if(btn) btn.textContent=lang==='vi'?'EN':'VI';
+    }
+    let currentLang=localStorage.getItem('askgenieLang');
+    if(!currentLang) currentLang=navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en';
+    applyLanguage(currentLang);
+    document.getElementById('langToggle')?.addEventListener('click',()=>{
+      currentLang=currentLang==='en'?'vi':'en'; applyLanguage(currentLang);
+    });
+
+    var selectedGender='', imageURL='', imageDataURL='', currentPalmAI=null;
+    const choices=[...document.querySelectorAll('.choice')],instruction=document.getElementById('instruction'),cameraInput=document.getElementById('cameraInput'),fileInput=document.getElementById('fileInput'),previewWrap=document.getElementById('previewWrap'),preview=document.getElementById('preview'),scanImage=document.getElementById('scanImage'),setupPanel=document.getElementById('setupPanel'),uploadPanel=document.getElementById('uploadPanel'),scanView=document.getElementById('scanView'),results=document.getElementById('results');
+    function updatePalmInstruction(){
+      if(!selectedGender || !instruction) return;
+      const vi=currentLang==='vi';
+      instruction.innerHTML=selectedGender==='female'?(vi?'👩 <b>Hãy cho Genie xem lòng bàn tay phải của bạn.</b>':'👩 <b>Show Genie your right palm.</b>'):selectedGender==='male'?(vi?'👨 <b>Hãy cho Genie xem lòng bàn tay trái của bạn.</b>':'👨 <b>Show Genie your left palm.</b>'):(vi?'✨ <b>Hãy cho Genie xem bàn tay thuận của bạn.</b>':'✨ <b>Show Genie your dominant palm.</b>');
+      instruction.classList.add('show');
+    }
+    choices.forEach(btn=>btn.addEventListener('click',()=>{choices.forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedGender=btn.dataset.gender;updatePalmInstruction()}));
+    document.getElementById('takePhotoBtn').onclick=()=>cameraInput.click();document.getElementById('uploadBtn').onclick=()=>fileInput.click();
+    async function fileToDataURL(file){
+      return await new Promise((resolve,reject)=>{
+        const reader=new FileReader();
+        reader.onload=()=>resolve(String(reader.result||''));
+        reader.onerror=()=>reject(reader.error||new Error('FileReader failed'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function blobToJpegDataURL(blob){
+      const objectUrl=URL.createObjectURL(blob);
+      try{
+        const img=new Image();
+        await new Promise((resolve,reject)=>{
+          img.onload=resolve;
+          img.onerror=()=>reject(new Error('Image decode failed'));
+          img.src=objectUrl;
+        });
+
+        const maxSide=1600;
+        const scale=Math.min(1,maxSide/Math.max(img.naturalWidth||1,img.naturalHeight||1));
+        const w=Math.max(1,Math.round(img.naturalWidth*scale));
+        const h=Math.max(1,Math.round(img.naturalHeight*scale));
+
+        const canvas=document.createElement('canvas');
+        canvas.width=w; canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        return canvas.toDataURL('image/jpeg',0.88);
+      }finally{
+        URL.revokeObjectURL(objectUrl);
+      }
+    }
+
+    async function normalizePalmImage(file){
+      const type=(file.type||'').toLowerCase();
+      const name=(file.name||'').toLowerCase();
+      const isHeic=type.includes('heic')||type.includes('heif')||name.endsWith('.heic')||name.endsWith('.heif');
+
+      // HEIC/HEIF often produces a broken <img> in Chrome/Edge.
+      if(isHeic){
+        if(typeof window.heic2any!=='function'){
+          throw new Error('HEIC_CONVERTER_UNAVAILABLE');
+        }
+        const converted=await window.heic2any({
+          blob:file,
+          toType:'image/jpeg',
+          quality:0.88
+        });
+        const jpegBlob=Array.isArray(converted)?converted[0]:converted;
+        return await blobToJpegDataURL(jpegBlob);
+      }
+
+      // Normalize regular browser-supported images into JPEG as well.
+      // This avoids temporary blob URL issues and also reduces upload size.
+      try{
+        return await blobToJpegDataURL(file);
+      }catch(e){
+        // Last fallback: use the original data URL if the browser can render it.
+        return await fileToDataURL(file);
+      }
+    }
+
+    async function handleImage(file){
+      if(!file)return;
+
+      const vi=currentLang==='vi';
+      const takeBtn=document.getElementById('takePhotoBtn');
+      const uploadBtn=document.getElementById('uploadBtn');
+      const originalTake=takeBtn.textContent;
+      const originalUpload=uploadBtn.textContent;
+
+      takeBtn.disabled=true;
+      uploadBtn.disabled=true;
+      takeBtn.textContent=vi?'Đang xử lý…':'Processing…';
+      uploadBtn.textContent=vi?'Đang xử lý…':'Processing…';
+
+      try{
+        imageDataURL=await normalizePalmImage(file);
+        imageURL=imageDataURL;
+
+        // Verify the normalized image actually renders before showing the preview.
+        await new Promise((resolve,reject)=>{
+          const tester=new Image();
+          tester.onload=resolve;
+          tester.onerror=()=>reject(new Error('NORMALIZED_IMAGE_FAILED'));
+          tester.src=imageDataURL;
+        });
+
+        preview.src=imageDataURL;
+        scanImage.src=imageDataURL;
+        previewWrap.classList.add('show');
+        previewWrap.scrollIntoView({behavior:'smooth',block:'center'});
+      }catch(err){
+        console.error('Palm image processing failed:',err);
+        imageURL='';
+        imageDataURL='';
+        preview.removeAttribute('src');
+        scanImage.removeAttribute('src');
+        previewWrap.classList.remove('show');
+
+        const heicMessage=String(err&&err.message||'').includes('HEIC');
+        alert(vi
+          ? (heicMessage
+              ? 'Ảnh HEIC này chưa thể chuyển đổi. Hãy thử lại khi có Internet hoặc chọn ảnh JPG/PNG.'
+              : 'Không thể mở ảnh này. Vui lòng thử ảnh JPG, PNG hoặc chụp ảnh mới.')
+          : (heicMessage
+              ? 'This HEIC photo could not be converted. Try again with Internet access or choose a JPG/PNG image.'
+              : 'This image could not be opened. Please try a JPG, PNG, or take a new photo.'));
+      }finally{
+        takeBtn.disabled=false;
+        uploadBtn.disabled=false;
+        takeBtn.textContent=originalTake;
+        uploadBtn.textContent=originalUpload;
+      }
+    }
+    cameraInput.onchange=async e=>await handleImage(e.target.files[0]);fileInput.onchange=async e=>await handleImage(e.target.files[0]);
+    document.getElementById('retakeBtn').onclick=()=>{previewWrap.classList.remove('show');cameraInput.value='';fileInput.value='';imageURL='';imageDataURL=''};
+
+    function palmPayload(extraQuestion=''){
+      return {
+        selected_gender:selectedGender,
+        requested_hand:selectedGender==='female'?'right':selectedGender==='male'?'left':'dominant',
+        followup_question:extraQuestion || undefined,
+        followup_instruction:extraQuestion
+          ? 'Answer this exact follow-up question directly using the palm image and the previous reading. Do not regenerate the whole reading.'
+          : undefined,
+        previous_reading:currentPalmAI || undefined
+      };
+    }
+
+    function renderAIPalm(ai){
+      const vi=currentLang==='vi';
+      document.querySelector('.archetype-icon').textContent='✨';
+      document.querySelector('.archetype').textContent=ai.archetype||'';
+      document.getElementById('palmTraits').textContent=(ai.traits||[]).join(' • ');
+      document.getElementById('palmSummary').textContent=ai.summary||'';
+      document.getElementById('palmYouText').textContent=ai.you||'';
+      document.getElementById('palmLoveText').textContent=ai.love||'';
+      document.getElementById('palmMoneyCareerText').textContent=ai.money_career||'';
+      document.getElementById('palmFutureText').textContent=ai.future_vibe||'';
+      document.getElementById('palmHiddenText').textContent=ai.hidden_strength||'';
+      document.getElementById('aiStatus').textContent=translations[currentLang].aiReady;
+
+      const qs=(ai.followups||[]).slice(0,4);
+      const buttons=[...document.querySelectorAll('.quick[data-q]')];
+      qs.forEach((q,i)=>{if(buttons[i])buttons[i].textContent=q;});
+    }
+
+    async function buildPalmReading(){
+      showAIWait(document.getElementById('aiStatus'));
+      if(!window.AskGenieAI || typeof window.AskGenieAI.palm!=='function' || !imageDataURL){
+        document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+        return false;
+      }
+      try{
+        const ai=await window.AskGenieAI.palm(
+          palmPayload(),
+          {language:currentLang,imageDataUrl:imageDataURL}
+        );
+        currentPalmAI=ai;
+        renderAIPalm(ai);
+        return true;
+      }catch(err){
+        console.warn('AskGenie palm AI failed:',err);
+        document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+        return false;
+      }
+    }
+
+    async function askPalmAI(question){
+      const text=(question||'').trim();
+      if(!text)return;
+      addMsg(text,'user');
+      chatInput.value='';
+      askOwnInput.value='';
+      const typing=addTyping();
+      try{
+        if(!window.AskGenieAI || typeof window.AskGenieAI.palm!=='function') throw new Error('AI unavailable');
+        const ai=await window.AskGenieAI.palm(
+          palmPayload(text),
+          {language:currentLang,imageDataUrl:imageDataURL}
+        );
+        typing.remove();
+        const reply=ai.answer || ai.summary || ai.future_vibe || ai.love || ai.money_career || ai.you || '';
+        addMsg(reply,'genie');
+      }catch(err){
+        typing.remove();
+        addMsg(genieReply(text),'genie');
+      }
+    }
+
+    document.getElementById('readPalmBtn').onclick=()=>{
+      if(!selectedGender){
+        alert(translations[currentLang].chooseFirst);
+        setupPanel.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+      if(!imageURL || !imageDataURL){
+        alert(translations[currentLang].addPhoto);
+        return;
+      }
+
+      setupPanel.classList.add('hidden');
+      uploadPanel.classList.add('hidden');
+
+      // Refresh the scan image right before the scan starts.
+      // Some mobile browsers can drop an earlier image assignment.
+      scanImage.src=imageDataURL;
+      scanView.classList.add('show');
+      scanView.scrollIntoView({behavior:'smooth',block:'start'});
+
+      const vi=currentLang==='vi';
+      const messages=vi
+        ? [['s1','✓ Đã thấy','Đang tìm Đường Tâm Đạo… ❤️'],['s2','✓ Đã thấy','Đang theo Đường Trí Đạo… 🧠'],['s3','✓ Đã thấy','Đang đọc Đường Sinh Đạo… ✨'],['s4','✓ Đã thấy','Đang tìm Đường Định Mệnh… 🧭']]
+        : [['s1','✓ Found','Finding your Heart Line… ❤️'],['s2','✓ Found','Following your Head Line… 🧠'],['s3','✓ Found','Reading your Life Line… ✨'],['s4','✓ Found','Looking for your Fate Line… 🧭']];
+
+      messages.forEach((item,i)=>setTimeout(()=>{
+        const el=document.getElementById(item[0]);
+        el.textContent=item[1];
+        el.classList.add('done');
+        document.getElementById('scanMessage').textContent=item[2];
+      },700+i*650));
+
+      setTimeout(()=>document.getElementById('scanMessage').textContent=
+        vi?'ChatGPT Vision đang xem kỹ các đường nét…':'ChatGPT Vision is looking closely at the visible palm lines…',3300);
+
+      setTimeout(async()=>{
+        await buildPalmReading();
+        scanView.classList.remove('show');
+        results.classList.add('show');
+        results.scrollIntoView({behavior:'smooth',block:'start'});
+      },4200);
+    };
+    document.getElementById('otherHandBtn').onclick=()=>{results.classList.remove('show');setupPanel.classList.remove('hidden');uploadPanel.classList.remove('hidden');previewWrap.classList.remove('show');cameraInput.value='';fileInput.value='';imageURL='';imageDataURL='';currentPalmAI=null;document.getElementById('aiStatus').textContent='';window.scrollTo({top:0,behavior:'smooth'})};
+    document.getElementById('shareBtn').onclick=async()=>{const vi=currentLang==='vi';const shareData={title:vi?'Kiểu bàn tay AskGenie247 của tôi':'My AskGenie247 Palm Archetype',text:vi?'✋ Kiểu bàn tay của tôi là NGƯỜI KIẾN TẠO — Tham vọng • Kiên trì • Độc lập. Bàn tay của bạn nói gì?':'✋ My Palm Archetype is THE BUILDER — Ambitious • Persistent • Independent. What does your palm say?',url:window.location.href};if(navigator.share){try{await navigator.share(shareData)}catch(e){}}else{try{await navigator.clipboard.writeText(shareData.text+' '+shareData.url);alert(translations[currentLang].copied)}catch(e){alert(translations[currentLang].shareUnavailable)}}};
+    document.getElementById('futureBtn').onclick=()=>window.location.href='future-predictor.html';
+    
+const chatBody=document.getElementById('chatBody'),chatInput=document.getElementById('chatInput'),chatSend=document.getElementById('chatSend');
+const palmProfiles={
+  en:{archetype:'The Builder',traits:['ambitious','persistent','independent'],love:'You tend to value loyalty, consistency and respect more than dramatic gestures.',career:'The pattern fits multiple career chapters, self-direction and a tendency to improve systems or create your own path.',future:'The current theme is change, expansion and having more than one opportunity competing for your attention.',unusual:'The strongest theme is the combination of persistence, independence and repeated course-correction.'},
+  vi:{archetype:'Người Kiến Tạo',traits:['tham vọng','kiên trì','độc lập'],love:'Bạn có xu hướng coi trọng sự chung thủy, ổn định và tôn trọng hơn những cử chỉ quá phô trương.',career:'Kiểu bàn tay này gợi đến nhiều chặng đường sự nghiệp, khả năng tự định hướng và xu hướng cải thiện hệ thống hoặc tự tạo con đường riêng.',future:'Chủ đề hiện tại là thay đổi, mở rộng và có nhiều hơn một cơ hội cùng cạnh tranh sự chú ý của bạn.',unusual:'Điểm nổi bật nhất là sự kết hợp giữa kiên trì, độc lập và khả năng liên tục điều chỉnh hướng đi.'}
+};
+
+function addMsg(text,who='genie'){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el}
+function addTyping(){const el=document.createElement('div');el.className='msg genie';showAIWait(el);chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el}
+function genieReply(raw){
+  const q=raw.toLowerCase();
+  const p=palmProfiles[currentLang]||palmProfiles.en;
+  const vi=currentLang==='vi';
+  const has=(...words)=>words.some(w=>q.includes(w));
+  if(has('money','rich','wealth','finance','tiền','tài chính','giàu')) return vi?`💰 Tiền Bạc\nKiểu ${p.archetype} cho thấy xu hướng xây dựng tài chính bằng sự kiên trì, kỹ năng hữu ích và tự tạo cơ hội nhiều hơn là trông chờ may mắn bất ngờ.\n\nLời vui từ Genie: xây nền trước, mở rộng sau, đầu cơ cuối cùng.`:`💰 Money\nYour ${p.archetype} pattern points more toward building wealth through persistence, useful skills and creating your own opportunities than through sudden luck.\n\nFor fun, I’d describe your money vibe as: build first, expand second, speculate last.`;
+  if(has('love','relationship','marry','romance','tình yêu','yêu','quan hệ')) return vi?`❤️ Tình Yêu\n${p.love}\n\nBạn có thể cần thời gian để hoàn toàn tin tưởng, nhưng khi đã gắn bó, bạn thường thể hiện sự quan tâm qua hành động và trách nhiệm. Chủ đề của Genie ở đây là kết nối bền vững hơn là kịch tính.`:`❤️ Love\n${p.love}\n\nYou may be slow to fully trust, but once committed, you tend to show care through actions and responsibility. The Genie theme here is steady connection over drama.`;
+  if(has('career','job','business','work','sự nghiệp','công việc','kinh doanh')) return vi?`💼 Sự Nghiệp\n${p.career}\n\nKiểu bàn tay của bạn gợi rằng bạn có thể hợp với những vai trò nơi bạn được xây dựng, dẫn dắt, sửa chữa hoặc cải thiện điều gì đó. Một con đường quá cứng nhắc có thể kém hấp dẫn hơn nơi bạn có quyền quyết định.`:`💼 Career\n${p.career}\n\nYour palm archetype suggests you may enjoy roles where you can build, lead, fix or improve something. A rigid path may feel less satisfying than one where you have room to make decisions.`;
+  if(has('future','ahead','next','year','tương lai','sắp tới','năm tới')) return vi?`🔮 Sắp Tới\n${p.future}\n\nNếu xem theo hướng giải trí, giai đoạn tiếp theo có thể được diễn tả là “chọn làn đường của bạn thật kỹ.” Nhiều lựa chọn có thể thú vị, nhưng kết quả mạnh nhất đến khi bạn tập trung năng lượng thay vì chạy theo mọi khả năng.`:`🔮 What’s Ahead\n${p.future}\n\nThe entertainment reading would frame the next phase as “choose your lane carefully.” More options can be exciting, but the strongest outcome comes from focusing your energy instead of chasing every possibility.`;
+  if(has('unusual','special','different','nổi bật','đặc biệt','khác thường')) return vi?`✨ Điều Nổi Bật\n${p.unusual}\n\nChính sự kết hợp đó là lý do bài xem gọi bạn là ${p.archetype}.`:`✨ What Stands Out\n${p.unusual}\n\nThat combination is why the reading labeled you ${p.archetype}.`;
+  if(has('luck','lucky','may mắn','vận may')) return vi?`🍀 Vận May\nBài xem này ít giống “ngồi chờ may mắn” và giống “tự tạo vận may” hơn. Theo ngôn ngữ xem chỉ tay, cơ hội có xu hướng mạnh hơn khi bạn chủ động theo đuổi chúng.`:`🍀 Luck\nYour reading feels less like “wait for luck” and more like “make your own luck.” In palmistry-style language, opportunities tend to become stronger when you actively pursue them.`;
+  return vi?`🧞 Góc nhìn của Genie\nBài xem của bạn xoay quanh năng lượng ${p.traits.join(', ')}. ${p.future}\n\nHãy hỏi cụ thể về tình yêu, tiền bạc, sự nghiệp, vận may hoặc điều sắp tới và Genie sẽ nói sâu hơn.`:`🧞 Genie’s take\nYour palm reading centers on ${p.traits.join(', ')} energy. ${p.future}\n\nAsk me specifically about love, money, career, luck, or what’s ahead and I’ll go deeper.`;
+}
+function askGenie(question){ askPalmAI(question); }
+document.querySelectorAll('.quick').forEach(btn=>btn.addEventListener('click',()=>{const map=currentLang==='vi'?{money:'Tiền bạc thì sao?',love:'Nói thêm về tình yêu',career:'Sự nghiệp thì sao?',future:'Sắp tới có gì?',unusual:'Điều gì nổi bật ở bàn tay của tôi?',luck:'Vận may thì sao?'}:{money:'What about money?',love:'Tell me more about love',career:'What about career?',future:"What's ahead?",unusual:"What's unusual about my palm?",luck:'What about luck?'};askGenie(map[btn.dataset.q]||btn.textContent)}));
+chatSend.addEventListener('click',()=>askGenie(chatInput.value));
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')askGenie(chatInput.value)});
+
+const moreQuestionsBtn=document.getElementById('moreQuestionsBtn');
+const moreQuestions=document.getElementById('moreQuestions');
+const askOwnInput=document.getElementById('askOwnInput');
+const askOwnBtn=document.getElementById('askOwnBtn');
+
+moreQuestionsBtn.addEventListener('click',()=>{
+  moreQuestions.classList.toggle('show');
+  moreQuestionsBtn.textContent=moreQuestions.classList.contains('show')?'×':'•••';
+});
+
+askOwnBtn.addEventListener('click',()=>askGenie(askOwnInput.value));
+askOwnInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter') askGenie(askOwnInput.value);
+});
+
+
+  </script>
+</body>
+</html>

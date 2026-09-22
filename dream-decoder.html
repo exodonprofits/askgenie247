@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080513">
+<title>AskGenie247 — Dream Decoder</title>
+<style>
+:root{--bg:#080513;--gold:#ffd66b;--violet:#a974ff;--pink:#ff7ac8;--text:#fff8ff;--muted:#c9bfd2;--line:rgba(255,255,255,.10);--shadow:0 18px 50px rgba(0,0,0,.38)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}body{overflow-x:hidden}button,input,textarea{font:inherit}
+.app{min-height:100dvh;position:relative;overflow:hidden;background:radial-gradient(circle at 50% -8%,rgba(140,77,255,.28),transparent 28%),radial-gradient(circle at 14% 36%,rgba(255,122,200,.08),transparent 24%),linear-gradient(180deg,#090512 0%,#12071d 48%,#080513 100%);padding:env(safe-area-inset-top) 0 calc(104px + env(safe-area-inset-bottom))}
+.stars,.stars:before,.stars:after{position:fixed;inset:0;content:"";pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.2px),radial-gradient(circle,rgba(255,214,107,.55) 1px,transparent 1.2px);background-size:42px 42px,70px 70px;background-position:0 0,17px 22px;opacity:.14;animation:drift 22s linear infinite}.stars:before{opacity:.08;animation-duration:32s}.stars:after{opacity:.05;animation-duration:40s}@keyframes drift{to{transform:translateY(40px)}}
+header{position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}.back,.lang-toggle{min-width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:#ffffff0b;color:white;display:grid;place-items:center;backdrop-filter:blur(12px)}.back{font-size:22px;text-decoration:none;width:42px}.lang-toggle{padding:0 11px;font-weight:850;font-size:11px}.brand{font-weight:850;font-size:16px}
+main{position:relative;z-index:2;padding:0 14px 24px}.hero{text-align:center;padding:10px 12px 14px}.hero-logo{width:104px;height:104px;object-fit:contain;display:block;margin:0 auto 9px;filter:drop-shadow(0 0 18px rgba(255,214,107,.22)) drop-shadow(0 0 28px rgba(169,116,255,.18));animation:float 3.6s ease-in-out infinite}@keyframes float{50%{transform:translateY(-5px)}}h1{font-size:29px;line-height:1.08;margin:0 0 7px;font-weight:900}.gradient{background:linear-gradient(90deg,var(--gold),#ffe7a4 40%,#ffb6de 72%,#b98fff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.panel{background:linear-gradient(180deg,rgba(35,20,52,.9),rgba(18,11,29,.95));border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);margin-top:12px;backdrop-filter:blur(16px)}.step-title{font-size:18px;font-weight:850;margin:0 0 4px}.step-sub{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.45}
+.field{margin-top:12px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.field textarea,.field input{width:100%;border-radius:15px;border:1px solid var(--line);background:#ffffff08;color:white;padding:12px 13px;font-size:13px;outline:none}.field textarea{min-height:150px;resize:vertical}.field input{height:46px}.field textarea::placeholder,.field input::placeholder{color:#8f8497}
+.emotion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.emotion{min-height:70px;border-radius:16px;border:1px solid var(--line);background:#ffffff08;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:800;font-size:11px}.emotion span:first-child{font-size:26px}.emotion.active{border-color:rgba(255,214,107,.50);background:rgba(255,214,107,.10)}
+.segment{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg{min-height:44px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:white;font-weight:800;font-size:12px}.seg.active{border-color:rgba(169,116,255,.55);background:rgba(169,116,255,.12)}
+.btn{border:0;border-radius:16px;min-height:50px;padding:12px 14px;font-weight:850;font-size:14px}.btn.primary{width:100%;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500}.btn.secondary{background:#ffffff0b;color:white;border:1px solid var(--line)}
+.scan-view{display:none}.scan-view.show{display:block}.moon-stage{display:grid;place-items:center;padding:8px 0}.moon-orb{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;font-size:70px;background:radial-gradient(circle at 35% 27%,rgba(255,255,255,.62),transparent 11%),radial-gradient(circle,rgba(185,143,255,.55),rgba(79,33,119,.86) 48%,rgba(16,7,30,.98) 75%);box-shadow:0 0 34px rgba(169,116,255,.36),0 0 70px rgba(169,116,255,.18),inset 0 0 24px rgba(255,255,255,.10);animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.04)}}.scan-copy{text-align:center}.scan-copy h3{margin:0 0 6px;font-size:19px}.scan-copy p{margin:0;color:var(--muted);font-size:12px}
+.results{display:none}.results.show{display:block}.reveal{text-align:center;background:radial-gradient(circle at 50% 0%,rgba(169,116,255,.16),transparent 28%),linear-gradient(180deg,rgba(38,20,55,.94),rgba(18,10,27,.96));border:1px solid rgba(255,214,107,.18);border-radius:28px;padding:22px 16px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:850}.theme-icon{font-size:54px;margin:10px 0 3px}.theme-title{font-size:28px;font-weight:950;margin:0}.traits{font-size:13px;color:var(--muted);margin-top:6px}.summary{font-size:14px;line-height:1.5;color:#fbf4ff;margin:14px auto 0;max-width:330px}.ai-status{margin-top:8px;font-size:10px;color:var(--gold);font-weight:800}
+.result-grid{display:grid;gap:10px;margin-top:12px}.result-card{border-radius:20px;padding:15px;background:#ffffff08;border:1px solid var(--line)}.result-card h3{margin:0 0 6px;font-size:15px}.result-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.48}.symbols{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{border-radius:999px;padding:7px 9px;font-size:11px;background:#ffffff0a;border:1px solid var(--line);color:#eee3f7}
+.ask-box{margin-top:12px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(169,116,255,.13),rgba(255,255,255,.04));border:1px solid rgba(169,116,255,.22)}.ask-box h3{margin:0 0 7px;font-size:17px}.ask-box p{margin:0 0 12px;color:var(--muted);font-size:12px}.quick-qs{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}.quick{min-width:0;border:1px solid var(--line);background:#ffffff09;color:white;padding:9px 10px;border-radius:999px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick.more{width:42px;padding:9px 0;text-align:center;font-size:16px}.more-questions{display:none;margin-top:9px;gap:8px;grid-template-columns:1fr 1fr}.more-questions.show{display:grid}
+.ask-own-row{margin-top:9px;display:grid;grid-template-columns:1fr auto;gap:8px}.ask-own-row input{min-width:0;height:40px;border-radius:13px;border:1px solid var(--line);background:#ffffff08;color:white;padding:0 11px;font-size:11px;outline:none}.ask-own-row button{height:40px;min-width:42px;border-radius:13px;border:0;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900}
+.genie-chat{margin-top:12px;border-radius:22px;background:linear-gradient(180deg,rgba(22,13,34,.96),rgba(13,8,21,.98));border:1px solid rgba(169,116,255,.22);overflow:hidden}.chat-head{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);background:rgba(169,116,255,.08)}.chat-head img{width:34px;height:34px;object-fit:contain}.chat-head strong{font-size:14px}.chat-head small{display:block;margin-top:2px;font-size:10px;color:var(--muted)}.chat-body{max-height:320px;overflow:auto;padding:12px;display:grid;gap:9px}.msg{max-width:88%;padding:10px 12px;border-radius:16px;font-size:12px;line-height:1.45;white-space:pre-wrap}.msg.user{justify-self:end;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;border-bottom-right-radius:6px;font-weight:700}.msg.genie{justify-self:start;background:#ffffff0a;border:1px solid var(--line);color:#f7effd;border-bottom-left-radius:6px}.chat-input{padding:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:8px}.chat-input input{min-width:0;height:44px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:white;padding:0 12px;outline:none;font-size:12px}.chat-send{width:44px;height:44px;border-radius:14px;border:0;background:linear-gradient(90deg,#f0c554,#ffdc7c);color:#1d1500;font-weight:900;font-size:17px}
+.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.fineprint{margin:12px 4px 0;text-align:center;color:#8f8497;font-size:10px;line-height:1.4}.bottom-nav{position:fixed;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));height:62px;border-radius:21px;background:rgba(14,9,22,.88);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);z-index:80;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 18px 50px rgba(0,0,0,.48)}.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#bfb4c8;text-decoration:none;font-size:10px;font-weight:700}.nav-item .ni{font-size:19px}.nav-item.active{color:var(--gold)}.hidden{display:none!important}@media(min-width:700px){.app{max-width:520px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+
+    .nav-genie-icon{
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 5px rgba(255,214,107,.28));
+    }
+
+
+/* AskGenie AI wait animation — dream-decoder.html */
+.ai-magic-wait{
+  --ai-c1:#b98fff;--ai-c2:#ffd66b;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:34px;max-width:100%;vertical-align:middle
+}
+.ai-magic-wheel{
+  width:34px;height:34px;flex:0 0 34px;position:relative;display:grid;place-items:center
+}
+.ai-magic-wheel:before{
+  content:"";position:absolute;inset:1px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--ai-c1);border-right-color:var(--ai-c2);
+  box-shadow:0 0 9px rgba(255,214,107,.24);
+  animation:aiMagicSpin 1.35s linear infinite
+}
+.ai-magic-wheel:after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.19);
+  animation:aiMagicSpinReverse 2.7s linear infinite
+}
+.ai-magic-core{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  font-size:12px;line-height:1;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.65),transparent 18%),
+             radial-gradient(circle,var(--ai-c1),rgba(31,14,46,.96) 72%);
+  box-shadow:0 0 12px rgba(169,116,255,.38);
+  animation:aiMagicPulse 1.15s ease-in-out infinite
+}
+.ai-magic-orbit{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--ai-c2);
+  top:-1px;left:14px;box-shadow:0 0 8px var(--ai-c2);z-index:3;
+  transform-origin:3px 18px;animation:aiMagicOrbit 2.7s linear infinite
+}
+.ai-wait-copy{
+  color:#efe5f7;font-size:10px;font-weight:800;line-height:1.35;
+  animation:aiMagicGlow 1s ease-in-out infinite alternate;text-align:left
+}
+@keyframes aiMagicSpin{to{transform:rotate(360deg)}}
+@keyframes aiMagicSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes aiMagicOrbit{to{transform:rotate(360deg)}}
+@keyframes aiMagicPulse{50%{transform:scale(1.12);filter:brightness(1.18)}}
+@keyframes aiMagicGlow{from{opacity:.62}to{opacity:1}}
+.ai-answer-reveal{animation:aiAnswerReveal .48s cubic-bezier(.16,1,.3,1)}
+@keyframes aiAnswerReveal{
+  from{opacity:.2;transform:translateY(5px);filter:blur(3px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+</style>
+</head>
+<body>
+<div class="app"><div class="stars"></div>
+<header><a class="back" href="index.html">‹</a><div class="brand" data-i18n="pageTitle">🌙 Dream Decoder</div><button class="lang-toggle" id="langToggle">VI</button></header>
+<main>
+<section class="hero"><img class="hero-logo" src="images/genie-logo.png" alt="AskGenie247 Genie"><h1><span class="gradient" data-i18n="heroTitle">What might your dream be processing?</span></h1><p data-i18n="heroSub">Tell Genie what you remember, how it felt, and what stood out most.</p></section>
+<section class="panel" id="setupPanel">
+<h2 class="step-title" data-i18n="dreamTitle">Tell Genie your dream</h2><p class="step-sub" data-i18n="dreamSub">More context usually creates a more useful interpretation.</p>
+<div class="field"><label data-i18n="dreamLabel">Dream description</label><textarea id="dreamText" data-i18n-placeholder="dreamPlaceholder" placeholder="I was driving, but the brakes stopped working..."></textarea></div>
+<div style="margin-top:16px"><h3 class="step-title" style="font-size:16px" data-i18n="emotionTitle">How did the dream feel?</h3><div class="emotion-grid">
+<button class="emotion" data-emotion="Scary"><span>😨</span><span data-i18n="scary">Scary</span></button>
+<button class="emotion" data-emotion="Sad"><span>😢</span><span data-i18n="sad">Sad</span></button>
+<button class="emotion" data-emotion="Peaceful"><span>😌</span><span data-i18n="peaceful">Peaceful</span></button>
+<button class="emotion" data-emotion="Confusing"><span>😕</span><span data-i18n="confusing">Confusing</span></button>
+<button class="emotion" data-emotion="Romantic"><span>😍</span><span data-i18n="romantic">Romantic</span></button>
+<button class="emotion" data-emotion="Exciting"><span>🤩</span><span data-i18n="exciting">Exciting</span></button>
+</div></div>
+<div style="margin-top:16px"><h3 class="step-title" style="font-size:16px" data-i18n="recurringTitle">Was this dream recurring?</h3><div class="segment"><button class="seg" data-recurring="yes" data-i18n="yes">Yes</button><button class="seg" data-recurring="no" data-i18n="no">No</button></div></div>
+<div class="field"><label><span data-i18n="standoutLabel">What stood out most?</span> <span style="opacity:.7" data-i18n="optional">(optional)</span></label><input id="standout" data-i18n-placeholder="standoutPlaceholder" placeholder="The brakes, the water, one person, a room..."></div>
+<button class="btn primary" id="decodeBtn" style="margin-top:16px" data-i18n="decode">Decode My Dream ✨</button>
+</section>
+<section class="panel scan-view" id="scanView"><div class="moon-stage"><div class="moon-orb">🌙</div></div><div class="scan-copy"><h3 data-i18n="scanTitle">Genie is decoding your dream…</h3><p id="scanText" data-i18n="scanStart">Looking for patterns, symbols and emotional tone.</p></div></section>
+<section class="results" id="results">
+<div class="reveal"><div class="eyebrow" data-i18n="resultLabel">YOUR DREAM THEME</div><div class="theme-icon">🌙</div><h2 class="theme-title" id="themeTitle"></h2><div class="traits" id="traits"></div><p class="summary" id="summaryText"></p><div class="ai-status" id="aiStatus"></div></div>
+<div class="result-grid">
+<div class="result-card"><h3 data-i18n="processingTitle">🧠 What Your Mind May Be Processing</h3><p id="processingText"></p></div>
+<div class="result-card"><h3 data-i18n="symbolsTitle">🔍 Key Symbols</h3><p id="symbolsText"></p><div class="symbols" id="symbolChips"></div></div>
+<div class="result-card"><h3 data-i18n="emotionalTitle">❤️ Emotional Meaning</h3><p id="emotionalText"></p></div>
+<div class="result-card"><h3 data-i18n="reflectionTitle">🪞 Current-Life Reflection</h3><p id="reflectionText"></p></div>
+<div class="result-card"><h3 data-i18n="recurringResultTitle">🔁 If This Dream Repeats</h3><p id="recurringText"></p></div>
+<div class="result-card"><h3 data-i18n="hiddenTitle">✨ Hidden Message / Reflection Prompt</h3><p id="hiddenText"></p></div>
+<div class="result-card"><h3 data-i18n="notOverTitle">⚠️ What Not To Overinterpret</h3><p id="notOverText"></p></div>
+</div>
+<div class="ask-box"><h3 data-i18n="askTitle">🧞 Ask Genie About My Dream</h3><p data-i18n="askSub">Pick a common question or ask your own.</p><div class="quick-qs"><button class="quick" data-q="symbol" data-i18n="qSymbol">🔍 What does this symbol mean?</button><button class="quick" data-q="feelings" data-i18n="qFeelings">❤️ What does this say about my feelings?</button><button class="quick more" id="moreQuestionsBtn">•••</button></div>
+<div class="more-questions" id="moreQuestions"><button class="quick" data-q="person" data-i18n="qPerson">👤 Why did this person appear?</button><button class="quick" data-q="work" data-i18n="qWork">💼 Could this be about work?</button><button class="quick" data-q="repeat" data-i18n="qRepeat">🔁 Why does it repeat?</button><button class="quick" data-q="fear" data-i18n="qFear">😨 Why did I feel scared?</button></div>
+<div class="ask-own-row"><input id="askOwnInput" data-i18n-placeholder="askOwnPlaceholder" placeholder="Ask your own question…"><button id="askOwnBtn">➤</button></div></div>
+<div class="genie-chat"><div class="chat-head"><img src="images/genie-mark.png" alt="AskGenie247"><div><strong data-i18n="askGenieTitle">Ask Genie</strong><small data-i18n="readingFromDream">Reading from your dream result</small></div></div><div class="chat-body" id="chatBody"><div class="msg genie" data-i18n="welcomeMsg">I’ve decoded the main themes. Ask me about a symbol, person, feeling, or why the dream may be repeating. ✨</div></div><div class="chat-input"><input id="chatInput" data-i18n-placeholder="chatPlaceholder" placeholder="Ask about your dream…"><button class="chat-send" id="chatSend">➤</button></div></div>
+<div class="bottom-actions"><button class="btn secondary" id="retryBtn" data-i18n="retry">🔄 Decode Another Dream</button><button class="btn primary" id="shareBtn" data-i18n="share">📤 Share Result</button></div>
+<p class="fineprint" data-i18n="fineprint">For entertainment and self-reflection only. Dream interpretation is subjective and not a scientific prediction of future events.</p>
+</section>
+</main>
+<nav class="bottom-nav"><a class="nav-item" href="index.html"><span class="ni">🏠</span><span data-i18n="home">Home</span></a><a class="nav-item active" href="index.html#explore"><span class="ni">✨</span><span data-i18n="explore">Explore</span></a><a class="nav-item" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><span data-i18n="genie">Genie</span></a><a class="nav-item" href="my-genie.html"><span class="ni">❤️</span><span data-i18n="me">Me</span></a></nav></div>
+<script src="js/askgenie-ai.js"></script>
+<script>
+
+function aiWaitMarkup(){
+  const vi=document.documentElement.lang==='vi';
+  return `<span class="ai-magic-wait"><span class="ai-magic-wheel"><span class="ai-magic-orbit"></span><span class="ai-magic-core">☾</span></span><span class="ai-wait-copy">${vi?"Đang đọc những biểu tượng trong giấc mơ…":"Reading the dream symbols…"}</span></span>`;
+}
+function showAIWait(el){
+  if(!el)return;
+  el.classList.remove('ai-answer-reveal');
+  el.innerHTML=aiWaitMarkup();
+}
+function revealAIText(el,text){
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.remove('ai-answer-reveal');
+  void el.offsetWidth;
+  el.classList.add('ai-answer-reveal');
+}
+
+
+const translations={en:{pageTitle:"🌙 Dream Decoder",heroTitle:"What might your dream be processing?",heroSub:"Tell Genie what you remember, how it felt, and what stood out most.",dreamTitle:"Tell Genie your dream",dreamSub:"More context usually creates a more useful interpretation.",dreamLabel:"Dream description",dreamPlaceholder:"I was driving, but the brakes stopped working...",emotionTitle:"How did the dream feel?",scary:"Scary",sad:"Sad",peaceful:"Peaceful",confusing:"Confusing",romantic:"Romantic",exciting:"Exciting",recurringTitle:"Was this dream recurring?",yes:"Yes",no:"No",standoutLabel:"What stood out most?",optional:"(optional)",standoutPlaceholder:"The brakes, the water, one person, a room...",decode:"Decode My Dream ✨",scanTitle:"Genie is decoding your dream…",scanStart:"Looking for patterns, symbols and emotional tone.",resultLabel:"YOUR DREAM THEME",processingTitle:"🧠 What Your Mind May Be Processing",symbolsTitle:"🔍 Key Symbols",emotionalTitle:"❤️ Emotional Meaning",reflectionTitle:"🪞 Current-Life Reflection",recurringResultTitle:"🔁 If This Dream Repeats",hiddenTitle:"✨ Hidden Message / Reflection Prompt",notOverTitle:"⚠️ What Not To Overinterpret",askTitle:"🧞 Ask Genie About My Dream",askSub:"Pick a common question or ask your own.",qSymbol:"🔍 What does this symbol mean?",qFeelings:"❤️ What does this say about my feelings?",qPerson:"👤 Why did this person appear?",qWork:"💼 Could this be about work?",qRepeat:"🔁 Why does it repeat?",qFear:"😨 Why did I feel scared?",askOwnPlaceholder:"Ask your own question…",askGenieTitle:"Ask Genie",readingFromDream:"Reading from your dream result",welcomeMsg:"I’ve decoded the main themes. Ask me about a symbol, person, feeling, or why the dream may be repeating. ✨",chatPlaceholder:"Ask about your dream…",retry:"🔄 Decode Another Dream",share:"📤 Share Result",fineprint:"For entertainment and self-reflection only. Dream interpretation is subjective and not a scientific prediction of future events.",home:"Home",explore:"Explore",genie:"Genie",me:"Me",aiThinking:"🧞 ChatGPT is interpreting your dream…",aiReady:"✨ Personalized by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",needDream:"Please describe your dream first.",needEmotion:"Choose how the dream felt.",needRecurring:"Choose whether the dream was recurring."},
+vi:{pageTitle:"🌙 Giải Mã Giấc Mơ",heroTitle:"Giấc mơ của bạn có thể đang xử lý điều gì?",heroSub:"Hãy kể Genie điều bạn nhớ, cảm xúc của bạn và chi tiết nổi bật nhất.",dreamTitle:"Kể Genie giấc mơ của bạn",dreamSub:"Càng có ngữ cảnh, phần giải mã thường càng hữu ích.",dreamLabel:"Mô tả giấc mơ",dreamPlaceholder:"Tôi đang lái xe nhưng phanh không hoạt động...",emotionTitle:"Giấc mơ khiến bạn cảm thấy thế nào?",scary:"Sợ hãi",sad:"Buồn",peaceful:"Yên bình",confusing:"Khó hiểu",romantic:"Lãng mạn",exciting:"Hào hứng",recurringTitle:"Giấc mơ này có lặp lại không?",yes:"Có",no:"Không",standoutLabel:"Chi tiết nào nổi bật nhất?",optional:"(không bắt buộc)",standoutPlaceholder:"Phanh xe, nước, một người, một căn phòng...",decode:"Giải Mã Giấc Mơ ✨",scanTitle:"Genie đang giải mã giấc mơ…",scanStart:"Đang tìm các mô hình, biểu tượng và cảm xúc.",resultLabel:"CHỦ ĐỀ GIẤC MƠ CỦA BẠN",processingTitle:"🧠 Tâm Trí Bạn Có Thể Đang Xử Lý Điều Gì",symbolsTitle:"🔍 Biểu Tượng Chính",emotionalTitle:"❤️ Ý Nghĩa Cảm Xúc",reflectionTitle:"🪞 Liên Hệ Với Cuộc Sống Hiện Tại",recurringResultTitle:"🔁 Nếu Giấc Mơ Này Lặp Lại",hiddenTitle:"✨ Thông Điệp Ẩn / Câu Hỏi Tự Chiêm Nghiệm",notOverTitle:"⚠️ Điều Không Nên Diễn Giải Quá Mức",askTitle:"🧞 Hỏi Genie Về Giấc Mơ Của Tôi",askSub:"Chọn câu hỏi phổ biến hoặc tự hỏi điều bạn muốn.",qSymbol:"🔍 Biểu tượng này nghĩa là gì?",qFeelings:"❤️ Điều này nói gì về cảm xúc của tôi?",qPerson:"👤 Tại sao người này xuất hiện?",qWork:"💼 Có thể liên quan đến công việc không?",qRepeat:"🔁 Tại sao giấc mơ lặp lại?",qFear:"😨 Tại sao tôi cảm thấy sợ?",askOwnPlaceholder:"Tự đặt câu hỏi…",askGenieTitle:"Hỏi Genie",readingFromDream:"Dựa trên kết quả giấc mơ của bạn",welcomeMsg:"Genie đã giải mã các chủ đề chính. Hãy hỏi về một biểu tượng, một người, cảm xúc hoặc lý do giấc mơ lặp lại. ✨",chatPlaceholder:"Hỏi về giấc mơ…",retry:"🔄 Giải Mã Giấc Mơ Khác",share:"📤 Chia Sẻ Kết Quả",fineprint:"Chỉ dành cho giải trí và tự chiêm nghiệm. Giải mã giấc mơ mang tính chủ quan và không phải dự đoán khoa học về tương lai.",home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",aiThinking:"🧞 ChatGPT đang diễn giải giấc mơ của bạn…",aiReady:"✨ Cá nhân hóa bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",needDream:"Hãy mô tả giấc mơ của bạn trước.",needEmotion:"Hãy chọn cảm xúc trong giấc mơ.",needRecurring:"Hãy chọn giấc mơ có lặp lại hay không."}};
+let currentLang=localStorage.getItem('askgenieLang');if(!currentLang)currentLang=navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en';let selectedEmotion='',recurring='',currentDreamAI=null;
+function applyLanguage(lang){document.documentElement.lang=lang==='vi'?'vi':'en';localStorage.setItem('askgenieLang',lang);document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(translations[lang][k])el.textContent=translations[lang][k]});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.dataset.i18nPlaceholder;if(translations[lang][k])el.placeholder=translations[lang][k]});document.getElementById('langToggle').textContent=lang==='vi'?'EN':'VI'}applyLanguage(currentLang);document.getElementById('langToggle').onclick=()=>{currentLang=currentLang==='en'?'vi':'en';applyLanguage(currentLang)};
+document.querySelectorAll('.emotion').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.emotion').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedEmotion=btn.dataset.emotion});document.querySelectorAll('.seg').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.seg').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recurring=btn.dataset.recurring});
+function dreamPayload(extraQuestion=''){return{dream:document.getElementById('dreamText').value.trim(),emotion:selectedEmotion,recurring:recurring==='yes',standout:document.getElementById('standout').value.trim(),followup_question:extraQuestion||undefined,previous_reading:currentDreamAI||undefined}}
+function localFallback(){const vi=currentLang==='vi';return{title:vi?'ĐANG XỬ LÝ MỘT ĐIỀU CHƯA RÕ':'PROCESSING SOMETHING UNSETTLED',traits:vi?['Cảm Xúc','Ngữ Cảnh','Biểu Tượng']:['Emotion','Context','Symbols'],summary:vi?'Giấc mơ này có vẻ đáng đọc theo cảm xúc và bối cảnh hơn là theo một “từ điển biểu tượng” cố định.':'This dream is more useful to read through emotion and context than through a fixed symbol dictionary.',processing:vi?'Tâm trí của bạn có thể đang thử sắp xếp một cảm giác, mối quan hệ hoặc tình huống chưa hoàn toàn rõ.':'Your mind may be sorting through a feeling, relationship, or situation that still feels unclear.',symbols:[vi?'Chi tiết nổi bật':'Standout detail'],symbol_interpretation:vi?'Ý nghĩa của biểu tượng phụ thuộc vào việc nó xuất hiện như thế nào và bạn cảm thấy gì trong giấc mơ.':'A symbol’s meaning depends on how it appeared and how you felt in the dream.',emotional:vi?'Cảm xúc trong giấc mơ có thể cho biết chủ đề đáng chú ý hơn chính hình ảnh.':'The feeling in the dream may be more informative than the image itself.',reflection:vi?'Hãy nghĩ xem gần đây có tình huống nào khiến bạn có cảm giác tương tự không.':'Consider whether anything recently created a similar feeling.',recurring:recurring==='yes'?(vi?'Nếu giấc mơ lặp lại, hãy chú ý cảm xúc hoặc tình huống nào trong đời sống hiện tại vẫn quay lại.':'If it repeats, notice which emotion or situation in current life keeps returning.'):(vi?'Vì đây không phải giấc mơ lặp lại, hãy xem nó như ảnh chụp của cảm xúc gần đây hơn là một thông điệp cố định.':'Because it is not recurring, it may be more useful as a snapshot of recent emotions than a fixed message.'),hidden:vi?'Câu hỏi hữu ích: “Điều gì trong cuộc sống hiện tại khiến tôi có cảm giác giống nhất với giấc mơ này?”':'Useful prompt: “What in my current life feels most like the emotion in this dream?”',not_overinterpret:vi?'Đừng coi một biểu tượng đơn lẻ là bằng chứng chắc chắn về tương lai hoặc ý định của người khác.':'Do not treat one symbol as proof of the future or another person’s intentions.'}}
+function renderDream(ai){document.getElementById('themeTitle').textContent=ai.title||'';document.getElementById('traits').textContent=(ai.traits||[]).join(' • ');document.getElementById('summaryText').textContent=ai.summary||'';document.getElementById('processingText').textContent=ai.processing||'';document.getElementById('symbolsText').textContent=ai.symbol_interpretation||'';document.getElementById('symbolChips').innerHTML=(ai.symbols||[]).slice(0,6).map(x=>`<span class="chip">✨ ${x}</span>`).join('');document.getElementById('emotionalText').textContent=ai.emotional||'';document.getElementById('reflectionText').textContent=ai.reflection||'';document.getElementById('recurringText').textContent=ai.recurring||'';document.getElementById('hiddenText').textContent=ai.hidden||'';document.getElementById('notOverText').textContent=ai.not_overinterpret||''}
+async function buildReading(){const fallback=localFallback();renderDream(fallback);showAIWait(document.getElementById('aiStatus'));try{if(!window.AskGenieAI||typeof window.AskGenieAI.dream!=='function')throw new Error('Dream AI client method unavailable');const ai=await window.AskGenieAI.dream(dreamPayload(),{language:currentLang});currentDreamAI=ai;renderDream(ai);document.getElementById('aiStatus').textContent=translations[currentLang].aiReady}catch(err){console.warn('Dream Decoder AI failed; using local fallback:',err);currentDreamAI=null;document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback}}
+document.getElementById('decodeBtn').onclick=()=>{if(!document.getElementById('dreamText').value.trim()){alert(translations[currentLang].needDream);return}if(!selectedEmotion){alert(translations[currentLang].needEmotion);return}if(!recurring){alert(translations[currentLang].needRecurring);return}document.getElementById('setupPanel').classList.add('hidden');document.getElementById('scanView').classList.add('show');const msgs=currentLang==='vi'?['Đang đọc cảm xúc chính…','Đang xem các biểu tượng trong ngữ cảnh…','Đang tìm mô hình lặp lại…','ChatGPT đang tạo phần diễn giải cá nhân hóa…']:['Reading the emotional tone…','Interpreting symbols in context…','Looking for repeating patterns…','ChatGPT is creating a personalized interpretation…'];msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('scanText').textContent=m,450+i*520));setTimeout(async()=>{document.getElementById('scanView').classList.remove('show');document.getElementById('results').classList.add('show');document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});await buildReading()},2450)};
+const chatBody=document.getElementById('chatBody'),chatInput=document.getElementById('chatInput'),askOwnInput=document.getElementById('askOwnInput');function addMsg(text,who='genie'){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el}
+async function askGenie(question){const q=(question||'').trim();if(!q)return;addMsg(q,'user');chatInput.value='';askOwnInput.value='';const waiting=addMsg(currentLang==='vi'?'ChatGPT đang suy ngẫm…':'ChatGPT is thinking…','genie');showAIWait(waiting);try{if(!window.AskGenieAI||typeof window.AskGenieAI.dream!=='function')throw new Error('Dream AI unavailable');const ai=await window.AskGenieAI.dream(dreamPayload(q),{language:currentLang});waiting.textContent=ai.answer||ai.summary||ai.reflection||''}catch(err){waiting.textContent=localFallback().reflection}}
+document.querySelectorAll('.quick[data-q]').forEach(btn=>btn.onclick=()=>askGenie(btn.textContent));document.getElementById('chatSend').onclick=()=>askGenie(chatInput.value);chatInput.onkeydown=e=>{if(e.key==='Enter')askGenie(chatInput.value)};document.getElementById('askOwnBtn').onclick=()=>askGenie(askOwnInput.value);askOwnInput.onkeydown=e=>{if(e.key==='Enter')askGenie(askOwnInput.value)};document.getElementById('moreQuestionsBtn').onclick=()=>{const b=document.getElementById('moreQuestions');b.classList.toggle('show');document.getElementById('moreQuestionsBtn').textContent=b.classList.contains('show')?'×':'•••'};document.getElementById('retryBtn').onclick=()=>{document.getElementById('results').classList.remove('show');document.getElementById('setupPanel').classList.remove('hidden');currentDreamAI=null;document.getElementById('aiStatus').textContent='';window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('shareBtn').onclick=async()=>{const text=currentLang==='vi'?`🌙 Chủ đề giấc mơ AskGenie247 của tôi: ${document.getElementById('themeTitle').textContent}`:`🌙 My AskGenie247 Dream Theme: ${document.getElementById('themeTitle').textContent}`;if(navigator.share){try{await navigator.share({title:'AskGenie247 Dream Decoder',text,url:location.href})}catch(e){}}else{try{await navigator.clipboard.writeText(text+' '+location.href)}catch(e){}}};
+</script>
+</body></html>
