@@ -569,11 +569,13 @@ async function buildReading(){
     currentAI=ai;
     renderPattern(currentPattern,ai);
     document.getElementById('aiStatus').textContent=translations[currentLang].aiReady;
+    saveToMyGenie();
   }catch(err){
     console.warn('Lucky Today AI failed; using local fallback:',err);
     currentAI=null;
     renderPattern(currentPattern,null);
     document.getElementById('aiStatus').textContent=translations[currentLang].aiFallback;
+    saveToMyGenie();
   }
 }
 document.getElementById('revealBtn').onclick=()=>{
@@ -638,6 +640,22 @@ document.getElementById('shareBtn').onclick=async()=>{
   if(navigator.share){try{await navigator.share({title:'AskGenie247 Lucky Today',text,url:location.href})}catch(e){}}
   else{try{await navigator.clipboard.writeText(text+' '+location.href);alert(currentLang==='vi'?'Đã sao chép kết quả!':'Result copied!')}catch(e){}}
 };
+
+// My Genie V1: save completed reading summaries locally (never saves uploaded images).
+function saveToMyGenie(){
+  try{
+    const key='askgenieReadingHistory';
+    const list=JSON.parse(localStorage.getItem(key)||'[]');
+    const title=(()=>document.getElementById('themeTitle')?.textContent||document.querySelector('.theme-title')?.textContent||'Lucky Today')();
+    const summary=(()=>document.getElementById('summaryText')?.textContent||document.getElementById('bestMoveText')?.textContent||'')();
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'lucky',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const fingerprint=item.type+'|'+item.title+'|'+item.summary;
+    const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
+    filtered.unshift(item);
+    localStorage.setItem(key,JSON.stringify(filtered.slice(0,50)));
+  }catch(e){console.warn('My Genie history save failed:',e)}
+}
+
 </script>
 </body>
 </html>
