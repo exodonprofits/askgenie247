@@ -304,8 +304,8 @@ async function buildAI(){
  render(scores,null);showAIWait(document.getElementById('aiStatus'));
  try{
   if(!window.AskGenieAI||typeof window.AskGenieAI.love!=='function')throw new Error('Love AI client method unavailable');
-  const ai=await AskGenieAI.love(payload(),{language:lang});currentAI=ai;render(scores,ai);document.getElementById('aiStatus').textContent=T[lang].aiReady
- }catch(e){console.warn('Love Compatibility AI failed; using fallback:',e);currentAI=null;document.getElementById('aiStatus').textContent=T[lang].aiFallback}
+  const ai=await AskGenieAI.love(payload(),{language:lang});currentAI=ai;render(scores,ai);document.getElementById('aiStatus').textContent=T[lang].aiReady;saveToMyGenie()
+ }catch(e){console.warn('Love Compatibility AI failed; using fallback:',e);currentAI=null;document.getElementById('aiStatus').textContent=T[lang].aiFallback;saveToMyGenie()}
 }
 document.getElementById('calculateBtn').onclick=()=>{
  if(!document.getElementById('nameA').value.trim()||!document.getElementById('nameB').value.trim()){alert(T[lang].needNames);return}
@@ -324,6 +324,22 @@ document.querySelectorAll('.quick[data-q]').forEach(btn=>btn.onclick=()=>askGeni
 document.getElementById('moreQuestionsBtn').onclick=()=>{const b=document.getElementById('moreQuestions');b.classList.toggle('show');document.getElementById('moreQuestionsBtn').textContent=b.classList.contains('show')?'×':'•••'};
 document.getElementById('retryBtn').onclick=()=>{document.getElementById('results').classList.remove('show');document.getElementById('setupPanel').classList.remove('hidden');currentAI=null;scores=null;window.scrollTo({top:0,behavior:'smooth'})};
 document.getElementById('shareBtn').onclick=async()=>{if(!scores)return;const text=lang==='vi'?`❤️ Độ hợp tình yêu AskGenie247 của chúng tôi: ${scores.overall}/100 — ${document.getElementById('themeTitle').textContent}`:`❤️ Our AskGenie247 love compatibility: ${scores.overall}/100 — ${document.getElementById('themeTitle').textContent}`;if(navigator.share){try{await navigator.share({title:'AskGenie247 Love Compatibility',text,url:location.href})}catch(e){}}else{try{await navigator.clipboard.writeText(text+' '+location.href)}catch(e){}}};
+
+// My Genie V1: save completed reading summaries locally (never saves uploaded images).
+function saveToMyGenie(){
+  try{
+    const key='askgenieReadingHistory';
+    const list=JSON.parse(localStorage.getItem(key)||'[]');
+    const title=(()=>document.getElementById('themeTitle')?.textContent||'Love Compatibility')();
+    const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'love',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const fingerprint=item.type+'|'+item.title+'|'+item.summary;
+    const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
+    filtered.unshift(item);
+    localStorage.setItem(key,JSON.stringify(filtered.slice(0,50)));
+  }catch(e){console.warn('My Genie history save failed:',e)}
+}
+
 </script>
 </body>
 </html>
