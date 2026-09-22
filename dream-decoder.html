@@ -168,7 +168,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.getElementById('themeTitle')?.textContent||'Dream Decoder')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'dream',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={traits:document.getElementById('traits')?.textContent||'',symbols:document.getElementById('symbolsText')?.textContent||'',emotional:document.getElementById('emotionalText')?.textContent||'',reflection:document.getElementById('reflectionText')?.textContent||'',recurring:document.getElementById('recurringText')?.textContent||'',hidden:document.getElementById('hiddenText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'dream',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
