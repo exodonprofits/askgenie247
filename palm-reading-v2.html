@@ -514,6 +514,7 @@ function revealAIText(el,text){
         );
         currentPalmAI=ai;
         renderAIPalm(ai);
+        saveToMyGenie();
         return true;
       }catch(err){
         console.warn('AskGenie palm AI failed:',err);
@@ -632,6 +633,22 @@ askOwnInput.addEventListener('keydown',e=>{
 });
 
 
-  </script>
+  
+// My Genie V1: save completed reading summaries locally (never saves uploaded images).
+function saveToMyGenie(){
+  try{
+    const key='askgenieReadingHistory';
+    const list=JSON.parse(localStorage.getItem(key)||'[]');
+    const title=(()=>document.querySelector('.archetype')?.textContent||'Palm Reading')();
+    const summary=(()=>document.getElementById('palmSummary')?.textContent||'')();
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'palm',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const fingerprint=item.type+'|'+item.title+'|'+item.summary;
+    const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
+    filtered.unshift(item);
+    localStorage.setItem(key,JSON.stringify(filtered.slice(0,50)));
+  }catch(e){console.warn('My Genie history save failed:',e)}
+}
+
+</script>
 </body>
 </html>
