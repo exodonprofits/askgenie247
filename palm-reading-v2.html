@@ -641,7 +641,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.querySelector('.archetype')?.textContent||'Palm Reading')();
     const summary=(()=>document.getElementById('palmSummary')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'palm',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={traits:document.getElementById('palmTraits')?.textContent||'',you:document.getElementById('palmYouText')?.textContent||'',love:document.getElementById('palmLoveText')?.textContent||'',money_career:document.getElementById('palmMoneyCareerText')?.textContent||'',future_vibe:document.getElementById('palmFutureText')?.textContent||'',hidden_strength:document.getElementById('palmHiddenText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'palm',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
