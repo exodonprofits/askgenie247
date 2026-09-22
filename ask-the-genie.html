@@ -535,6 +535,7 @@ async function sendQuestion(q){
       type:readingContext.type,
       title:readingContext.title||'',
       summary:readingContext.summary||'',
+      detail:readingContext.detail||null,
       createdAt:readingContext.createdAt||''
     }:null;
     const ai=await AskGenieAI.chat({topic:topic||readingContext?.type||"Anything",message:q,conversation:recent,reading_context:context},{language:lang});
