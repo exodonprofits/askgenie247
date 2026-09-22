@@ -1312,7 +1312,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.querySelector('.theme-title')?.textContent||'Future Predictor')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'future',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={focus:(typeof focus!=='undefined'?focus:''),timeframe:(typeof timeframe!=='undefined'?timeframe:''),direction:document.getElementById('changeText')?.textContent||'',love:document.getElementById('loveText')?.textContent||'',money:document.getElementById('moneyText')?.textContent||'',career:document.getElementById('careerText')?.textContent||'',watch_for:document.getElementById('luckText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'future',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
