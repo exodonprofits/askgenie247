@@ -332,7 +332,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.getElementById('themeTitle')?.textContent||'Love Compatibility')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'love',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={scores:(typeof scores!=='undefined'?scores:null),chemistry:document.getElementById('chemistryText')?.textContent||'',communication:document.getElementById('communicationText')?.textContent||'',emotional:document.getElementById('emotionalText')?.textContent||'',conflict:document.getElementById('conflictText')?.textContent||'',values:document.getElementById('valuesText')?.textContent||'',future:document.getElementById('futureText')?.textContent||'',strength:document.getElementById('strengthText')?.textContent||'',friction:document.getElementById('frictionText')?.textContent||'',best_move:document.getElementById('moveText')?.textContent||''};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'love',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
