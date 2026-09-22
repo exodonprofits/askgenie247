@@ -720,7 +720,8 @@ function saveToMyGenie(){
     const list=JSON.parse(localStorage.getItem(key)||'[]');
     const title=(()=>document.getElementById('readingTitle')?.textContent||'Tarot')();
     const summary=(()=>document.getElementById('summaryText')?.textContent||'')();
-    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'tarot',title:title,summary:summary,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
+    const detail={focus:(typeof focus!=='undefined'?focus:''),spread:(typeof spread!=='undefined'?spread:''),cards:(typeof drawn!=='undefined'?drawn.map(c=>currentLang==='vi'?c.vi:c.en):[]),subtitle:document.getElementById('readingSub')?.textContent||'',keywords:[...document.querySelectorAll('#summaryChips .chip')].map(x=>x.textContent.trim())};
+    const item={id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()),type:'tarot',title:title,summary:summary,detail:detail,language:(typeof currentLang!=='undefined'?currentLang:(typeof lang!=='undefined'?lang:'en')),createdAt:new Date().toISOString()};
     const fingerprint=item.type+'|'+item.title+'|'+item.summary;
     const filtered=list.filter(x=>(x.type+'|'+(x.title||'')+'|'+(x.summary||''))!==fingerprint);
     filtered.unshift(item);
