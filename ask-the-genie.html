@@ -401,7 +401,26 @@ chatPlaceholder:"Hỏi tiếp…",clearChat:"Xóa Cuộc Trò Chuyện",fineprin
 home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",needQuestion:"Hãy hỏi Genie một câu trước.",thinking:"Genie đang suy nghĩ…"
 }};
 let lang=localStorage.getItem('askgenieLang')||(navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en');
-let topic="",history=[],readingContext=null;
+let topic="",history=[],readingContext=null,connectedReadings=[];
+function loadConnectedReadings(){
+  try{
+    const params=new URLSearchParams(location.search);if(params.get('connect')!=='1')return[];
+    const ids=JSON.parse(sessionStorage.getItem('askgenieConnectedReadingIds')||'[]');
+    const all=JSON.parse(localStorage.getItem('askgenieReadingHistory')||'[]');
+    return ids.map(id=>all.find(r=>r.id===id)).filter(Boolean).slice(0,7);
+  }catch(e){return[]}
+}
+function connectedWelcome(rs){
+  const names=rs.map(r=>readingTypeName(r.type)).join(lang==='vi'?' • ':' • ');
+  return lang==='vi'
+    ?'Mình đã kết nối '+rs.length+' bài xem gần nhất của bạn: '+names+'. Mình sẽ tìm những chủ đề lặp lại, điểm tương đồng và cả những điểm khác nhau — để bạn suy ngẫm, không phải như một dự đoán chắc chắn.'
+    :'I connected your '+rs.length+' latest reading types: '+names+'. I’ll look for recurring themes, similarities, and meaningful differences for reflection — not as certain predictions.';
+}
+function connectedSuggestions(){
+ return lang==='vi'
+ ?['Chủ đề nào lặp lại nhiều nhất trong các bài xem của tôi?','Các bài xem đang đồng thuận và khác nhau ở đâu?','Tôi nên suy ngẫm điều gì từ tất cả các bài này?']
+ :['What theme repeats most across my readings?','Where do my readings agree and differ?','What should I reflect on across all of these readings?'];
+}
 function loadReadingContext(){
   try{
     const params=new URLSearchParams(location.search),id=params.get('reading');
@@ -531,6 +550,7 @@ async function sendQuestion(q){
   try{
     if(!window.AskGenieAI||typeof AskGenieAI.chat!=='function')throw new Error('Chat AI client method unavailable');
     const recent=history.slice(-10);
+    const connected_context=connectedReadings.length?connectedReadings.map(r=>({type:r.type,title:r.title||'',summary:r.summary||'',detail:r.detail||null,createdAt:r.createdAt||''})):null;
     const context=readingContext?{
       type:readingContext.type,
       title:readingContext.title||'',
@@ -538,7 +558,7 @@ async function sendQuestion(q){
       detail:readingContext.detail||null,
       createdAt:readingContext.createdAt||''
     }:null;
-    const ai=await AskGenieAI.chat({topic:topic||readingContext?.type||"Anything",message:q,conversation:recent,reading_context:context},{language:lang});
+    const ai=await AskGenieAI.chat({topic:topic||readingContext?.type||(connectedReadings.length?'Connected Readings':"Anything"),message:q,conversation:recent,reading_context:context,connected_readings:connected_context},{language:lang});
     stopThinking();
     typing.textContent=ai.answer||'';
     typing.classList.add('answer-reveal');
@@ -565,8 +585,15 @@ document.getElementById('chatSend').onclick=()=>{const i=document.getElementById
 document.getElementById('chatInput').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('chatSend').click()}};
 
 // Open directly into a contextual conversation when launched from My Genie.
+connectedReadings=loadConnectedReadings();
 readingContext=loadReadingContext();
-if(readingContext){
+if(connectedReadings.length>=2){
+  document.getElementById('chatWrap').classList.add('show');
+  document.getElementById('askPanel').classList.add('hidden');
+  addMsg(connectedWelcome(connectedReadings),'genie').classList.add('answer-reveal');
+  renderSuggestions(connectedSuggestions());
+  setTimeout(()=>sendQuestion(lang==='vi'?'Hãy kết nối các bài xem của tôi và cho tôi biết 3 chủ đề nổi bật nhất, điểm nào lặp lại, điểm nào khác nhau, và một câu hỏi hữu ích để tôi tự suy ngẫm.':'Connect my readings and show me the 3 strongest themes, what repeats, what differs, and one useful question for me to reflect on.'),180);
+}else if(readingContext){
   document.getElementById('chatWrap').classList.add('show');
   document.getElementById('askPanel').classList.add('hidden');
   addMsg(contextWelcome(readingContext),'genie').classList.add('answer-reveal');
@@ -576,7 +603,7 @@ if(readingContext){
 }
 
 document.getElementById('clearBtn').onclick=()=>{
-  history=[];topic='';readingContext=null;chatBody.innerHTML='';renderSuggestions([]);renderRelated('','');
+  history=[];topic='';readingContext=null;connectedReadings=[];sessionStorage.removeItem('askgenieConnectedReadingIds');chatBody.innerHTML='';renderSuggestions([]);renderRelated('','');
   document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active'));
   document.getElementById('chatWrap').classList.remove('show');
   document.getElementById('askPanel').classList.remove('hidden');
