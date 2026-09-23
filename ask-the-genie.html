@@ -401,7 +401,8 @@ chatPlaceholder:"Hỏi tiếp…",clearChat:"Xóa Cuộc Trò Chuyện",fineprin
 home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",needQuestion:"Hãy hỏi Genie một câu trước.",thinking:"Genie đang suy nghĩ…"
 }};
 let lang=localStorage.getItem('askgenieLang')||(navigator.language&&navigator.language.toLowerCase().startsWith('vi')?'vi':'en');
-let topic="",history=[],readingContext=null,connectedReadings=[];
+let topic="",history=[],readingContext=null,connectedReadings=[],insightReport=null;
+function loadInsightReport(){try{const p=new URLSearchParams(location.search);if(p.get('insights')!=='1'&&p.get('report')!=='1')return null;return JSON.parse(localStorage.getItem('askgenieInsightReport')||'null')}catch(e){return null}}
 function loadConnectedReadings(){
   try{
     const params=new URLSearchParams(location.search);if(params.get('connect')!=='1')return[];
@@ -558,7 +559,8 @@ async function sendQuestion(q){
       detail:readingContext.detail||null,
       createdAt:readingContext.createdAt||''
     }:null;
-    const ai=await AskGenieAI.chat({topic:topic||readingContext?.type||(connectedReadings.length?'Connected Readings':"Anything"),message:q,conversation:recent,reading_context:context,connected_readings:connected_context},{language:lang});
+    const report_context=insightReport?{generatedAt:insightReport.generatedAt||"",fields:insightReport.fields||{}}:null;
+    const ai=await AskGenieAI.chat({topic:topic||readingContext?.type||(connectedReadings.length?'Connected Readings':"Anything"),message:q,conversation:recent,reading_context:context,connected_readings:connected_context,genie_insight_report:report_context},{language:lang});
     stopThinking();
     typing.textContent=ai.answer||'';
     typing.classList.add('answer-reveal');
@@ -585,6 +587,7 @@ document.getElementById('chatSend').onclick=()=>{const i=document.getElementById
 document.getElementById('chatInput').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('chatSend').click()}};
 
 // Open directly into a contextual conversation when launched from My Genie.
+insightReport=loadInsightReport();
 connectedReadings=loadConnectedReadings();
 readingContext=loadReadingContext();
 if(connectedReadings.length>=2){
@@ -592,7 +595,7 @@ if(connectedReadings.length>=2){
   document.getElementById('askPanel').classList.add('hidden');
   addMsg(connectedWelcome(connectedReadings),'genie').classList.add('answer-reveal');
   renderSuggestions(connectedSuggestions());
-  setTimeout(()=>sendQuestion(lang==='vi'?'Hãy kết nối các bài xem của tôi và cho tôi biết 3 chủ đề nổi bật nhất, điểm nào lặp lại, điểm nào khác nhau, và một câu hỏi hữu ích để tôi tự suy ngẫm.':'Connect my readings and show me the 3 strongest themes, what repeats, what differs, and one useful question for me to reflect on.'),180);
+  setTimeout(()=>sendQuestion(insightReport?(lang==='vi'?'Hãy giúp tôi hiểu sâu hơn báo cáo Genie Intelligence đã lưu: chủ đề nào quan trọng nhất, điều gì mới đáng chú ý, và tôi nên suy ngẫm về câu hỏi nào tiếp theo?':'Help me understand my saved Genie Intelligence report more deeply: what matters most, what is newly important, and what should I reflect on next?'):(lang==='vi'?'Hãy kết nối các bài xem của tôi và cho tôi biết 3 chủ đề nổi bật nhất, điểm nào lặp lại, điểm nào khác nhau, và một câu hỏi hữu ích để tôi tự suy ngẫm.':'Connect my readings and show me the 3 strongest themes, what repeats, what differs, and one useful question for me to reflect on.')),180);
 }else if(readingContext){
   document.getElementById('chatWrap').classList.add('show');
   document.getElementById('askPanel').classList.add('hidden');
@@ -603,7 +606,7 @@ if(connectedReadings.length>=2){
 }
 
 document.getElementById('clearBtn').onclick=()=>{
-  history=[];topic='';readingContext=null;connectedReadings=[];sessionStorage.removeItem('askgenieConnectedReadingIds');chatBody.innerHTML='';renderSuggestions([]);renderRelated('','');
+  history=[];topic='';readingContext=null;connectedReadings=[];insightReport=null;sessionStorage.removeItem('askgenieConnectedReadingIds');chatBody.innerHTML='';renderSuggestions([]);renderRelated('','');
   document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active'));
   document.getElementById('chatWrap').classList.remove('show');
   document.getElementById('askPanel').classList.remove('hidden');
