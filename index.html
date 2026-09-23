@@ -276,6 +276,7 @@
       align-items:center;justify-content:center;
       gap:3px;
       font-size:10px;color:#bfb4c8;
+      text-decoration:none;
     }
     .nav-item .ni{font-size:19px}
     .nav-item.active{color:var(--gold)}
@@ -513,10 +514,10 @@
     <button class="surprise" id="surprise" data-i18n="surpriseMe">🎲 Surprise Me</button>
 
     <nav class="bottom-nav">
-      <div class="nav-item active"><div class="ni">🏠</div><div data-i18n="home">Home</div></div>
-      <div class="nav-item"><div class="ni">✨</div><div data-i18n="explore">Explore</div></div>
-      <div class="nav-item"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><div data-i18n="genie">Genie</div></div>
-      <div class="nav-item"><div class="ni">❤️</div><div data-i18n="me">Me</div></div>
+      <a class="nav-item active" href="index.html"><div class="ni">🏠</div><div data-i18n="home">Home</div></a>
+      <a class="nav-item" href="#mysteryGrid"><div class="ni">✨</div><div data-i18n="explore">Explore</div></a>
+      <a class="nav-item" href="ask-the-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><div data-i18n="genie">Genie</div></a>
+      <a class="nav-item" href="my-genie.html"><img class="nav-genie-icon" src="images/genie-mark.png" alt=""><div data-i18n="myGenie">My Genie</div></a>
     </nav>
   </div>
 
@@ -551,7 +552,7 @@
         askTitle:"Ask Genie", askMicro:"Ask Anything",
         compatTitle:"Compatibility", compatMicro:"Are We a Match?",
         todayTitle:"🔮 Today’s Genie", todayFortune:"“A small surprise may lead to a bigger idea today.”",
-        surpriseMe:"🎲 Surprise Me", home:"Home", explore:"Explore", genie:"Genie", me:"Me"
+        surpriseMe:"🎲 Surprise Me", home:"Home", explore:"Explore", genie:"Genie", myGenie:"My Genie", me:"Me"
       },
       vi:{
         heroTitle:"Hôm nay bạn tò mò điều gì?", heroSub:"Chọn một điều bí ẩn. Cùng vui một chút nhé.",
@@ -565,7 +566,7 @@
         askTitle:"Hỏi Genie", askMicro:"Hỏi Bất Cứ Điều Gì",
         compatTitle:"Độ Tương Hợp", compatMicro:"Chúng Ta Có Hợp Không?",
         todayTitle:"🔮 Genie Hôm Nay", todayFortune:"“Một bất ngờ nhỏ hôm nay có thể dẫn đến một ý tưởng lớn hơn.”",
-        surpriseMe:"🎲 Làm Tôi Bất Ngờ", home:"Trang Chủ", explore:"Khám Phá", genie:"Genie", me:"Tôi"
+        surpriseMe:"🎲 Làm Tôi Bất Ngờ", home:"Trang Chủ", explore:"Khám Phá", genie:"Genie", myGenie:"Genie Của Tôi", me:"Tôi"
       }
     };
 
