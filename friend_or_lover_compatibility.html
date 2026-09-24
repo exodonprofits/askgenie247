@@ -723,6 +723,21 @@ function saveToMyGenie(){
   }catch(e){console.warn('My Genie history save failed:',e)}
 }
 
+
+// My Genie profile: reuse the saved user's name and birthday on this device.
+// Only the primary user's fields are prefilled; partner/friend fields remain untouched.
+function loadMyGenieProfile(){
+  try{
+    const profile=JSON.parse(localStorage.getItem('askgenieProfile')||'{}');
+    const nameEl=document.getElementById('name1');
+    const dobEl=document.getElementById('dob1');
+    if(nameEl && !nameEl.value && profile.name) nameEl.value=String(profile.name);
+    if(dobEl && !dobEl.value && /^\d{4}-\d{2}-\d{2}$/.test(String(profile.birthday||''))) dobEl.value=String(profile.birthday);
+  }catch(e){console.warn('Could not load My Genie profile:',e)}
+}
+loadMyGenieProfile();
+window.addEventListener('pageshow',loadMyGenieProfile);
+window.addEventListener('storage',e=>{if(e.key==='askgenieProfile')loadMyGenieProfile()});
 </script>
 </body>
 </html>
