@@ -205,7 +205,7 @@ strengthTitle:"💪 Biggest Strength",frictionTitle:"⚠️ Biggest Friction Poi
 qStrongest:"❤️ What is our strongest connection?",qProblems:"⚠️ What could cause problems?",qCommunication:"💬 Are our communication styles compatible?",qWorkOn:"🛠 What should we work on?",qLongTerm:"🔮 Could this work long-term?",qClash:"⚖️ Why do we clash sometimes?",
 askOwnPlaceholder:"Ask your own question…",askGenieTitle:"Ask Genie",readingFromUs:"Reading from your compatibility map",welcomeMsg:"I’ve mapped your strongest and weakest areas. Ask me about communication, chemistry, conflict, or long-term fit. ✨",chatPlaceholder:"Ask about your relationship…",
 retry:"🔄 Start Over",share:"📤 Share Result",fineprint:"For entertainment and self-reflection only. Compatibility scores are not scientific measures and do not determine whether a relationship will succeed.",
-home:"Home",explore:"Explore",genie:"Genie",me:"Me",aiThinking:"🧞 ChatGPT is interpreting your compatibility map…",aiReady:"✨ Personalized by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",
+home:"Home",explore:"Explore",genie:"Genie",me:"Me",aiThinking:"🧞 Genie is interpreting your compatibility map…",aiReady:"✨ Genie’s Insight",aiFallback:"⚠️ AI unavailable — showing local fallback",
 needNames:"Please enter both names.",needBirthdays:"Please enter both birthdays.",needAnswers:"Please answer all 6 relationship questions.",
 low:"Needs care",medium:"Mixed but workable",good:"Strong connection",high:"Very strong fit",
 scaleLow:"Not really",scaleHigh:"Very much",
@@ -221,7 +221,7 @@ strengthTitle:"💪 Điểm Mạnh Lớn Nhất",frictionTitle:"⚠️ Điểm D
 qStrongest:"❤️ Kết nối mạnh nhất của chúng tôi là gì?",qProblems:"⚠️ Điều gì có thể gây vấn đề?",qCommunication:"💬 Cách giao tiếp của chúng tôi có hợp không?",qWorkOn:"🛠 Chúng tôi nên cải thiện điều gì?",qLongTerm:"🔮 Mối quan hệ này có thể đi lâu dài không?",qClash:"⚖️ Vì sao đôi khi chúng tôi va chạm?",
 askOwnPlaceholder:"Tự đặt câu hỏi…",askGenieTitle:"Hỏi Genie",readingFromUs:"Dựa trên bản đồ độ hợp của hai bạn",welcomeMsg:"Genie đã lập bản đồ điểm mạnh và điểm yếu. Hãy hỏi về giao tiếp, hấp dẫn, mâu thuẫn hoặc định hướng lâu dài. ✨",chatPlaceholder:"Hỏi về mối quan hệ…",
 retry:"🔄 Làm Lại",share:"📤 Chia Sẻ Kết Quả",fineprint:"Chỉ dành cho giải trí và tự chiêm nghiệm. Điểm tương hợp không phải thước đo khoa học và không quyết định một mối quan hệ có thành công hay không.",
-home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",aiThinking:"🧞 ChatGPT đang diễn giải bản đồ tương hợp…",aiReady:"✨ Cá nhân hóa bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",
+home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",aiThinking:"🧞 Genie đang diễn giải bản đồ tương hợp…",aiReady:"✨ Góc Nhìn Của Genie",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",
 needNames:"Hãy nhập tên của cả hai.",needBirthdays:"Hãy nhập ngày sinh của cả hai.",needAnswers:"Hãy trả lời đủ 6 câu hỏi.",
 low:"Cần Chăm Chút",medium:"Pha Trộn Nhưng Có Thể Cải Thiện",good:"Kết Nối Mạnh",high:"Rất Hợp Nhau",
 scaleLow:"Không giống lắm",scaleHigh:"Rất giống",
@@ -312,14 +312,14 @@ document.getElementById('calculateBtn').onclick=()=>{
  if(!document.getElementById('dobA').value||!document.getElementById('dobB').value){alert(T[lang].needBirthdays);return}
  if(answers.some(v=>!v)){alert(T[lang].needAnswers);return}
  scores=calculateScores();document.getElementById('setupPanel').classList.add('hidden');document.getElementById('scanView').classList.add('show');
- const msgs=lang==='vi'?['Đang xem độ hòa hợp cảm xúc…','Đang so sánh giao tiếp và cách xử lý mâu thuẫn…','Đang lập bản đồ giá trị và tương lai…','ChatGPT đang tạo phần diễn giải cá nhân hóa…']:['Checking emotional fit…','Comparing communication and conflict style…','Mapping values and future direction…','ChatGPT is creating a personalized interpretation…'];
+ const msgs=lang==='vi'?['Đang xem độ hòa hợp cảm xúc…','Đang so sánh giao tiếp và cách xử lý mâu thuẫn…','Đang lập bản đồ giá trị và tương lai…','Genie đang tạo góc nhìn cá nhân hóa…']:['Checking emotional fit…','Comparing communication and conflict style…','Mapping values and future direction…','ChatGPT is creating a personalized interpretation…'];
  msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('scanText').textContent=m,450+i*520));
  setTimeout(async()=>{document.getElementById('scanView').classList.remove('show');document.getElementById('results').classList.add('show');document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});await buildAI()},2450);
 };
 
 const chatBody=document.getElementById('chatBody'),chatInput=document.getElementById('chatInput'),askOwnInput=document.getElementById('askOwnInput');
 function addMsg(text,who='genie'){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;chatBody.appendChild(el);chatBody.scrollTop=chatBody.scrollHeight;return el}
-async function askGenie(q){q=(q||'').trim();if(!q||!scores)return;addMsg(q,'user');chatInput.value='';askOwnInput.value='';const waiting=addMsg(lang==='vi'?'ChatGPT đang suy ngẫm…':'ChatGPT is thinking…','genie');showAIWait(waiting);try{if(!AskGenieAI||typeof AskGenieAI.love!=='function')throw new Error('Love AI unavailable');const ai=await AskGenieAI.love(payload(q),{language:lang});waiting.textContent=ai.answer||ai.summary||ai.best_move||''}catch(e){revealAIText(waiting,localCopy(scores).best_move)}}
+async function askGenie(q){q=(q||'').trim();if(!q||!scores)return;addMsg(q,'user');chatInput.value='';askOwnInput.value='';const waiting=addMsg(lang==='vi'?'Genie đang suy ngẫm…':'Genie is thinking…','genie');showAIWait(waiting);try{if(!AskGenieAI||typeof AskGenieAI.love!=='function')throw new Error('Love AI unavailable');const ai=await AskGenieAI.love(payload(q),{language:lang});waiting.textContent=ai.answer||ai.summary||ai.best_move||''}catch(e){revealAIText(waiting,localCopy(scores).best_move)}}
 document.querySelectorAll('.quick[data-q]').forEach(btn=>btn.onclick=()=>askGenie(btn.textContent));document.getElementById('chatSend').onclick=()=>askGenie(chatInput.value);chatInput.onkeydown=e=>{if(e.key==='Enter')askGenie(chatInput.value)};document.getElementById('askOwnBtn').onclick=()=>askGenie(askOwnInput.value);askOwnInput.onkeydown=e=>{if(e.key==='Enter')askGenie(askOwnInput.value)};
 document.getElementById('moreQuestionsBtn').onclick=()=>{const b=document.getElementById('moreQuestions');b.classList.toggle('show');document.getElementById('moreQuestionsBtn').textContent=b.classList.contains('show')?'×':'•••'};
 document.getElementById('retryBtn').onclick=()=>{document.getElementById('results').classList.remove('show');document.getElementById('setupPanel').classList.remove('hidden');currentAI=null;scores=null;window.scrollTo({top:0,behavior:'smooth'})};
