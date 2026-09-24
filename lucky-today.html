@@ -410,7 +410,7 @@ const translations={
     chatPlaceholder:"Ask about today…",retry:"🔄 Start Over",share:"📤 Share Result",
     fineprint:"For fun, entertainment and self-reflection only. This is not a scientific prediction of future events.",
     home:"Home",explore:"Explore",genie:"Genie",me:"Me",
-    aiThinking:"🧞 ChatGPT is interpreting your daily pattern…",aiReady:"✨ Personalized by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",
+    aiThinking:"🧞 Genie is interpreting your daily pattern…",aiReady:"✨ Genie’s Insight",aiFallback:"⚠️ AI unavailable — showing local fallback",
     nameRequired:"Please enter your name.",birthdayRequired:"Please add your birthday."
   },
   vi:{
@@ -428,7 +428,7 @@ const translations={
     chatPlaceholder:"Hỏi về hôm nay…",retry:"🔄 Làm Lại",share:"📤 Chia Sẻ Kết Quả",
     fineprint:"Chỉ dành cho giải trí và tự chiêm nghiệm. Đây không phải là dự đoán khoa học về các sự kiện tương lai.",
     home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi",
-    aiThinking:"🧞 ChatGPT đang diễn giải mẫu năng lượng hôm nay…",aiReady:"✨ Cá nhân hóa bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",
+    aiThinking:"🧞 Genie đang diễn giải mẫu năng lượng hôm nay…",aiReady:"✨ Góc Nhìn Của Genie",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",
     nameRequired:"Hãy nhập tên của bạn.",birthdayRequired:"Hãy nhập ngày sinh của bạn."
   }
 };
@@ -585,8 +585,8 @@ document.getElementById('revealBtn').onclick=()=>{
   document.getElementById('setupPanel').classList.add('hidden');
   document.getElementById('scanView').classList.add('show');
   const msgs=currentLang==='vi'
-    ?['Đang kết nối tên, ngày sinh và hôm nay…','Đang tính mẫu năng lượng ổn định trong ngày…','Đang xem điểm mạnh nổi bật…','ChatGPT đang tạo phần diễn giải cá nhân hóa…']
-    :['Matching your name, birthday and today…','Building a stable daily pattern…','Checking where today is strongest…','ChatGPT is creating your personalized interpretation…'];
+    ?['Đang kết nối tên, ngày sinh và hôm nay…','Đang tính mẫu năng lượng ổn định trong ngày…','Đang xem điểm mạnh nổi bật…','Genie đang tạo góc nhìn cá nhân hóa…']
+    :['Matching your name, birthday and today…','Building a stable daily pattern…','Checking where today is strongest…','Genie is creating your personalized insight…'];
   msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('scanText').textContent=m,450+i*520));
   setTimeout(async()=>{
     document.getElementById('scanView').classList.remove('show');
@@ -601,7 +601,7 @@ function addMsg(text,who='genie'){const el=document.createElement('div');el.clas
 async function askGenie(question){
   const q=(question||'').trim();if(!q||!currentPattern)return;
   addMsg(q,'user');chatInput.value='';askOwnInput.value='';
-  const waiting=addMsg(currentLang==='vi'?'ChatGPT đang suy ngẫm…':'ChatGPT is thinking…','genie');showAIWait(waiting);
+  const waiting=addMsg(currentLang==='vi'?'Genie đang suy ngẫm…':'Genie is thinking…','genie');showAIWait(waiting);
   try{
     if(!window.AskGenieAI||typeof window.AskGenieAI.lucky!=='function')throw new Error('Lucky AI unavailable');
     const ai=await window.AskGenieAI.lucky(payload(q),{language:currentLang});
