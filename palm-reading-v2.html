@@ -296,7 +296,7 @@ function revealAIText(el,text){
         askOwnPlaceholder:"Ask your own question…", askGenieTitle:"Ask Genie", readingFromPalm:"Reading from your palm result", welcomeMsg:"I’ve got your palm reading. Ask me about money, love, career, what’s ahead, or anything else you’re curious about. ✨", chatPlaceholder:"Ask about your palm…",
         otherHand:"✋ Other Hand", shareResult:"📤 Share Result", seeFuture:"🔮 See My Future", fineprint:"For fun, entertainment and self-reflection only. Palmistry is not scientifically proven and does not predict future events with certainty.",
         navHome:"Home", navExplore:"Explore", navGenie:"Genie", navMe:"Me",
-        aiThinking:"🧞 ChatGPT Vision is analyzing your palm…",aiReady:"✨ Palm interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",chooseFirst:"Choose who this reading is for first.", addPhoto:"Add a palm photo first.", copied:"Result copied!", shareUnavailable:"Sharing is not available on this device."
+        aiThinking:"🧞 Genie is analyzing your palm…",aiReady:"✨ Genie’s Insight",aiFallback:"⚠️ AI unavailable — showing local fallback",chooseFirst:"Choose who this reading is for first.", addPhoto:"Add a palm photo first.", copied:"Result copied!", shareUnavailable:"Sharing is not available on this device."
       },
       vi:{
         pageTitle:"✋ Xem Chỉ Tay", heroTitle:"Bàn tay của bạn có một câu chuyện.", heroSub:"Hãy để Genie xem thử nhé.",
@@ -317,7 +317,7 @@ function revealAIText(el,text){
         askOwnPlaceholder:"Tự đặt câu hỏi…", askGenieTitle:"Hỏi Genie", readingFromPalm:"Dựa trên kết quả xem chỉ tay của bạn", welcomeMsg:"Genie đã có kết quả xem chỉ tay của bạn. Hãy hỏi về tiền bạc, tình yêu, sự nghiệp, tương lai hoặc bất cứ điều gì bạn tò mò. ✨", chatPlaceholder:"Hỏi về bàn tay của bạn…",
         otherHand:"✋ Xem Tay Khác", shareResult:"📤 Chia Sẻ Kết Quả", seeFuture:"🔮 Xem Tương Lai Của Tôi", fineprint:"Chỉ để giải trí và tự chiêm nghiệm. Xem chỉ tay chưa được khoa học chứng minh và không thể dự đoán chắc chắn các sự kiện tương lai.",
         navHome:"Trang Chủ", navExplore:"Khám Phá", navGenie:"Genie", navMe:"Tôi",
-        aiThinking:"🧞 ChatGPT Vision đang phân tích lòng bàn tay của bạn…",aiReady:"✨ Diễn giải bàn tay bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",chooseFirst:"Hãy chọn người được xem chỉ tay trước.", addPhoto:"Hãy thêm ảnh lòng bàn tay trước.", copied:"Đã sao chép kết quả!", shareUnavailable:"Thiết bị này không hỗ trợ chia sẻ."
+        aiThinking:"🧞 Genie đang phân tích lòng bàn tay của bạn…",aiReady:"✨ Góc Nhìn Của Genie",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",chooseFirst:"Hãy chọn người được xem chỉ tay trước.", addPhoto:"Hãy thêm ảnh lòng bàn tay trước.", copied:"Đã sao chép kết quả!", shareUnavailable:"Thiết bị này không hỗ trợ chia sẻ."
       }
     };
     function applyLanguage(lang){
@@ -578,7 +578,7 @@ function revealAIText(el,text){
       },700+i*650));
 
       setTimeout(()=>document.getElementById('scanMessage').textContent=
-        vi?'ChatGPT Vision đang xem kỹ các đường nét…':'ChatGPT Vision is looking closely at the visible palm lines…',3300);
+        vi?'Genie đang xem kỹ các đường nét…':'Genie is looking closely at the visible palm lines…',3300);
 
       setTimeout(async()=>{
         await buildPalmReading();
