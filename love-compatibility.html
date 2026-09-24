@@ -312,7 +312,7 @@ document.getElementById('calculateBtn').onclick=()=>{
  if(!document.getElementById('dobA').value||!document.getElementById('dobB').value){alert(T[lang].needBirthdays);return}
  if(answers.some(v=>!v)){alert(T[lang].needAnswers);return}
  scores=calculateScores();document.getElementById('setupPanel').classList.add('hidden');document.getElementById('scanView').classList.add('show');
- const msgs=lang==='vi'?['Đang xem độ hòa hợp cảm xúc…','Đang so sánh giao tiếp và cách xử lý mâu thuẫn…','Đang lập bản đồ giá trị và tương lai…','Genie đang tạo góc nhìn cá nhân hóa…']:['Checking emotional fit…','Comparing communication and conflict style…','Mapping values and future direction…','ChatGPT is creating a personalized interpretation…'];
+ const msgs=lang==='vi'?['Đang xem độ hòa hợp cảm xúc…','Đang so sánh giao tiếp và cách xử lý mâu thuẫn…','Đang lập bản đồ giá trị và tương lai…','Genie đang tạo góc nhìn cá nhân hóa…']:['Checking emotional fit…','Comparing communication and conflict style…','Mapping values and future direction…','Genie is creating your personalized insight…'];
  msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('scanText').textContent=m,450+i*520));
  setTimeout(async()=>{document.getElementById('scanView').classList.remove('show');document.getElementById('results').classList.add('show');document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});await buildAI()},2450);
 };
