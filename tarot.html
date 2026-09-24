@@ -363,7 +363,7 @@ const translations={
     shuffleTitle:"Genie is shuffling the cards…",shuffleStart:"Focus on your question.",resultLabel:"YOUR TAROT READING",
     summaryTitle:"🧞 Genie’s Reflection",askTitle:"🧞 Ask Genie About This Reading",askSub:"Choose a follow-up question.",
     qMeaning:"✨ What matters most?",qAction:"🧭 What should I focus on?",genieSays:"Genie says",retry:"🔄 Draw Again",share:"📤 Share Result",
-    aiReading:"✨ AI interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",aiThinking:"🧞 ChatGPT is interpreting your cards…",fineprint:"For fun, entertainment and self-reflection only. Tarot does not scientifically predict future events.",
+    aiReading:"✨ Genie’s Insight",aiFallback:"⚠️ AI unavailable — showing local fallback",aiThinking:"🧞 Genie is interpreting your cards…",fineprint:"For fun, entertainment and self-reflection only. Tarot does not scientifically predict future events.",
     home:"Home",explore:"Explore",genie:"Genie",me:"Me"
   },
   vi:{
@@ -374,7 +374,7 @@ const translations={
     shuffleTitle:"Genie đang xáo bài…",shuffleStart:"Hãy tập trung vào câu hỏi của bạn.",resultLabel:"BÀI TAROT CỦA BẠN",
     summaryTitle:"🧞 Góc Nhìn Của Genie",askTitle:"🧞 Hỏi Genie Về Bài Tarot Này",askSub:"Chọn một câu hỏi tiếp theo.",
     qMeaning:"✨ Điều gì quan trọng nhất?",qAction:"🧭 Tôi nên tập trung vào điều gì?",genieSays:"Genie nói",retry:"🔄 Rút Lại",share:"📤 Chia Sẻ Kết Quả",
-    aiReading:"✨ Diễn giải AI bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",aiThinking:"🧞 ChatGPT đang diễn giải các lá bài…",fineprint:"Chỉ dành cho giải trí và tự suy ngẫm. Tarot không thể dự đoán tương lai một cách khoa học.",
+    aiReading:"✨ Góc Nhìn Của Genie",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",aiThinking:"🧞 Genie đang diễn giải các lá bài…",fineprint:"Chỉ dành cho giải trí và tự suy ngẫm. Tarot không thể dự đoán tương lai một cách khoa học.",
     home:"Trang Chủ",explore:"Khám Phá",genie:"Genie",me:"Tôi"
   }
 };
@@ -652,8 +652,8 @@ document.getElementById('drawBtn').onclick=()=>{
   document.getElementById('shuffleView').scrollIntoView({behavior:'smooth',block:'center'});
 
   const msgs=currentLang==='vi'
-    ? ['Hãy tập trung vào câu hỏi của bạn…','Đang xáo bài…','Đang chọn lá phù hợp…','ChatGPT đang diễn giải bài…']
-    : ['Focus on your question…','Shuffling the deck…','Choosing the cards…','ChatGPT is interpreting your reading…'];
+    ? ['Hãy tập trung vào câu hỏi của bạn…','Đang xáo bài…','Đang chọn lá phù hợp…','Genie đang diễn giải bài…']
+    : ['Focus on your question…','Shuffling the deck…','Choosing the cards…','Genie is interpreting your reading…'];
   msgs.forEach((m,i)=>setTimeout(()=>document.getElementById('shuffleText').textContent=m,500+i*500));
 
   setTimeout(async()=>{
