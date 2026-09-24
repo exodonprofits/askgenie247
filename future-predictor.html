@@ -682,6 +682,24 @@ function revealAIText(el,text){
     const birthdayInput = document.getElementById('birthday');
     const birthdayPickerBtn = document.getElementById('birthdayPickerBtn');
 
+    // My Genie profile: automatically reuse a saved birthday on this device.
+    function loadBirthdayFromMyGenie(){
+      try{
+        const profile=JSON.parse(localStorage.getItem('askgenieProfile')||'{}');
+        const savedBirthday=String(profile.birthday||'').trim();
+        if(birthdayInput && !birthdayInput.value && /^\d{4}-\d{2}-\d{2}$/.test(savedBirthday)){
+          birthdayInput.value=savedBirthday;
+        }
+      }catch(e){
+        console.warn('Could not load birthday from My Genie profile:',e);
+      }
+    }
+    loadBirthdayFromMyGenie();
+    window.addEventListener('pageshow',loadBirthdayFromMyGenie);
+    window.addEventListener('storage',e=>{
+      if(e.key==='askgenieProfile') loadBirthdayFromMyGenie();
+    });
+
     function openBirthdayPicker(){
       try{
         if(typeof birthdayInput.showPicker === 'function'){
