@@ -624,7 +624,7 @@ function revealAIText(el,text){
         readingFromResult:"Reading from your future result",
         welcomeMsg:"I’ve got your future reading. Ask me about love, money, career, timing, or anything else you’re curious about. ✨",
         chatPlaceholder:"Ask about your future…", retry:"🔄 Try Another Time", share:"📤 Share Result",
-        aiThinking:"🧞 ChatGPT is creating your personalized reading…",aiReady:"✨ AI interpretation by ChatGPT",aiFallback:"⚠️ AI unavailable — showing local fallback",fineprint:"For fun, entertainment and self-reflection only. This is not a scientific prediction of future events.",
+        aiThinking:"🧞 Genie is creating your personalized reading…",aiReady:"✨ Genie’s Insight",aiFallback:"⚠️ AI unavailable — showing local fallback",fineprint:"For fun, entertainment and self-reflection only. This is not a scientific prediction of future events.",
         home:"Home", explore:"Explore", genie:"Genie", me:"Me"
       },
       vi:{
@@ -645,7 +645,7 @@ function revealAIText(el,text){
         readingFromResult:"Dựa trên kết quả tương lai của bạn",
         welcomeMsg:"Genie đã có phần đọc tương lai của bạn. Hãy hỏi về tình yêu, tiền bạc, sự nghiệp, thời điểm hoặc bất cứ điều gì bạn tò mò. ✨",
         chatPlaceholder:"Hỏi về tương lai của bạn…", retry:"🔄 Chọn Khoảng Thời Gian Khác", share:"📤 Chia Sẻ Kết Quả",
-        aiThinking:"🧞 ChatGPT đang tạo phần đọc cá nhân hóa cho bạn…",aiReady:"✨ Diễn giải AI bởi ChatGPT",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",fineprint:"Chỉ dành cho mục đích giải trí và tự suy ngẫm. Đây không phải là dự đoán khoa học về các sự kiện trong tương lai.",
+        aiThinking:"🧞 Genie đang tạo phần đọc cá nhân hóa cho bạn…",aiReady:"✨ Góc Nhìn Của Genie",aiFallback:"⚠️ AI tạm thời không khả dụng — đang dùng nội dung dự phòng",fineprint:"Chỉ dành cho mục đích giải trí và tự suy ngẫm. Đây không phải là dự đoán khoa học về các sự kiện trong tương lai.",
         home:"Trang Chủ", explore:"Khám Phá", genie:"Genie", me:"Tôi"
       }
     };
@@ -1140,7 +1140,7 @@ function revealAIText(el,text){
       addMsg(text,'user');
       chatInput.value='';
       askOwnInput.value='';
-      const typing=addMsg(currentLang==='vi'?'ChatGPT đang suy ngẫm…':'ChatGPT is thinking…','genie');showAIWait(typing);
+      const typing=addMsg(currentLang==='vi'?'Genie đang suy ngẫm…':'Genie is thinking…','genie');showAIWait(typing);
       try{
         if(!window.AskGenieAI || typeof window.AskGenieAI.future!=='function') throw new Error('AI unavailable');
         const ai=await window.AskGenieAI.future(futurePayload(text),{language:currentLang});
