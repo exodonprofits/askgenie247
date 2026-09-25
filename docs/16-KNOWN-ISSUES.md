@@ -4,7 +4,11 @@
 
 **VERIFIED:** multiple pages link to `my-genie.html`, but the file is not in this project snapshot. This creates a broken navigation destination unless production supplies it separately.
 
-## 2. Missing Edge Function source
+## 2. Missing Edge Function source — RESOLVED 2026-09-25
+
+The deployed source is now in `supabase/functions/ask-genie-ai/index.ts`. Original note kept below for history.
+
+### Original note
 
 **VERIFIED:** frontend calls Supabase function `ask-genie-ai`, but its source is absent. This prevents complete review of prompts, model, response schemas, security, rate limiting, and secret handling.
 

@@ -19,6 +19,9 @@
       "lucky": true
     }
   },
+  "support": {
+    "tipUrl": ""
+  },
   "app": {
     "name": "AskGenie247",
     "platform": "GenieSphere",

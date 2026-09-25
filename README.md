@@ -63,7 +63,7 @@ English (`en`) and Vietnamese (`vi`) are implemented in-page. Language preferenc
 ## Important repository notes
 
 - `my-genie.html` is referenced by bottom navigation but is **not present in this snapshot**.
-- The Supabase Edge Function source is **not present in this snapshot**, so its prompts, validation, model choice, logging, and secret handling cannot be verified from this repository alone.
+- The Supabase Edge Function source is in `supabase/functions/ask-genie-ai/`, with its database migration in `supabase/migrations/`. See `docs/09-SUPABASE.md` for daily limits, secrets and cost logging.
 - `config.json` enables `tarot`, `future`, `compatibility`, `palm`, and `lucky`, while the shared client also implements `dream`, `love`, and `chat`. The feature-flag schema therefore does not fully describe the current frontend.
 - `palm-reading-v2.html` loads `heic2any` from jsDelivr; browser tracking/content policies can affect that dependency.
 

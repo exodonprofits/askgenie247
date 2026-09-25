@@ -80,7 +80,7 @@ Prefer existing local assets and shared code. If adding a CDN dependency, docume
 Do not fabricate missing code. In this snapshot:
 
 - `my-genie.html` is referenced but absent.
-- Supabase Edge Function source for `ask-genie-ai` is absent.
+- The `ask-genie-ai` Edge Function source now lives in `supabase/functions/ask-genie-ai/index.ts` (deployed v8). Keep it in sync with what is deployed.
 - Database schema/migrations are absent.
 - Automated tests/build tooling are absent.
 
