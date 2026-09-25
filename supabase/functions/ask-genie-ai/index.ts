@@ -1,11 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
 const OPENAI_API_KEY =
   Deno.env.get("OPENAI_API_KEY") ||
   Deno.env.get("OPEN_API_Key") ||
@@ -14,11 +8,107 @@ const OPENAI_API_KEY =
 
 const MODEL = Deno.env.get("OPENAI_MODEL") || "gpt-5.6-luna";
 
-function json(data: unknown, status = 200) {
+// --- Usage limits (all optional secrets; defaults below) ---
+// ALLOWED_ORIGINS: comma-separated site origins, e.g. "https://askgenie247.com,http://localhost:8080".
+//   When unset, any origin is allowed (the daily limits still apply).
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
+  .split(",").map((s) => s.trim().replace(/\/$/, "")).filter(Boolean);
+const DAILY_READING_LIMIT = Number(Deno.env.get("DAILY_READING_LIMIT") || 8);   // new readings per visitor per UTC day
+const DAILY_CHAT_LIMIT = Number(Deno.env.get("DAILY_CHAT_LIMIT") || 15);        // follow-ups + Ask Genie messages per visitor per day
+const DAILY_GLOBAL_LIMIT = Number(Deno.env.get("DAILY_GLOBAL_LIMIT") || 500);   // all visitors combined, per kind, per day
+const RATE_LIMIT_SALT = Deno.env.get("RATE_LIMIT_SALT") || "askgenie247-v1";
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
+const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+
+// Request size caps (characters)
+const MAX_IMAGE_CHARS = 6_000_000;   // ~4.5 MB image as a data URL
+const MAX_PAYLOAD_CHARS = 30_000;    // everything except the image
+const MAX_MESSAGE_CHARS = 4_000;     // one chat message / follow-up question
+
+function corsFor(origin: string | null) {
+  const allow = ALLOWED_ORIGINS.length === 0
+    ? "*"
+    : (origin && ALLOWED_ORIGINS.includes(origin) ? origin : "");
+  const headers: Record<string, string> = {
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+  if (allow) headers["Access-Control-Allow-Origin"] = allow;
+  return headers;
+}
+
+function json(data: unknown, status: number, cors: Record<string, string>) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...cors, "Content-Type": "application/json" },
   });
+}
+
+function clientIp(req: Request) {
+  const fwd = req.headers.get("x-forwarded-for") || "";
+  return fwd.split(",")[0].trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+}
+
+async function sha256Hex(text: string) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function rpc(fn: string, args: Record<string, unknown>) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: {
+      "apikey": SERVICE_ROLE_KEY,
+      "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) throw new Error(`${fn} failed (${res.status}): ${await res.text()}`);
+  return await res.json();
+}
+
+// Returns { allowed, reason }. Fails open (allowed) if the database is unreachable,
+// so an outage doesn't take the app down; the OpenAI budget cap is the backstop.
+async function claimUsage(visitor: string, kind: "reading" | "chat") {
+  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) return { allowed: true, reason: "" };
+  try {
+    const rows = await rpc("askgenie_claim_usage", {
+      p_visitor: visitor,
+      p_kind: kind,
+      p_limit: kind === "reading" ? DAILY_READING_LIMIT : DAILY_CHAT_LIMIT,
+      p_global_limit: DAILY_GLOBAL_LIMIT,
+    });
+    const row = Array.isArray(rows) ? rows[0] : rows;
+    return { allowed: !!row?.allowed, reason: String(row?.reason || "") };
+  } catch (err) {
+    console.error("usage claim failed", err);
+    return { allowed: true, reason: "" };
+  }
+}
+
+async function logRequest(entry: Record<string, unknown>) {
+  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/askgenie_request_log`, {
+      method: "POST",
+      headers: {
+        "apikey": SERVICE_ROLE_KEY,
+        "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(entry),
+    });
+    if (!res.ok) console.error("request log failed", res.status, await res.text());
+  } catch (err) {
+    console.error("request log failed", err);
+  }
 }
 
 function systemPrompt(type: string, language: string, isFollowup = false) {
@@ -32,6 +122,9 @@ ${langRule}
 Do not claim supernatural certainty, scientific prediction, guaranteed outcomes, or hidden knowledge.
 Avoid fear-based language. Do not tell the user what they must do.
 Keep the tone intriguing, specific, concise, and personalized.
+Stay within AskGenie247's purpose: readings, reflection, relationships, and personal questions.
+If the user asks for unrelated work (writing code, homework, essays, business documents, translations),
+kindly decline in one sentence and invite them back to a reflective question.
 Return valid JSON only, matching the requested schema exactly.
 `;
 
@@ -312,33 +405,80 @@ function schemaFor(type: string) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
-  if (!OPENAI_API_KEY) return json({ error: "OpenAI API key secret is not configured" }, 500);
+  const origin = req.headers.get("origin");
+  const cors = corsFor(origin);
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405, cors);
+  if (ALLOWED_ORIGINS.length && !(origin && ALLOWED_ORIGINS.includes(origin))) {
+    return json({ error: "Origin not allowed" }, 403, cors);
+  }
+  if (!OPENAI_API_KEY) return json({ error: "OpenAI API key secret is not configured" }, 500, cors);
+
+  const started = Date.now();
+  let logEntry: Record<string, unknown> | null = null;
 
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    if (rawBody.length > MAX_IMAGE_CHARS + MAX_PAYLOAD_CHARS) {
+      return json({ error: "Request too large", code: "TOO_LARGE" }, 413, cors);
+    }
+    const body = JSON.parse(rawBody);
     const type = String(body.type || "");
     const language = body.language === "vi" ? "vi" : "en";
-    const payload = body.payload || {};
+    const payload = body.payload && typeof body.payload === "object" ? body.payload : {};
     const isFollowup =
       typeof payload.followup_question === "string" &&
       payload.followup_question.trim().length > 0;
 
     if (!["tarot","future","compatibility","palm","lucky","dream","love","chat"].includes(type)) {
-      return json({ error: "Unsupported reading type" }, 400);
+      return json({ error: "Unsupported reading type" }, 400, cors);
     }
+
+    // Keep chat history short so one request can't carry an essay's worth of input.
+    if (Array.isArray(payload.conversation)) {
+      payload.conversation = payload.conversation.slice(-10).map((m: any) => ({
+        role: m?.role === "assistant" ? "assistant" : "user",
+        content: String(m?.content || "").slice(0, 2000),
+      }));
+    }
+
+    const payloadText = JSON.stringify(payload);
+    const message = String(payload.message || payload.followup_question || "");
+    if (payloadText.length > MAX_PAYLOAD_CHARS || message.length > MAX_MESSAGE_CHARS) {
+      return json({ error: "Request too large", code: "TOO_LARGE" }, 413, cors);
+    }
+
+    const hasImage =
+      type === "palm" &&
+      typeof body.imageDataUrl === "string" &&
+      body.imageDataUrl.startsWith("data:image/");
+    if (hasImage && body.imageDataUrl.length > MAX_IMAGE_CHARS) {
+      return json({ error: "Image too large", code: "TOO_LARGE" }, 413, cors);
+    }
+
+    // Daily free allowance: new readings and conversation are counted separately.
+    const kind: "reading" | "chat" = type === "chat" || isFollowup ? "chat" : "reading";
+    const visitor = await sha256Hex(RATE_LIMIT_SALT + "|" + clientIp(req));
+    const claim = await claimUsage(visitor, kind);
+    if (!claim.allowed) {
+      await logRequest({ type, kind, is_followup: isFollowup, has_image: hasImage, model: MODEL,
+        status: claim.reason === "global" ? "limited_global" : "limited", latency_ms: Date.now() - started });
+      return json({
+        ok: false,
+        error: "Daily free limit reached",
+        code: claim.reason === "global" ? "BUSY" : "DAILY_LIMIT",
+        kind,
+      }, 429, cors);
+    }
+
+    logEntry = { type, kind, is_followup: isFollowup, has_image: hasImage, model: MODEL };
 
     const content: any[] = [{
       type: "input_text",
-      text: JSON.stringify(payload)
+      text: payloadText
     }];
 
-    if (
-      type === "palm" &&
-      typeof body.imageDataUrl === "string" &&
-      body.imageDataUrl.startsWith("data:image/")
-    ) {
+    if (hasImage) {
       content.push({ type: "input_image", image_url: body.imageDataUrl });
     }
 
@@ -367,10 +507,15 @@ Deno.serve(async (req) => {
     });
 
     const raw = await openaiRes.json();
+    const usage = {
+      input_tokens: raw?.usage?.input_tokens ?? null,
+      output_tokens: raw?.usage?.output_tokens ?? null,
+    };
 
     if (!openaiRes.ok) {
       console.error("OpenAI error", raw);
-      return json({ error: "AI request failed" }, 502);
+      await logRequest({ ...logEntry, ...usage, status: "openai_error", latency_ms: Date.now() - started });
+      return json({ error: "AI request failed" }, 502, cors);
     }
 
     const outputText =
@@ -378,11 +523,17 @@ Deno.serve(async (req) => {
       raw.output?.flatMap((item: any) => item.content || [])
         ?.find((c: any) => c.type === "output_text")?.text;
 
-    if (!outputText) return json({ error: "AI returned no text" }, 502);
+    if (!outputText) {
+      await logRequest({ ...logEntry, ...usage, status: "no_text", latency_ms: Date.now() - started });
+      return json({ error: "AI returned no text" }, 502, cors);
+    }
 
-    return json({ ok: true, reading: JSON.parse(outputText) });
+    const reading = JSON.parse(outputText);
+    await logRequest({ ...logEntry, ...usage, status: "ok", latency_ms: Date.now() - started });
+    return json({ ok: true, reading }, 200, cors);
   } catch (err) {
     console.error(err);
-    return json({ error: "Unexpected server error" }, 500);
+    if (logEntry) await logRequest({ ...logEntry, status: "error", latency_ms: Date.now() - started });
+    return json({ error: "Unexpected server error" }, 500, cors);
   }
 });
